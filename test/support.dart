@@ -45,7 +45,6 @@ class TestData extends IterableBase<Map> {
     var key = null;
     var result = <Map>[];
     var lines = _text.split('\n');
-    int numLines = lines.length;
     // Remove trailing newline to match Python
     if (lines.last == '') {
       lines.removeLast();

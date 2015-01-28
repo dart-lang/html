@@ -84,7 +84,6 @@ void main() {
     var testName = pathos.basenameWithoutExtension(path);
 
     group(testName, () {
-      int index = 0;
       for (var testData in tests) {
         var input = testData['data'];
         var errors = testData['errors'];
@@ -102,8 +101,6 @@ void main() {
             });
           }
         }
-
-        index++;
       }
     });
   }

@@ -272,46 +272,6 @@ abstract class Node {
 
   bool contains(Node node) => nodes.contains(node);
 
-  /// Checks if this is a type selector.
-  /// See <http://www.w3.org/TR/CSS2/grammar.html>.
-  /// Note: this doesn't support '*', the universal selector, non-ascii chars or
-  /// escape chars.
-  bool _isTypeSelector(String selector) {
-    // Parser:
-
-    // element_name
-    //   : IDENT | '*'
-    //   ;
-
-    // Lexer:
-
-    // nmstart   [_a-z]|{nonascii}|{escape}
-    // nmchar    [_a-z0-9-]|{nonascii}|{escape}
-    // ident   -?{nmstart}{nmchar}*
-    // nonascii  [\240-\377]
-    // unicode   \\{h}{1,6}(\r\n|[ \t\r\n\f])?
-    // escape    {unicode}|\\[^\r\n\f0-9a-f]
-
-    // As mentioned above, no nonascii or escape support yet.
-    int len = selector.length;
-    if (len == 0) return false;
-
-    int i = 0;
-    const int DASH = 45;
-    if (selector.codeUnitAt(i) == DASH) i++;
-
-    if (i >= len || !isLetter(selector[i])) return false;
-    i++;
-
-    for (; i < len; i++) {
-      if (!isLetterOrDigit(selector[i]) && selector.codeUnitAt(i) != DASH) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
   /// Initialize [attributeSpans] using [sourceSpan].
   void _ensureAttributeSpans() {
     if (_attributeSpans != null) return;

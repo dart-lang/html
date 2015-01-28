@@ -534,7 +534,7 @@ class HtmlParser {
   void parseRCDataRawtext(Token token, String contentType) {
     assert(contentType == "RAWTEXT" || contentType == "RCDATA");
 
-    var element = tree.insertElement(token);
+    tree.insertElement(token);
 
     if (contentType == "RAWTEXT") {
       tokenizer.state = tokenizer.rawtextState;
@@ -1973,7 +1973,7 @@ class TextPhase extends Phase {
   }
 
   void endTagOther(EndTagToken token) {
-    var node = tree.openElements.removeLast();
+    tree.openElements.removeLast();
     parser.phase = parser.originalPhase;
   }
 }

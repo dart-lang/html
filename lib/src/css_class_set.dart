@@ -28,7 +28,6 @@ class ElementCssClassSet extends CssClassSetImpl {
   }
 
   void writeClasses(Set<String> s) {
-    List list = new List.from(s);
     _element.className = s.join(' ');
   }
 }
