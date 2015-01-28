@@ -106,7 +106,6 @@ class TagAttribute {
   TagAttribute(this.name, [this.value = '']);
 }
 
-
 class TokenKind {
   static const int spaceCharacters = 0;
   static const int characters = 1;

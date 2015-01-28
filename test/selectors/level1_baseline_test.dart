@@ -18,7 +18,7 @@ Document getTestContentDocument() {
 }
 
 var testType = TEST_QSA_BASELINE; // Only run baseline tests.
-var docType  = "html"; // Only run tests suitable for HTML
+var docType = "html"; // Only run tests suitable for HTML
 
 main() {
   /*
@@ -59,21 +59,24 @@ main() {
   //doc = frame.contentDocument;                 // Document Node tests
   doc = getTestContentDocument();
 
-  var element = doc.getElementById("root");   // In-document Element Node tests
+  var element = doc.getElementById("root"); // In-document Element Node tests
 
   //Setup the namespace tests
   setupSpecialElements(element);
 
-  var outOfScope = element.clone(true);   // Append this to the body before running the in-document
-                                               // Element tests, but after running the Document tests. This
-                                               // tests that no elements that are not descendants of element
-                                               // are selected.
+  var outOfScope = element
+      .clone(true); // Append this to the body before running the in-document
+  // Element tests, but after running the Document tests. This
+  // tests that no elements that are not descendants of element
+  // are selected.
 
-  traverse(outOfScope, (elem) {        // Annotate each element as being a clone; used for verifying
-    elem.attributes["data-clone"] = "";     // that none of these elements ever match.
+  traverse(outOfScope, (elem) {
+    // Annotate each element as being a clone; used for verifying
+    elem.attributes["data-clone"] =
+        ""; // that none of these elements ever match.
   });
 
-  var detached = element.clone(true);     // Detached Element Node tests
+  var detached = element.clone(true); // Detached Element Node tests
 
   var fragment = doc.createDocumentFragment(); // Fragment Node tests
   fragment.append(element.clone(true));
@@ -101,17 +104,19 @@ main() {
   //runInvalidSelectorTest("In-document Element", element, invalidSelectors);
 
   runValidSelectorTest("Document", doc, validSelectors, testType, docType);
-  runValidSelectorTest("Detached Element", detached, validSelectors, testType, docType);
+  runValidSelectorTest(
+      "Detached Element", detached, validSelectors, testType, docType);
   runValidSelectorTest("Fragment", fragment, validSelectors, testType, docType);
 
   group('out of scope', () {
     setUp(() {
       doc.body.append(outOfScope); // Append before in-document Element tests.
-                                   // None of these elements should match
+      // None of these elements should match
     });
     tearDown(() {
       outOfScope.remove();
     });
-    runValidSelectorTest("In-document Element", element, validSelectors, testType, docType);
+    runValidSelectorTest(
+        "In-document Element", element, validSelectors, testType, docType);
   });
 }

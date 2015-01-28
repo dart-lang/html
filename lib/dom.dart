@@ -54,8 +54,8 @@ class AttributeName implements Comparable {
   int compareTo(other) {
     // Not sure about this sort order
     if (other is! AttributeName) return 1;
-    int cmp = (prefix != null ? prefix : "").compareTo(
-          (other.prefix != null ? other.prefix : ""));
+    int cmp = (prefix != null ? prefix : "")
+        .compareTo((other.prefix != null ? other.prefix : ""));
     if (cmp != 0) return cmp;
     cmp = name.compareTo(other.name);
     if (cmp != 0) return cmp;
@@ -80,8 +80,7 @@ abstract class _ParentNode implements Node {
   /// are implemented. For example, nth-child does not implement An+B syntax
   /// and *-of-type is not implemented. If a selector is not implemented this
   /// method will throw [UniplmentedError].
-  Element querySelector(String selector) =>
-      query.querySelector(this, selector);
+  Element querySelector(String selector) => query.querySelector(this, selector);
 
   /// Returns all descendant nodes matching the given selectors, using a
   /// preorder traversal.
@@ -111,10 +110,9 @@ abstract class _ElementAndDocument implements _ParentNode {
   List<Element> getElementsByTagName(String localName) =>
       querySelectorAll(localName);
 
-  List<Element> getElementsByClassName(String classNames) =>
-      querySelectorAll(classNames.splitMapJoin(' ',
-          onNonMatch: (m) => m.isNotEmpty ? '.$m' : m,
-          onMatch: (m) => ''));
+  List<Element> getElementsByClassName(String classNames) => querySelectorAll(
+      classNames.splitMapJoin(' ',
+          onNonMatch: (m) => m.isNotEmpty ? '.$m' : m, onMatch: (m) => ''));
 }
 
 /// Really basic implementation of a DOM-core like Node.
@@ -281,8 +279,8 @@ abstract class Node {
 
     if (sourceSpan == null) return;
 
-    var tokenizer = new HtmlTokenizer(sourceSpan.text, generateSpans: true,
-        attributeSpans: true);
+    var tokenizer = new HtmlTokenizer(sourceSpan.text,
+        generateSpans: true, attributeSpans: true);
 
     tokenizer.moveNext();
     var token = tokenizer.current as StartTagToken;
@@ -291,8 +289,8 @@ abstract class Node {
 
     for (var attr in token.attributeSpans) {
       var offset = sourceSpan.start.offset;
-      _attributeSpans[attr.name] = sourceSpan.file.span(
-          offset + attr.start, offset + attr.end);
+      _attributeSpans[attr.name] =
+          sourceSpan.file.span(offset + attr.start, offset + attr.end);
       if (attr.startValue != null) {
         _attributeValueSpans[attr.name] = sourceSpan.file.span(
             offset + attr.startValue, offset + attr.endValue);
@@ -312,7 +310,6 @@ abstract class Node {
 
 class Document extends Node
     with _ParentNode, _NonElementParentNode, _ElementAndDocument {
-
   Document() : super._();
   factory Document.html(String html) => parse(html);
 
@@ -349,9 +346,7 @@ class Document extends Node
   DocumentFragment createDocumentFragment() => new DocumentFragment();
 }
 
-class DocumentFragment extends Node
-    with _ParentNode, _NonElementParentNode {
-
+class DocumentFragment extends Node with _ParentNode, _NonElementParentNode {
   DocumentFragment() : super._();
   factory DocumentFragment.html(String html) => parseFragment(html);
 
@@ -382,7 +377,8 @@ class DocumentType extends Node {
 
   DocumentType(String name, this.publicId, this.systemId)
       // Note: once Node.tagName is removed, don't pass "name" to super
-      : name = name, super._();
+      : name = name,
+        super._();
 
   int get nodeType => Node.DOCUMENT_TYPE_NODE;
 
@@ -397,7 +393,6 @@ class DocumentType extends Node {
       return '<!DOCTYPE $name>';
     }
   }
-
 
   void _addOuterHtml(StringBuffer str) {
     str.write(toString());
@@ -420,7 +415,9 @@ class Text extends Node {
   Text clone(bool deep) => new Text(data);
 
   String get text => data;
-  set text(String value) { data = value; }
+  set text(String value) {
+    data = value;
+  }
 }
 
 // TODO(jmesserly): Elements should have a pointer back to their document
@@ -433,7 +430,9 @@ class Element extends Node with _ParentNode, _ElementAndDocument {
 
   Element._(this.localName, [this.namespaceUri]) : super._();
 
-  Element.tag(this.localName) : namespaceUri = Namespaces.html, super._();
+  Element.tag(this.localName)
+      : namespaceUri = Namespaces.html,
+        super._();
 
   static final _START_TAG_REGEXP = new RegExp('<(\\w+)');
 
@@ -553,7 +552,8 @@ class Element extends Node with _ParentNode, _ElementAndDocument {
     str.write('>');
 
     if (nodes.length > 0) {
-      if (localName == 'pre' || localName == 'textarea' ||
+      if (localName == 'pre' ||
+          localName == 'textarea' ||
           localName == 'listing') {
         final first = nodes[0];
         if (first is Text && first.data.startsWith('\n')) {
@@ -586,7 +586,7 @@ class Element extends Node with _ParentNode, _ElementAndDocument {
 
   Element clone(bool deep) {
     var result = new Element._(localName, namespaceUri)
-        ..attributes = new LinkedHashMap.from(attributes);
+      ..attributes = new LinkedHashMap.from(attributes);
     return _clone(result, deep);
   }
 
@@ -643,7 +643,6 @@ class Comment extends Node {
     this.data = value;
   }
 }
-
 
 // TODO(jmesserly): fix this to extend one of the corelib classes if possible.
 // (The requirement to remove the node from the old node list makes it tricky.)
@@ -718,7 +717,7 @@ class NodeList extends ListProxy<Node> {
   // TODO(jmesserly): These aren't implemented in DOM _NodeListImpl, see
   // http://code.google.com/p/dart/issues/detail?id=5371
   void setRange(int start, int rangeLength, List<Node> from,
-                [int startFrom = 0]) {
+      [int startFrom = 0]) {
     if (from is NodeList) {
       // Note: this is presumed to make a copy
       from = from.sublist(startFrom, startFrom + rangeLength);
@@ -777,14 +776,12 @@ class NodeList extends ListProxy<Node> {
   }
 }
 
-
 /// An indexable collection of a node's descendants in the document tree,
 /// filtered so that only elements are in the collection.
 // TODO(jmesserly): this was copied from dart:html
 // TODO(jmesserly): "implements List<Element>" is a workaround for analyzer bug.
 class FilteredElementList extends IterableBase<Element> with ListMixin<Element>
     implements List<Element> {
-
   final Node _node;
   final List<Node> _childNodes;
 
@@ -794,7 +791,9 @@ class FilteredElementList extends IterableBase<Element> with ListMixin<Element>
   ///
   ///     var filteredElements = new FilteredElementList(query("#container"));
   ///     // filteredElements is [a, b, c].
-  FilteredElementList(Node node): _childNodes = node.nodes, _node = node;
+  FilteredElementList(Node node)
+      : _childNodes = node.nodes,
+        _node = node;
 
   // We can't memoize this, since it's possible that children will be messed
   // with externally to this class.
@@ -802,7 +801,7 @@ class FilteredElementList extends IterableBase<Element> with ListMixin<Element>
   // TODO(nweiz): we don't always need to create a new list. For example
   // forEach, every, any, ... could directly work on the _childNodes.
   List<Element> get _filtered =>
-    new List<Element>.from(_childNodes.where((n) => n is Element));
+      new List<Element>.from(_childNodes.where((n) => n is Element));
 
   void forEach(void f(Element element)) {
     _filtered.forEach(f);
@@ -846,7 +845,7 @@ class FilteredElementList extends IterableBase<Element> with ListMixin<Element>
   }
 
   void setRange(int start, int end, Iterable<Element> iterable,
-                [int skipCount = 0]) {
+      [int skipCount = 0]) {
     throw new UnimplementedError();
   }
 
@@ -917,7 +916,7 @@ class FilteredElementList extends IterableBase<Element> with ListMixin<Element>
 
   bool every(bool f(Element element)) => _filtered.every(f);
   bool any(bool f(Element element)) => _filtered.any(f);
-  List<Element> toList({ bool growable: true }) =>
+  List<Element> toList({bool growable: true}) =>
       new List<Element>.from(this, growable: growable);
   Set<Element> toSet() => new Set<Element>.from(this);
   Element firstWhere(bool test(Element value), {Element orElse()}) {
@@ -940,12 +939,11 @@ class FilteredElementList extends IterableBase<Element> with ListMixin<Element>
   int get length => _filtered.length;
   Element operator [](int index) => _filtered[index];
   Iterator<Element> get iterator => _filtered.iterator;
-  List<Element> sublist(int start, [int end]) =>
-    _filtered.sublist(start, end);
+  List<Element> sublist(int start, [int end]) => _filtered.sublist(start, end);
   Iterable<Element> getRange(int start, int end) =>
-    _filtered.getRange(start, end);
+      _filtered.getRange(start, end);
   int indexOf(Element element, [int start = 0]) =>
-    _filtered.indexOf(element, start);
+      _filtered.indexOf(element, start);
 
   int lastIndexOf(Element element, [int start = null]) {
     if (start == null) start = length - 1;

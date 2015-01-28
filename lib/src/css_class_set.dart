@@ -9,7 +9,6 @@ import 'dart:collection';
 import 'package:html5lib/dom.dart';
 
 class ElementCssClassSet extends CssClassSetImpl {
-
   final Element _element;
 
   ElementCssClassSet(this._element);
@@ -31,7 +30,6 @@ class ElementCssClassSet extends CssClassSetImpl {
     _element.className = s.join(' ');
   }
 }
-
 
 /** A Set that stores the CSS class names for an element. */
 abstract class CssClassSet implements Set<String> {
@@ -111,7 +109,6 @@ abstract class CssClassSet implements Set<String> {
 }
 
 abstract class CssClassSetImpl implements CssClassSet {
-
   String toString() {
     return readClasses().join(' ');
   }
@@ -267,21 +264,19 @@ abstract class CssClassSetImpl implements CssClassSet {
   }
 
   bool containsAll(Iterable<String> collection) =>
-    readClasses().containsAll(collection);
+      readClasses().containsAll(collection);
 
   Set<String> intersection(Set<String> other) =>
-    readClasses().intersection(other);
+      readClasses().intersection(other);
 
-  Set<String> union(Set<String> other) =>
-    readClasses().union(other);
+  Set<String> union(Set<String> other) => readClasses().union(other);
 
-  Set<String> difference(Set<String> other) =>
-    readClasses().difference(other);
+  Set<String> difference(Set<String> other) => readClasses().difference(other);
 
   String get first => readClasses().first;
   String get last => readClasses().last;
   String get single => readClasses().single;
-  List<String> toList({ bool growable: true }) =>
+  List<String> toList({bool growable: true}) =>
       readClasses().toList(growable: growable);
   Set<String> toSet() => readClasses().toSet();
   Iterable<String> take(int n) => readClasses().take(n);
@@ -290,9 +285,9 @@ abstract class CssClassSetImpl implements CssClassSet {
   Iterable<String> skip(int n) => readClasses().skip(n);
   Iterable<String> skipWhile(bool test(String value)) =>
       readClasses().skipWhile(test);
-  dynamic firstWhere(bool test(String value), { Object orElse() }) =>
+  dynamic firstWhere(bool test(String value), {Object orElse()}) =>
       readClasses().firstWhere(test, orElse: orElse);
-  dynamic lastWhere(bool test(String value), { Object orElse()}) =>
+  dynamic lastWhere(bool test(String value), {Object orElse()}) =>
       readClasses().lastWhere(test, orElse: orElse);
   String singleWhere(bool test(String value)) =>
       readClasses().singleWhere(test);
@@ -312,7 +307,7 @@ abstract class CssClassSetImpl implements CssClassSet {
    *   After f returns, the modified set is written to the
    *       className property of this element.
    */
-  modify( f(Set<String> s)) {
+  modify(f(Set<String> s)) {
     Set<String> s = readClasses();
     var ret = f(s);
     writeClasses(s);

@@ -9,13 +9,20 @@ import 'src/constants.dart' show rcdataElements;
 class TreeVisitor {
   visit(Node node) {
     switch (node.nodeType) {
-      case Node.ELEMENT_NODE: return visitElement(node);
-      case Node.TEXT_NODE: return visitText(node);
-      case Node.COMMENT_NODE: return visitComment(node);
-      case Node.DOCUMENT_FRAGMENT_NODE: return visitDocumentFragment(node);
-      case Node.DOCUMENT_NODE: return visitDocument(node);
-      case Node.DOCUMENT_TYPE_NODE: return visitDocumentType(node);
-      default: throw new UnsupportedError('DOM node type ${node.nodeType}');
+      case Node.ELEMENT_NODE:
+        return visitElement(node);
+      case Node.TEXT_NODE:
+        return visitText(node);
+      case Node.COMMENT_NODE:
+        return visitComment(node);
+      case Node.DOCUMENT_FRAGMENT_NODE:
+        return visitDocumentFragment(node);
+      case Node.DOCUMENT_NODE:
+        return visitDocument(node);
+      case Node.DOCUMENT_TYPE_NODE:
+        return visitDocumentType(node);
+      default:
+        throw new UnsupportedError('DOM node type ${node.nodeType}');
     }
   }
 
@@ -92,8 +99,7 @@ class CodeMarkupVisitor extends TreeVisitor {
       _str.write(">");
       return;
     }
-    _str.write(
-        '&lt;/<code class="markup element-name">$tag</code>>');
+    _str.write('&lt;/<code class="markup element-name">$tag</code>>');
   }
 
   visitComment(Comment node) {
@@ -101,7 +107,6 @@ class CodeMarkupVisitor extends TreeVisitor {
     _str.write('<code class="markup comment">&lt;!--${data}--></code>');
   }
 }
-
 
 // TODO(jmesserly): reconcile this with dart:web htmlEscape.
 // This one might be more useful, as it is HTML5 spec compliant.
@@ -128,11 +133,21 @@ String htmlSerializeEscape(String text, {bool attributeMode: false}) {
     var ch = text[i];
     String replace = null;
     switch (ch) {
-      case '&': replace = '&amp;'; break;
-      case '\u00A0'/*NO-BREAK SPACE*/: replace = '&nbsp;'; break;
-      case '"': if (attributeMode) replace = '&quot;'; break;
-      case '<': if (!attributeMode) replace = '&lt;'; break;
-      case '>': if (!attributeMode) replace = '&gt;'; break;
+      case '&':
+        replace = '&amp;';
+        break;
+      case '\u00A0' /*NO-BREAK SPACE*/ :
+        replace = '&nbsp;';
+        break;
+      case '"':
+        if (attributeMode) replace = '&quot;';
+        break;
+      case '<':
+        if (!attributeMode) replace = '&lt;';
+        break;
+      case '>':
+        if (!attributeMode) replace = '&gt;';
+        break;
     }
     if (replace != null) {
       if (result == null) result = new StringBuffer(text.substring(0, i));
@@ -145,16 +160,27 @@ String htmlSerializeEscape(String text, {bool attributeMode: false}) {
   return result != null ? result.toString() : text;
 }
 
-
 /// Returns true if this tag name is a void element.
 /// This method is useful to a pretty printer, because void elements must not
 /// have an end tag.
 /// See also: <http://dev.w3.org/html5/markup/syntax.html#void-elements>.
 bool isVoidElement(String tagName) {
   switch (tagName) {
-    case "area": case "base": case "br": case "col": case "command":
-    case "embed": case "hr": case "img": case "input": case "keygen":
-    case "link": case "meta": case "param": case "source": case "track":
+    case "area":
+    case "base":
+    case "br":
+    case "col":
+    case "command":
+    case "embed":
+    case "hr":
+    case "img":
+    case "input":
+    case "keygen":
+    case "link":
+    case "meta":
+    case "param":
+    case "source":
+    case "track":
     case "wbr":
       return true;
   }

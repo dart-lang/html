@@ -14,7 +14,7 @@ Map _treeTypes;
 Map<String, TreeBuilderFactory> get treeTypes {
   if (_treeTypes == null) {
     // TODO(jmesserly): add DOM here once it's implemented
-    _treeTypes = { "simpletree": (useNs) => new TreeBuilder(useNs) };
+    _treeTypes = {"simpletree": (useNs) => new TreeBuilder(useNs)};
   }
   return _treeTypes;
 }

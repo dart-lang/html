@@ -20,7 +20,7 @@ String namespaceHtml(String expected) {
   // final namespaceExpected = new RegExp(@"^(\s*)<(\S+)>", multiLine: true);
   // return expected.replaceAll(namespaceExpected, @"$1<html $2>");
   final namespaceExpected = new RegExp(r"^(\|\s*)<(\S+)>");
-  var lines =  expected.split("\n");
+  var lines = expected.split("\n");
   for (int i = 0; i < lines.length; i++) {
     var match = namespaceExpected.firstMatch(lines[i]);
     if (match != null) {
@@ -52,21 +52,19 @@ void runParserTest(String groupName, String innerHTML, String input,
     expected = namespaceHtml(expected);
   }
 
-  expect(output, equals(expected), reason:
-      "\n\nInput:\n$input\n\nExpected:\n$expected\n\nReceived:\n$output");
+  expect(output, equals(expected),
+      reason: "\n\nInput:\n$input\n\nExpected:\n$expected\n\nReceived:\n$output");
 
   if (checkParseErrors) {
-    expect(parser.errors.length, equals(errors.length), reason:
-        "\n\nInput:\n$input\n\nExpected errors (${errors.length}):\n"
+    expect(parser.errors.length, equals(errors.length),
+        reason: "\n\nInput:\n$input\n\nExpected errors (${errors.length}):\n"
         "${errors.join('\n')}\n\n"
         "Actual errors (${parser.errors.length}):\n"
         "${parser.errors.map((e) => '$e').join('\n')}");
   }
 }
 
-
 void main() {
-
   test('dart:io', () {
     // ensure IO support is unregistered
     expect(inputstream.consoleSupport,
@@ -113,6 +111,6 @@ _nameFor(String input) {
       .replaceAll(new RegExp('\\\\.'), '_')
       .replaceAll(new RegExp('\u0000'), '_')
       .replaceAll('"', '\\"')
-      .replaceAll(new RegExp('[\n\r\t]'),'_');
+      .replaceAll(new RegExp('[\n\r\t]'), '_');
   return JSON.decode('"$escapeQuote"');
 }

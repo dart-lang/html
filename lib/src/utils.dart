@@ -79,7 +79,8 @@ String formatStr(String format, Map data) {
   data.forEach((key, value) {
     var result = new StringBuffer();
     var search = '%($key)';
-    int last = 0, match;
+    int last = 0,
+        match;
     while ((match = format.indexOf(search, last)) >= 0) {
       result.write(format.substring(last, match));
       match += search.length;
@@ -106,8 +107,9 @@ String formatStr(String format, Map data) {
           var number = value.toRadixString(16);
           result.write(padWithZeros(number, numberSize));
           break;
-        default: throw "not implemented: formatStr does not support format "
-            "character ${format[match]}";
+        default:
+          throw "not implemented: formatStr does not support format "
+              "character ${format[match]}";
       }
 
       last = match + 1;

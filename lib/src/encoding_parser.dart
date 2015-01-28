@@ -63,7 +63,7 @@ class EncodingBytes extends IterableBase<String> {
   /// Skip past a list of characters. Defaults to skipping [isWhitespace].
   String skipChars([CharPreciate skipChars]) {
     if (skipChars == null) skipChars = isWhitespace;
-    var p = position;  // use property for the error-checking
+    var p = position; // use property for the error-checking
     while (p < length) {
       var c = _bytes[p];
       if (!skipChars(c)) {
@@ -141,7 +141,8 @@ class EncodingParser {
       ["</", handlePossibleEndTag],
       ["<!", handleOther],
       ["<?", handleOther],
-      ["<", handlePossibleStartTag]];
+      ["<", handlePossibleStartTag]
+    ];
 
     try {
       for (var byte in data) {
@@ -324,7 +325,6 @@ class EncodingParser {
   }
 }
 
-
 class ContentAttrParser {
   final EncodingBytes data;
 
@@ -369,7 +369,6 @@ class ContentAttrParser {
     }
   }
 }
-
 
 bool isSpaceOrAngleBracket(String char) {
   return char == ">" || char == "<" || isWhitespace(char);
