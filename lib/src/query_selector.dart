@@ -15,8 +15,8 @@ Element querySelector(Node node, String selector) =>
 
 List<Element> querySelectorAll(Node node, String selector) {
   var results = [];
-  new SelectorEvaluator()
-      .querySelectorAll(node, _parseSelectorList(selector), results);
+  new SelectorEvaluator().querySelectorAll(
+      node, _parseSelectorList(selector), results);
   return results;
 }
 
@@ -49,16 +49,14 @@ class SelectorEvaluator extends Visitor {
     return null;
   }
 
-  void querySelectorAll(Node root, SelectorGroup selector,
-      List<Element> results) {
-
+  void querySelectorAll(
+      Node root, SelectorGroup selector, List<Element> results) {
     for (var node in root.nodes) {
       if (node is! Element) continue;
       if (matches(node, selector)) results.add(node);
       querySelectorAll(node, selector, results);
     }
   }
-
 
   bool visitSelectorGroup(SelectorGroup group) =>
       group.selectors.any(visitSelector);
@@ -109,8 +107,10 @@ class SelectorEvaluator extends Visitor {
           // For now, just remember what the combinator was.
           combinator = s.combinator;
           break;
-        case TokenKind.COMBINATOR_NONE: break;
-        default: throw _unsupported(selector);
+        case TokenKind.COMBINATOR_NONE:
+          break;
+        default:
+          throw _unsupported(selector);
       }
 
       if (_element == null) {
@@ -123,9 +123,9 @@ class SelectorEvaluator extends Visitor {
     return result;
   }
 
-  _unimplemented(SimpleSelector selector) =>
-      new UnimplementedError("'$selector' selector of type "
-         "${selector.runtimeType} is not implemented");
+  _unimplemented(SimpleSelector selector) => new UnimplementedError(
+      "'$selector' selector of type "
+      "${selector.runtimeType} is not implemented");
 
   _unsupported(selector) =>
       new FormatException("'$selector' is not a valid selector");
@@ -142,8 +142,8 @@ class SelectorEvaluator extends Visitor {
 
       // http://dev.w3.org/csswg/selectors-4/#the-empty-pseudo
       case 'empty':
-        return _element.nodes.any((n) => !(n is Element ||
-            n is Text && n.text.isNotEmpty));
+        return _element.nodes
+            .any((n) => !(n is Element || n is Text && n.text.isNotEmpty));
 
       // http://dev.w3.org/csswg/selectors-4/#the-blank-pseudo
       case 'blank':
@@ -179,7 +179,6 @@ class SelectorEvaluator extends Visitor {
     throw _unimplemented(selector);
   }
 
-
   bool visitPseudoElementSelector(PseudoElementSelector selector) {
     // :before, :after, :first-letter/line can't match DOM elements.
     if (_isLegacyPsuedoClass(selector.name)) return false;
@@ -189,9 +188,13 @@ class SelectorEvaluator extends Visitor {
 
   static bool _isLegacyPsuedoClass(String name) {
     switch (name) {
-      case 'before': case 'after': case 'first-line': case 'first-letter':
+      case 'before':
+      case 'after':
+      case 'first-line':
+      case 'first-letter':
         return true;
-      default: return false;
+      default:
+        return false;
     }
   }
 
@@ -209,7 +212,8 @@ class SelectorEvaluator extends Visitor {
         if (exprs.length == 1 && exprs[0] is LiteralTerm) {
           LiteralTerm literal = exprs[0];
           var parent = _element.parentNode;
-          return parent != null && literal.value > 0 &&
+          return parent != null &&
+              literal.value > 0 &&
               parent.nodes.indexOf(_element) == literal.value;
         }
         break;
@@ -282,7 +286,8 @@ class SelectorEvaluator extends Visitor {
         return value.endsWith(select);
       case TokenKind.SUBSTRING_MATCH:
         return value.contains(select);
-      default: throw _unsupported(selector);
+      default:
+        throw _unsupported(selector);
     }
   }
 }

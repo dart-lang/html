@@ -61,7 +61,6 @@ bool _mapEquals(Map a, Map b) {
   return true;
 }
 
-
 bool _nodesEqual(Element node1, Element node2) {
   return getElementNameTuple(node1) == getElementNameTuple(node2) &&
       _mapEquals(node1.attributes, node2.attributes);
@@ -117,16 +116,22 @@ class TreeBuilder {
           listElements2 = const [const Pair(Namespaces.html, "button")];
           break;
         case "list":
-          listElements2 = const [const Pair(Namespaces.html, "ol"),
-                                 const Pair(Namespaces.html, "ul")];
+          listElements2 = const [
+            const Pair(Namespaces.html, "ol"),
+            const Pair(Namespaces.html, "ul")
+          ];
           break;
         case "table":
-          listElements1 = const [const Pair(Namespaces.html, "html"),
-                                 const Pair(Namespaces.html, "table")];
+          listElements1 = const [
+            const Pair(Namespaces.html, "html"),
+            const Pair(Namespaces.html, "table")
+          ];
           break;
         case "select":
-          listElements1 = const [const Pair(Namespaces.html, "optgroup"),
-                                 const Pair(Namespaces.html, "option")];
+          listElements1 = const [
+            const Pair(Namespaces.html, "optgroup"),
+            const Pair(Namespaces.html, "option")
+          ];
           invert = true;
           break;
         default:
@@ -140,7 +145,7 @@ class TreeBuilder {
         return true;
       } else if (invert !=
           (listElements1.contains(getElementNameTuple(node)) ||
-           listElements2.contains(getElementNameTuple(node)))) {
+              listElements2.contains(getElementNameTuple(node)))) {
         return false;
       }
     }
@@ -185,11 +190,10 @@ class TreeBuilder {
       entry = activeFormattingElements[i];
 
       // TODO(jmesserly): optimize this. No need to create a token.
-      var cloneToken = new StartTagToken(
-          entry.localName,
+      var cloneToken = new StartTagToken(entry.localName,
           namespace: entry.namespaceUri,
           data: new LinkedHashMap.from(entry.attributes))
-          ..span = entry.sourceSpan;
+        ..span = entry.sourceSpan;
 
       // Step 9
       var element = insertElement(cloneToken);
@@ -235,7 +239,7 @@ class TreeBuilder {
 
   void insertDoctype(DoctypeToken token) {
     var doctype = new DocumentType(token.name, token.publicId, token.systemId)
-        ..sourceSpan = token.span;
+      ..sourceSpan = token.span;
     document.nodes.add(doctype);
   }
 
@@ -252,8 +256,8 @@ class TreeBuilder {
     var namespace = token.namespace;
     if (namespace == null) namespace = defaultNamespace;
     var element = document.createElementNS(namespace, name)
-        ..attributes = token.data
-        ..sourceSpan = token.span;
+      ..attributes = token.data
+      ..sourceSpan = token.span;
     return element;
   }
 
@@ -267,8 +271,8 @@ class TreeBuilder {
     var namespace = token.namespace;
     if (namespace == null) namespace = defaultNamespace;
     var element = document.createElementNS(namespace, name)
-        ..attributes = token.data
-        ..sourceSpan = token.span;
+      ..attributes = token.data
+      ..sourceSpan = token.span;
     openElements.last.nodes.add(element);
     openElements.add(element);
     return element;
@@ -300,8 +304,9 @@ class TreeBuilder {
   void insertText(String data, FileSpan span) {
     var parent = openElements.last;
 
-    if (!insertFromTable || insertFromTable &&
-        !tableInsertModeElements.contains(openElements.last.localName)) {
+    if (!insertFromTable ||
+        insertFromTable &&
+            !tableInsertModeElements.contains(openElements.last.localName)) {
       _insertText(parent, data, span);
     } else {
       // We should be in the InTable mode. This means we want to do
@@ -322,8 +327,8 @@ class TreeBuilder {
         last.data = '${last.data}$data';
 
         if (span != null) {
-          last.sourceSpan = span.file.span(last.sourceSpan.start.offset,
-              span.end.offset);
+          last.sourceSpan =
+              span.file.span(last.sourceSpan.start.offset, span.end.offset);
         }
       } else {
         nodes.add(new Text(data)..sourceSpan = span);
@@ -372,8 +377,17 @@ class TreeBuilder {
   void generateImpliedEndTags([String exclude]) {
     var name = openElements.last.localName;
     // XXX td, th and tr are not actually needed
-    if (name != exclude && const ["dd", "dt", "li", "option", "optgroup", "p",
-        "rp", "rt"].contains(name)) {
+    if (name != exclude &&
+        const [
+      "dd",
+      "dt",
+      "li",
+      "option",
+      "optgroup",
+      "p",
+      "rp",
+      "rt"
+    ].contains(name)) {
       openElements.removeLast();
       // XXX This is not entirely what the specification says. We should
       // investigate it more closely.

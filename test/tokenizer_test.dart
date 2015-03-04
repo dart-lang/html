@@ -30,8 +30,7 @@ class TokenizerTestParser {
     // Note: we can't get a closure of the state method. However, we can
     // create a new closure to invoke it via mirrors.
     var mtok = reflect(tokenizer);
-    tokenizer.state = () =>
-        mtok.invoke(new Symbol(_state), const []).reflectee;
+    tokenizer.state = () => mtok.invoke(new Symbol(_state), const []).reflectee;
 
     if (_lastStartTag != null) {
       tokenizer.currentToken = new StartTagToken(_lastStartTag);
@@ -68,8 +67,8 @@ class TokenizerTestParser {
   }
 
   void processDoctype(DoctypeToken token) {
-    outputTokens.add(["DOCTYPE", token.name, token.publicId,
-        token.systemId, token.correct]);
+    outputTokens.add(
+        ["DOCTYPE", token.name, token.publicId, token.systemId, token.correct]);
   }
 
   void processStartTag(StartTagToken token) {
@@ -92,8 +91,7 @@ class TokenizerTestParser {
     outputTokens.add(["Character", token.data]);
   }
 
-  void processEOF(token) {
-  }
+  void processEOF(token) {}
 
   void processParseError(StringToken token) {
     // TODO(jmesserly): when debugging test failures it can be useful to add
@@ -110,7 +108,6 @@ List concatenateCharacterTokens(List tokens) {
       if (outputTokens.length > 0 &&
           outputTokens.last.indexOf("ParseError") == -1 &&
           outputTokens.last[0] == "Character") {
-
         outputTokens.last[1] = '${outputTokens.last[1]}${token[1]}';
       } else {
         outputTokens.add(token);
@@ -133,18 +130,17 @@ List normalizeTokens(List tokens) {
   return tokens;
 }
 
-
 /// Test whether the test has passed or failed
 ///
 /// If the ignoreErrorOrder flag is set to true we don't test the relative
 /// positions of parse errors and non parse errors.
-void expectTokensMatch(List expectedTokens, List receivedTokens,
-    bool ignoreErrorOrder, [bool ignoreErrors = false, String message]) {
-
+void expectTokensMatch(
+    List expectedTokens, List receivedTokens, bool ignoreErrorOrder,
+    [bool ignoreErrors = false, String message]) {
   var checkSelfClosing = false;
   for (var token in expectedTokens) {
-    if (token[0] == "StartTag" && token.length == 4
-        || token[0] == "EndTag" && token.length == 3) {
+    if (token[0] == "StartTag" && token.length == 4 ||
+        token[0] == "EndTag" && token.length == 3) {
       checkSelfClosing = true;
       break;
     }
@@ -185,16 +181,21 @@ void runTokenizerTest(Map testInfo) {
   if (!testInfo.containsKey('lastStartTag')) {
     testInfo['lastStartTag'] = null;
   }
-  var parser = new TokenizerTestParser(testInfo['initialState'],
-      testInfo['lastStartTag']);
+  var parser = new TokenizerTestParser(
+      testInfo['initialState'], testInfo['lastStartTag']);
   var tokens = parser.parse(testInfo['input']);
   tokens = concatenateCharacterTokens(tokens);
   var received = normalizeTokens(tokens);
-  var errorMsg = ["\n\nInitial state:",
-              testInfo['initialState'],
-              "\nInput:", testInfo['input'],
-              "\nExpected:", expected,
-              "\nreceived:", tokens].map((s) => '$s').join('\n');
+  var errorMsg = [
+    "\n\nInitial state:",
+    testInfo['initialState'],
+    "\nInput:",
+    testInfo['input'],
+    "\nExpected:",
+    expected,
+    "\nreceived:",
+    tokens
+  ].map((s) => '$s').join('\n');
   var ignoreErrorOrder = testInfo['ignoreErrorOrder'];
   if (ignoreErrorOrder == null) ignoreErrorOrder = false;
 
@@ -225,7 +226,6 @@ Map unescape(Map testInfo) {
   }
   return testInfo;
 }
-
 
 String camelCase(String s) {
   s = s.toLowerCase();

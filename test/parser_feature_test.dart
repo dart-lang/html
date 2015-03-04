@@ -129,8 +129,8 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
     var doc = parse(text, generateSpans: true);
     var elem = doc.querySelector('foo');
 
-    expect(elem.attributeSpans['template'].start.offset,
-        text.indexOf('template'));
+    expect(
+        elem.attributeSpans['template'].start.offset, text.indexOf('template'));
     expect(elem.attributeValueSpans.containsKey('template'), false);
   });
 
@@ -246,7 +246,7 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
         'Unexpected non-space characters. Expected DOCTYPE.');
     expect(parser.errors[0].toString(),
         'ParserError on line 1, column 4: Unexpected non-space characters. '
-          'Expected DOCTYPE.\n'
+        'Expected DOCTYPE.\n'
         'foo\n'
         '  ^');
   });

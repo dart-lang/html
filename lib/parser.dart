@@ -36,13 +36,12 @@ import 'dom.dart';
 /// [Node.sourceSpan] property will be `null`. When using [generateSpans] you
 /// can additionally pass [sourceUrl] to indicate where the [input] was
 /// extracted from.
-Document parse(input, {String encoding, bool generateSpans: false,
-    String sourceUrl}) {
-  var p = new HtmlParser(input, encoding: encoding,
-      generateSpans: generateSpans, sourceUrl: sourceUrl);
+Document parse(input,
+    {String encoding, bool generateSpans: false, String sourceUrl}) {
+  var p = new HtmlParser(input,
+      encoding: encoding, generateSpans: generateSpans, sourceUrl: sourceUrl);
   return p.parse();
 }
-
 
 /// Parse the [input] html5 document fragment into a tree. The [input] can be
 /// a [String], [List<int>] of bytes or an [HtmlTokenizer]. The [container]
@@ -56,13 +55,12 @@ Document parse(input, {String encoding, bool generateSpans: false,
 /// [Node.sourceSpan] property will be `null`. When using [generateSpans] you can
 /// additionally pass [sourceUrl] to indicate where the [input] was extracted
 /// from.
-DocumentFragment parseFragment(input, {String container: "div",
-    String encoding, bool generateSpans: false, String sourceUrl}) {
-  var p = new HtmlParser(input, encoding: encoding,
-      generateSpans: generateSpans, sourceUrl: sourceUrl);
+DocumentFragment parseFragment(input, {String container: "div", String encoding,
+    bool generateSpans: false, String sourceUrl}) {
+  var p = new HtmlParser(input,
+      encoding: encoding, generateSpans: generateSpans, sourceUrl: sourceUrl);
   return p.parseFragment(container);
 }
-
 
 /// Parser for HTML, which generates a tree structure from a stream of
 /// (possibly malformed) characters.
@@ -146,12 +144,15 @@ class HtmlParser {
       TreeBuilder tree})
       : generateSpans = generateSpans,
         tree = tree != null ? tree : new TreeBuilder(true),
-        tokenizer = (input is HtmlTokenizer ? input :
-          new HtmlTokenizer(input, encoding: encoding, parseMeta: parseMeta,
-            lowercaseElementName: lowercaseElementName,
-            lowercaseAttrName: lowercaseAttrName,
-            generateSpans: generateSpans, sourceUrl: sourceUrl)) {
-
+        tokenizer = (input is HtmlTokenizer
+            ? input
+            : new HtmlTokenizer(input,
+                encoding: encoding,
+                parseMeta: parseMeta,
+                lowercaseElementName: lowercaseElementName,
+                lowercaseAttrName: lowercaseAttrName,
+                generateSpans: generateSpans,
+                sourceUrl: sourceUrl)) {
     tokenizer.parser = this;
     _initialPhase = new InitialPhase(this);
     _beforeHtmlPhase = new BeforeHtmlPhase(this);
@@ -256,14 +257,14 @@ class HtmlParser {
       if (enc != null) enc = asciiUpper2Lower(enc);
       return enc == "text/html" || enc == "application/xhtml+xml";
     } else {
-      return htmlIntegrationPointElements.contains(
-          new Pair(element.namespaceUri, element.localName));
+      return htmlIntegrationPointElements
+          .contains(new Pair(element.namespaceUri, element.localName));
     }
   }
 
   bool isMathMLTextIntegrationPoint(Element element) {
-    return mathmlTextIntegrationPointElements.contains(
-        new Pair(element.namespaceUri, element.localName));
+    return mathmlTextIntegrationPointElements
+        .contains(new Pair(element.namespaceUri, element.localName));
   }
 
   bool inForeignContent(Token token, int type) {
@@ -275,7 +276,7 @@ class HtmlParser {
     if (isMathMLTextIntegrationPoint(node)) {
       if (type == TokenKind.startTag &&
           (token as StartTagToken).name != "mglyph" &&
-          (token as StartTagToken).name != "malignmark")  {
+          (token as StartTagToken).name != "malignmark") {
         return false;
       }
       if (type == TokenKind.characters || type == TokenKind.spaceCharacters) {
@@ -283,7 +284,8 @@ class HtmlParser {
       }
     }
 
-    if (node.localName == "annotation-xml" && type == TokenKind.startTag &&
+    if (node.localName == "annotation-xml" &&
+        type == TokenKind.startTag &&
         (token as StartTagToken).name == "svg") {
       return false;
     }
@@ -343,8 +345,9 @@ class HtmlParser {
 
       if (token is StartTagToken) {
         if (token.selfClosing && !token.selfClosingAcknowledged) {
-          parseError(token.span, "non-void-element-with-trailing-solidus",
-              {"name": token.name});
+          parseError(token.span, "non-void-element-with-trailing-solidus", {
+            "name": token.name
+          });
         }
       }
     }
@@ -371,7 +374,6 @@ class HtmlParser {
 
   void parseError(SourceSpan span, String errorcode,
       [Map datavars = const {}]) {
-
     if (!generateSpans && span == null) {
       span = _lastSpan;
     }
@@ -390,68 +392,68 @@ class HtmlParser {
 
   void adjustSVGAttributes(StartTagToken token) {
     final replacements = const {
-      "attributename":"attributeName",
-      "attributetype":"attributeType",
-      "basefrequency":"baseFrequency",
-      "baseprofile":"baseProfile",
-      "calcmode":"calcMode",
-      "clippathunits":"clipPathUnits",
-      "contentscripttype":"contentScriptType",
-      "contentstyletype":"contentStyleType",
-      "diffuseconstant":"diffuseConstant",
-      "edgemode":"edgeMode",
-      "externalresourcesrequired":"externalResourcesRequired",
-      "filterres":"filterRes",
-      "filterunits":"filterUnits",
-      "glyphref":"glyphRef",
-      "gradienttransform":"gradientTransform",
-      "gradientunits":"gradientUnits",
-      "kernelmatrix":"kernelMatrix",
-      "kernelunitlength":"kernelUnitLength",
-      "keypoints":"keyPoints",
-      "keysplines":"keySplines",
-      "keytimes":"keyTimes",
-      "lengthadjust":"lengthAdjust",
-      "limitingconeangle":"limitingConeAngle",
-      "markerheight":"markerHeight",
-      "markerunits":"markerUnits",
-      "markerwidth":"markerWidth",
-      "maskcontentunits":"maskContentUnits",
-      "maskunits":"maskUnits",
-      "numoctaves":"numOctaves",
-      "pathlength":"pathLength",
-      "patterncontentunits":"patternContentUnits",
-      "patterntransform":"patternTransform",
-      "patternunits":"patternUnits",
-      "pointsatx":"pointsAtX",
-      "pointsaty":"pointsAtY",
-      "pointsatz":"pointsAtZ",
-      "preservealpha":"preserveAlpha",
-      "preserveaspectratio":"preserveAspectRatio",
-      "primitiveunits":"primitiveUnits",
-      "refx":"refX",
-      "refy":"refY",
-      "repeatcount":"repeatCount",
-      "repeatdur":"repeatDur",
-      "requiredextensions":"requiredExtensions",
-      "requiredfeatures":"requiredFeatures",
-      "specularconstant":"specularConstant",
-      "specularexponent":"specularExponent",
-      "spreadmethod":"spreadMethod",
-      "startoffset":"startOffset",
-      "stddeviation":"stdDeviation",
-      "stitchtiles":"stitchTiles",
-      "surfacescale":"surfaceScale",
-      "systemlanguage":"systemLanguage",
-      "tablevalues":"tableValues",
-      "targetx":"targetX",
-      "targety":"targetY",
-      "textlength":"textLength",
-      "viewbox":"viewBox",
-      "viewtarget":"viewTarget",
-      "xchannelselector":"xChannelSelector",
-      "ychannelselector":"yChannelSelector",
-      "zoomandpan":"zoomAndPan"
+      "attributename": "attributeName",
+      "attributetype": "attributeType",
+      "basefrequency": "baseFrequency",
+      "baseprofile": "baseProfile",
+      "calcmode": "calcMode",
+      "clippathunits": "clipPathUnits",
+      "contentscripttype": "contentScriptType",
+      "contentstyletype": "contentStyleType",
+      "diffuseconstant": "diffuseConstant",
+      "edgemode": "edgeMode",
+      "externalresourcesrequired": "externalResourcesRequired",
+      "filterres": "filterRes",
+      "filterunits": "filterUnits",
+      "glyphref": "glyphRef",
+      "gradienttransform": "gradientTransform",
+      "gradientunits": "gradientUnits",
+      "kernelmatrix": "kernelMatrix",
+      "kernelunitlength": "kernelUnitLength",
+      "keypoints": "keyPoints",
+      "keysplines": "keySplines",
+      "keytimes": "keyTimes",
+      "lengthadjust": "lengthAdjust",
+      "limitingconeangle": "limitingConeAngle",
+      "markerheight": "markerHeight",
+      "markerunits": "markerUnits",
+      "markerwidth": "markerWidth",
+      "maskcontentunits": "maskContentUnits",
+      "maskunits": "maskUnits",
+      "numoctaves": "numOctaves",
+      "pathlength": "pathLength",
+      "patterncontentunits": "patternContentUnits",
+      "patterntransform": "patternTransform",
+      "patternunits": "patternUnits",
+      "pointsatx": "pointsAtX",
+      "pointsaty": "pointsAtY",
+      "pointsatz": "pointsAtZ",
+      "preservealpha": "preserveAlpha",
+      "preserveaspectratio": "preserveAspectRatio",
+      "primitiveunits": "primitiveUnits",
+      "refx": "refX",
+      "refy": "refY",
+      "repeatcount": "repeatCount",
+      "repeatdur": "repeatDur",
+      "requiredextensions": "requiredExtensions",
+      "requiredfeatures": "requiredFeatures",
+      "specularconstant": "specularConstant",
+      "specularexponent": "specularExponent",
+      "spreadmethod": "spreadMethod",
+      "startoffset": "startOffset",
+      "stddeviation": "stdDeviation",
+      "stitchtiles": "stitchTiles",
+      "surfacescale": "surfaceScale",
+      "systemlanguage": "systemLanguage",
+      "tablevalues": "tableValues",
+      "targetx": "targetX",
+      "targety": "targetY",
+      "textlength": "textLength",
+      "viewbox": "viewBox",
+      "viewtarget": "viewTarget",
+      "xchannelselector": "xChannelSelector",
+      "ychannelselector": "yChannelSelector",
+      "zoomandpan": "zoomAndPan"
     };
     for (var originalName in token.data.keys.toList()) {
       var svgName = replacements[originalName];
@@ -465,10 +467,10 @@ class HtmlParser {
     // TODO(jmesserly): I don't like mixing non-string objects with strings in
     // the Node.attributes Map. Is there another solution?
     final replacements = const {
-      "xlink:actuate": const AttributeName("xlink", "actuate",
-            Namespaces.xlink),
-      "xlink:arcrole": const AttributeName("xlink", "arcrole",
-            Namespaces.xlink),
+      "xlink:actuate":
+          const AttributeName("xlink", "actuate", Namespaces.xlink),
+      "xlink:arcrole":
+          const AttributeName("xlink", "arcrole", Namespaces.xlink),
       "xlink:href": const AttributeName("xlink", "href", Namespaces.xlink),
       "xlink:role": const AttributeName("xlink", "role", Namespaces.xlink),
       "xlink:show": const AttributeName("xlink", "show", Namespaces.xlink),
@@ -502,7 +504,10 @@ class HtmlParser {
       // Check for conditions that should only happen in the innerHTML
       // case
       switch (nodeName) {
-        case "select": case "colgroup": case "head": case "html":
+        case "select":
+        case "colgroup":
+        case "head":
+        case "html":
           assert(innerHTMLMode);
           break;
       }
@@ -510,20 +515,48 @@ class HtmlParser {
         continue;
       }
       switch (nodeName) {
-        case "select": phase = _inSelectPhase; return;
-        case "td": phase = _inCellPhase; return;
-        case "th": phase = _inCellPhase; return;
-        case "tr": phase = _inRowPhase; return;
-        case "tbody": phase = _inTableBodyPhase; return;
-        case "thead": phase = _inTableBodyPhase; return;
-        case "tfoot": phase = _inTableBodyPhase; return;
-        case "caption": phase = _inCaptionPhase; return;
-        case "colgroup": phase = _inColumnGroupPhase; return;
-        case "table": phase = _inTablePhase; return;
-        case "head": phase = _inBodyPhase; return;
-        case "body": phase = _inBodyPhase; return;
-        case "frameset": phase = _inFramesetPhase; return;
-        case "html": phase = _beforeHeadPhase; return;
+        case "select":
+          phase = _inSelectPhase;
+          return;
+        case "td":
+          phase = _inCellPhase;
+          return;
+        case "th":
+          phase = _inCellPhase;
+          return;
+        case "tr":
+          phase = _inRowPhase;
+          return;
+        case "tbody":
+          phase = _inTableBodyPhase;
+          return;
+        case "thead":
+          phase = _inTableBodyPhase;
+          return;
+        case "tfoot":
+          phase = _inTableBodyPhase;
+          return;
+        case "caption":
+          phase = _inCaptionPhase;
+          return;
+        case "colgroup":
+          phase = _inColumnGroupPhase;
+          return;
+        case "table":
+          phase = _inTablePhase;
+          return;
+        case "head":
+          phase = _inBodyPhase;
+          return;
+        case "body":
+          phase = _inBodyPhase;
+          return;
+        case "frameset":
+          phase = _inFramesetPhase;
+          return;
+        case "html":
+          phase = _beforeHeadPhase;
+          return;
       }
     }
     phase = _inBodyPhase;
@@ -534,7 +567,7 @@ class HtmlParser {
   void parseRCDataRawtext(Token token, String contentType) {
     assert(contentType == "RAWTEXT" || contentType == "RCDATA");
 
-    var element = tree.insertElement(token);
+    tree.insertElement(token);
 
     if (contentType == "RAWTEXT") {
       tokenizer.state = tokenizer.rawtextState;
@@ -546,7 +579,6 @@ class HtmlParser {
     phase = _textPhase;
   }
 }
-
 
 /// Base class for helper object that implements each phase of processing.
 class Phase {
@@ -565,7 +597,9 @@ class Phase {
 
   final TreeBuilder tree;
 
-  Phase(HtmlParser parser) : parser = parser, tree = parser.tree;
+  Phase(HtmlParser parser)
+      : parser = parser,
+        tree = parser.tree;
 
   bool processEOF() {
     throw new UnimplementedError();
@@ -599,7 +633,7 @@ class Phase {
 
   Token startTagHtml(StartTagToken token) {
     if (parser.firstStartTag == false && token.name == "html") {
-       parser.parseError(token.span, "non-html-root");
+      parser.parseError(token.span, "non-html-root");
     }
     // XXX Need a check here to see if the first start tag token emitted is
     // this token... If it's not, invoke parser.parseError().
@@ -641,7 +675,8 @@ class InitialPhase extends Phase {
     var systemId = token.systemId;
     var correct = token.correct;
 
-    if ((name != "html" || publicId != null ||
+    if ((name != "html" ||
+        publicId != null ||
         systemId != null && systemId != "about:legacy-compat")) {
       parser.parseError(token.span, "unknown-doctype");
     }
@@ -656,80 +691,86 @@ class InitialPhase extends Phase {
       publicId = asciiUpper2Lower(publicId);
     }
 
-    if (!correct || token.name != "html"
-        || startsWithAny(publicId, const [
-          "+//silmaril//dtd html pro v0r11 19970101//",
-          "-//advasoft ltd//dtd html 3.0 aswedit + extensions//",
-          "-//as//dtd html 3.0 aswedit + extensions//",
-          "-//ietf//dtd html 2.0 level 1//",
-          "-//ietf//dtd html 2.0 level 2//",
-          "-//ietf//dtd html 2.0 strict level 1//",
-          "-//ietf//dtd html 2.0 strict level 2//",
-          "-//ietf//dtd html 2.0 strict//",
-          "-//ietf//dtd html 2.0//",
-          "-//ietf//dtd html 2.1e//",
-          "-//ietf//dtd html 3.0//",
-          "-//ietf//dtd html 3.2 final//",
-          "-//ietf//dtd html 3.2//",
-          "-//ietf//dtd html 3//",
-          "-//ietf//dtd html level 0//",
-          "-//ietf//dtd html level 1//",
-          "-//ietf//dtd html level 2//",
-          "-//ietf//dtd html level 3//",
-          "-//ietf//dtd html strict level 0//",
-          "-//ietf//dtd html strict level 1//",
-          "-//ietf//dtd html strict level 2//",
-          "-//ietf//dtd html strict level 3//",
-          "-//ietf//dtd html strict//",
-          "-//ietf//dtd html//",
-          "-//metrius//dtd metrius presentational//",
-          "-//microsoft//dtd internet explorer 2.0 html strict//",
-          "-//microsoft//dtd internet explorer 2.0 html//",
-          "-//microsoft//dtd internet explorer 2.0 tables//",
-          "-//microsoft//dtd internet explorer 3.0 html strict//",
-          "-//microsoft//dtd internet explorer 3.0 html//",
-          "-//microsoft//dtd internet explorer 3.0 tables//",
-          "-//netscape comm. corp.//dtd html//",
-          "-//netscape comm. corp.//dtd strict html//",
-          "-//o'reilly and associates//dtd html 2.0//",
-          "-//o'reilly and associates//dtd html extended 1.0//",
-          "-//o'reilly and associates//dtd html extended relaxed 1.0//",
-          "-//softquad software//dtd hotmetal pro 6.0::19990601::extensions to html 4.0//",
-          "-//softquad//dtd hotmetal pro 4.0::19971010::extensions to html 4.0//",
-          "-//spyglass//dtd html 2.0 extended//",
-          "-//sq//dtd html 2.0 hotmetal + extensions//",
-          "-//sun microsystems corp.//dtd hotjava html//",
-          "-//sun microsystems corp.//dtd hotjava strict html//",
-          "-//w3c//dtd html 3 1995-03-24//",
-          "-//w3c//dtd html 3.2 draft//",
-          "-//w3c//dtd html 3.2 final//",
-          "-//w3c//dtd html 3.2//",
-          "-//w3c//dtd html 3.2s draft//",
-          "-//w3c//dtd html 4.0 frameset//",
-          "-//w3c//dtd html 4.0 transitional//",
-          "-//w3c//dtd html experimental 19960712//",
-          "-//w3c//dtd html experimental 970421//",
-          "-//w3c//dtd w3 html//",
-          "-//w3o//dtd w3 html 3.0//",
-          "-//webtechs//dtd mozilla html 2.0//",
-          "-//webtechs//dtd mozilla html//"])
-        || const ["-//w3o//dtd w3 html strict 3.0//en//",
-           "-/w3c/dtd html 4.0 transitional/en",
-           "html"].contains(publicId)
-        || startsWithAny(publicId, const [
-           "-//w3c//dtd html 4.01 frameset//",
-           "-//w3c//dtd html 4.01 transitional//"]) && systemId == null
-        || systemId != null && systemId.toLowerCase() ==
-           "http://www.ibm.com/data/dtd/v11/ibmxhtml1-transitional.dtd") {
-
+    if (!correct || token.name != "html" || startsWithAny(publicId, const [
+      "+//silmaril//dtd html pro v0r11 19970101//",
+      "-//advasoft ltd//dtd html 3.0 aswedit + extensions//",
+      "-//as//dtd html 3.0 aswedit + extensions//",
+      "-//ietf//dtd html 2.0 level 1//",
+      "-//ietf//dtd html 2.0 level 2//",
+      "-//ietf//dtd html 2.0 strict level 1//",
+      "-//ietf//dtd html 2.0 strict level 2//",
+      "-//ietf//dtd html 2.0 strict//",
+      "-//ietf//dtd html 2.0//",
+      "-//ietf//dtd html 2.1e//",
+      "-//ietf//dtd html 3.0//",
+      "-//ietf//dtd html 3.2 final//",
+      "-//ietf//dtd html 3.2//",
+      "-//ietf//dtd html 3//",
+      "-//ietf//dtd html level 0//",
+      "-//ietf//dtd html level 1//",
+      "-//ietf//dtd html level 2//",
+      "-//ietf//dtd html level 3//",
+      "-//ietf//dtd html strict level 0//",
+      "-//ietf//dtd html strict level 1//",
+      "-//ietf//dtd html strict level 2//",
+      "-//ietf//dtd html strict level 3//",
+      "-//ietf//dtd html strict//",
+      "-//ietf//dtd html//",
+      "-//metrius//dtd metrius presentational//",
+      "-//microsoft//dtd internet explorer 2.0 html strict//",
+      "-//microsoft//dtd internet explorer 2.0 html//",
+      "-//microsoft//dtd internet explorer 2.0 tables//",
+      "-//microsoft//dtd internet explorer 3.0 html strict//",
+      "-//microsoft//dtd internet explorer 3.0 html//",
+      "-//microsoft//dtd internet explorer 3.0 tables//",
+      "-//netscape comm. corp.//dtd html//",
+      "-//netscape comm. corp.//dtd strict html//",
+      "-//o'reilly and associates//dtd html 2.0//",
+      "-//o'reilly and associates//dtd html extended 1.0//",
+      "-//o'reilly and associates//dtd html extended relaxed 1.0//",
+      "-//softquad software//dtd hotmetal pro 6.0::19990601::extensions to html 4.0//",
+      "-//softquad//dtd hotmetal pro 4.0::19971010::extensions to html 4.0//",
+      "-//spyglass//dtd html 2.0 extended//",
+      "-//sq//dtd html 2.0 hotmetal + extensions//",
+      "-//sun microsystems corp.//dtd hotjava html//",
+      "-//sun microsystems corp.//dtd hotjava strict html//",
+      "-//w3c//dtd html 3 1995-03-24//",
+      "-//w3c//dtd html 3.2 draft//",
+      "-//w3c//dtd html 3.2 final//",
+      "-//w3c//dtd html 3.2//",
+      "-//w3c//dtd html 3.2s draft//",
+      "-//w3c//dtd html 4.0 frameset//",
+      "-//w3c//dtd html 4.0 transitional//",
+      "-//w3c//dtd html experimental 19960712//",
+      "-//w3c//dtd html experimental 970421//",
+      "-//w3c//dtd w3 html//",
+      "-//w3o//dtd w3 html 3.0//",
+      "-//webtechs//dtd mozilla html 2.0//",
+      "-//webtechs//dtd mozilla html//"
+    ]) ||
+        const [
+      "-//w3o//dtd w3 html strict 3.0//en//",
+      "-/w3c/dtd html 4.0 transitional/en",
+      "html"
+    ].contains(publicId) ||
+        startsWithAny(publicId, const [
+      "-//w3c//dtd html 4.01 frameset//",
+      "-//w3c//dtd html 4.01 transitional//"
+    ]) &&
+            systemId == null ||
+        systemId != null &&
+            systemId.toLowerCase() ==
+                "http://www.ibm.com/data/dtd/v11/ibmxhtml1-transitional.dtd") {
       parser.compatMode = "quirks";
     } else if (startsWithAny(publicId, const [
-          "-//w3c//dtd xhtml 1.0 frameset//",
-          "-//w3c//dtd xhtml 1.0 transitional//"])
-        || startsWithAny(publicId, const [
-          "-//w3c//dtd html 4.01 frameset//",
-          "-//w3c//dtd html 4.01 transitional//"]) &&
-          systemId != null) {
+      "-//w3c//dtd xhtml 1.0 frameset//",
+      "-//w3c//dtd xhtml 1.0 transitional//"
+    ]) ||
+        startsWithAny(publicId, const [
+      "-//w3c//dtd html 4.01 frameset//",
+      "-//w3c//dtd html 4.01 transitional//"
+    ]) &&
+        systemId != null) {
       parser.compatMode = "limited quirks";
     }
     parser.phase = parser._beforeHtmlPhase;
@@ -748,15 +789,15 @@ class InitialPhase extends Phase {
   }
 
   Token processStartTag(StartTagToken token) {
-    parser.parseError(token.span, "expected-doctype-but-got-start-tag",
-        {"name": token.name});
+    parser.parseError(
+        token.span, "expected-doctype-but-got-start-tag", {"name": token.name});
     anythingElse();
     return token;
   }
 
   Token processEndTag(EndTagToken token) {
-    parser.parseError(token.span, "expected-doctype-but-got-end-tag",
-        {"name": token.name});
+    parser.parseError(
+        token.span, "expected-doctype-but-got-end-tag", {"name": token.name});
     anythingElse();
     return token;
   }
@@ -767,7 +808,6 @@ class InitialPhase extends Phase {
     return true;
   }
 }
-
 
 class BeforeHtmlPhase extends Phase {
   BeforeHtmlPhase(parser) : super(parser);
@@ -808,34 +848,43 @@ class BeforeHtmlPhase extends Phase {
 
   Token processEndTag(EndTagToken token) {
     switch (token.name) {
-      case "head": case "body": case "html": case "br":
+      case "head":
+      case "body":
+      case "html":
+      case "br":
         insertHtmlElement();
         return token;
       default:
-        parser.parseError(token.span, "unexpected-end-tag-before-html",
-            {"name": token.name});
+        parser.parseError(
+            token.span, "unexpected-end-tag-before-html", {"name": token.name});
         return null;
     }
   }
 }
-
 
 class BeforeHeadPhase extends Phase {
   BeforeHeadPhase(parser) : super(parser);
 
   processStartTag(StartTagToken token) {
     switch (token.name) {
-      case 'html': return startTagHtml(token);
-      case 'head': return startTagHead(token);
-      default: return startTagOther(token);
+      case 'html':
+        return startTagHtml(token);
+      case 'head':
+        return startTagHead(token);
+      default:
+        return startTagOther(token);
     }
   }
 
   processEndTag(EndTagToken token) {
     switch (token.name) {
-      case "head": case "body": case "html": case "br":
+      case "head":
+      case "body":
+      case "html":
+      case "br":
         return endTagImplyHead(token);
-      default: return endTagOther(token);
+      default:
+        return endTagOther(token);
     }
   }
 
@@ -874,8 +923,8 @@ class BeforeHeadPhase extends Phase {
   }
 
   void endTagOther(EndTagToken token) {
-    parser.parseError(token.span, "end-tag-after-implied-root",
-        {"name": token.name});
+    parser.parseError(
+        token.span, "end-tag-after-implied-root", {"name": token.name});
   }
 }
 
@@ -884,24 +933,41 @@ class InHeadPhase extends Phase {
 
   processStartTag(StartTagToken token) {
     switch (token.name) {
-      case "html": return startTagHtml(token);
-      case "title": return startTagTitle(token);
-      case "noscript": case "noframes": case "style":
+      case "html":
+        return startTagHtml(token);
+      case "title":
+        return startTagTitle(token);
+      case "noscript":
+      case "noframes":
+      case "style":
         return startTagNoScriptNoFramesStyle(token);
-      case "script": return startTagScript(token);
-      case "base": case "basefont": case "bgsound": case "command": case "link":
+      case "script":
+        return startTagScript(token);
+      case "base":
+      case "basefont":
+      case "bgsound":
+      case "command":
+      case "link":
         return startTagBaseLinkCommand(token);
-      case "meta": return startTagMeta(token);
-      case "head": return startTagHead(token);
-      default: return startTagOther(token);
+      case "meta":
+        return startTagMeta(token);
+      case "head":
+        return startTagHead(token);
+      default:
+        return startTagOther(token);
     }
   }
 
   processEndTag(EndTagToken token) {
     switch (token.name) {
-      case "head": return endTagHead(token);
-      case "br": case "html": case "body": return endTagHtmlBodyBr(token);
-      default: return endTagOther(token);
+      case "head":
+        return endTagHead(token);
+      case "br":
+      case "html":
+      case "body":
+        return endTagHtmlBodyBr(token);
+      default:
+        return endTagOther(token);
     }
   }
 
@@ -990,7 +1056,6 @@ class InHeadPhase extends Phase {
   }
 }
 
-
 // XXX If we implement a parser for which scripting is disabled we need to
 // implement this phase.
 //
@@ -1001,22 +1066,37 @@ class AfterHeadPhase extends Phase {
 
   processStartTag(StartTagToken token) {
     switch (token.name) {
-      case "html": return startTagHtml(token);
-      case "body": return startTagBody(token);
-      case "frameset": return startTagFrameset(token);
-      case "base": case "basefont": case "bgsound": case "link": case "meta":
-      case "noframes": case "script": case "style": case "title":
+      case "html":
+        return startTagHtml(token);
+      case "body":
+        return startTagBody(token);
+      case "frameset":
+        return startTagFrameset(token);
+      case "base":
+      case "basefont":
+      case "bgsound":
+      case "link":
+      case "meta":
+      case "noframes":
+      case "script":
+      case "style":
+      case "title":
         return startTagFromHead(token);
-      case "head": return startTagHead(token);
-      default: return startTagOther(token);
+      case "head":
+        return startTagHead(token);
+      default:
+        return startTagOther(token);
     }
   }
 
   processEndTag(EndTagToken token) {
     switch (token.name) {
-      case "body": case "html": case "br":
+      case "body":
+      case "html":
+      case "br":
         return endTagHtmlBodyBr(token);
-      default: return endTagOther(token);
+      default:
+        return endTagOther(token);
     }
   }
 
@@ -1046,8 +1126,9 @@ class AfterHeadPhase extends Phase {
   }
 
   void startTagFromHead(StartTagToken token) {
-    parser.parseError(token.span, "unexpected-start-tag-out-of-my-head",
-      {"name": token.name});
+    parser.parseError(token.span, "unexpected-start-tag-out-of-my-head", {
+      "name": token.name
+    });
     tree.openElements.add(tree.headPointer);
     parser._inHeadPhase.processStartTag(token);
     for (var node in tree.openElements.reversed) {
@@ -1096,48 +1177,101 @@ class InBodyPhase extends Phase {
     switch (token.name) {
       case "html":
         return startTagHtml(token);
-      case "base": case "basefont": case "bgsound": case "command": case "link":
-      case "meta": case "noframes": case "script": case "style": case "title":
+      case "base":
+      case "basefont":
+      case "bgsound":
+      case "command":
+      case "link":
+      case "meta":
+      case "noframes":
+      case "script":
+      case "style":
+      case "title":
         return startTagProcessInHead(token);
       case "body":
         return startTagBody(token);
       case "frameset":
         return startTagFrameset(token);
-      case "address": case "article": case "aside": case "blockquote":
-      case "center": case "details": case "details": case "dir": case "div":
-      case "dl": case "fieldset": case "figcaption": case "figure":
-      case "footer": case "header": case "hgroup": case "menu": case "nav":
-      case "ol": case "p": case "section": case "summary": case "ul":
+      case "address":
+      case "article":
+      case "aside":
+      case "blockquote":
+      case "center":
+      case "details":
+      case "details":
+      case "dir":
+      case "div":
+      case "dl":
+      case "fieldset":
+      case "figcaption":
+      case "figure":
+      case "footer":
+      case "header":
+      case "hgroup":
+      case "menu":
+      case "nav":
+      case "ol":
+      case "p":
+      case "section":
+      case "summary":
+      case "ul":
         return startTagCloseP(token);
       // headingElements
-      case "h1": case "h2": case "h3": case "h4": case "h5": case "h6":
+      case "h1":
+      case "h2":
+      case "h3":
+      case "h4":
+      case "h5":
+      case "h6":
         return startTagHeading(token);
-      case "pre": case "listing":
+      case "pre":
+      case "listing":
         return startTagPreListing(token);
       case "form":
         return startTagForm(token);
-      case "li": case "dd": case "dt":
+      case "li":
+      case "dd":
+      case "dt":
         return startTagListItem(token);
       case "plaintext":
         return startTagPlaintext(token);
-      case "a": return startTagA(token);
-      case "b": case "big": case "code": case "em": case "font": case "i":
-      case "s": case "small": case "strike": case "strong": case "tt": case "u":
+      case "a":
+        return startTagA(token);
+      case "b":
+      case "big":
+      case "code":
+      case "em":
+      case "font":
+      case "i":
+      case "s":
+      case "small":
+      case "strike":
+      case "strong":
+      case "tt":
+      case "u":
         return startTagFormatting(token);
       case "nobr":
         return startTagNobr(token);
       case "button":
         return startTagButton(token);
-      case "applet": case "marquee": case "object":
+      case "applet":
+      case "marquee":
+      case "object":
         return startTagAppletMarqueeObject(token);
       case "xmp":
         return startTagXmp(token);
       case "table":
         return startTagTable(token);
-      case "area": case "br": case "embed": case "img": case "keygen":
+      case "area":
+      case "br":
+      case "embed":
+      case "img":
+      case "keygen":
       case "wbr":
         return startTagVoidFormatting(token);
-      case "param": case "source": case "track":
+      case "param":
+      case "source":
+      case "track":
         return startTagParamSource(token);
       case "input":
         return startTagInput(token);
@@ -1151,49 +1285,108 @@ class InBodyPhase extends Phase {
         return startTagTextarea(token);
       case "iframe":
         return startTagIFrame(token);
-      case "noembed": case "noframes": case "noscript":
+      case "noembed":
+      case "noframes":
+      case "noscript":
         return startTagRawtext(token);
       case "select":
         return startTagSelect(token);
-      case "rp": case "rt":
+      case "rp":
+      case "rt":
         return startTagRpRt(token);
-      case "option": case "optgroup":
+      case "option":
+      case "optgroup":
         return startTagOpt(token);
       case "math":
         return startTagMath(token);
       case "svg":
         return startTagSvg(token);
-      case "caption": case "col": case "colgroup": case "frame": case "head":
-      case "tbody": case "td": case "tfoot": case "th": case "thead": case "tr":
+      case "caption":
+      case "col":
+      case "colgroup":
+      case "frame":
+      case "head":
+      case "tbody":
+      case "td":
+      case "tfoot":
+      case "th":
+      case "thead":
+      case "tr":
         return startTagMisplaced(token);
-      default: return startTagOther(token);
+      default:
+        return startTagOther(token);
     }
   }
 
   processEndTag(EndTagToken token) {
     switch (token.name) {
-      case "body": return endTagBody(token);
-      case "html": return endTagHtml(token);
-      case "address": case "article": case "aside": case "blockquote":
-      case "center": case "details": case "dir": case "div": case "dl":
-      case "fieldset": case "figcaption": case "figure": case "footer":
-      case "header": case "hgroup": case "listing": case "menu": case "nav":
-      case "ol": case "pre": case "section": case "summary": case "ul":
+      case "body":
+        return endTagBody(token);
+      case "html":
+        return endTagHtml(token);
+      case "address":
+      case "article":
+      case "aside":
+      case "blockquote":
+      case "center":
+      case "details":
+      case "dir":
+      case "div":
+      case "dl":
+      case "fieldset":
+      case "figcaption":
+      case "figure":
+      case "footer":
+      case "header":
+      case "hgroup":
+      case "listing":
+      case "menu":
+      case "nav":
+      case "ol":
+      case "pre":
+      case "section":
+      case "summary":
+      case "ul":
         return endTagBlock(token);
-      case "form": return endTagForm(token);
-      case "p": return endTagP(token);
-      case "dd": case "dt": case "li": return endTagListItem(token);
+      case "form":
+        return endTagForm(token);
+      case "p":
+        return endTagP(token);
+      case "dd":
+      case "dt":
+      case "li":
+        return endTagListItem(token);
       // headingElements
-      case "h1": case "h2": case "h3": case "h4": case "h5": case "h6":
+      case "h1":
+      case "h2":
+      case "h3":
+      case "h4":
+      case "h5":
+      case "h6":
         return endTagHeading(token);
-      case "a": case "b": case "big": case "code": case "em": case "font":
-      case "i": case "nobr": case "s": case "small": case "strike":
-      case "strong": case "tt": case "u":
+      case "a":
+      case "b":
+      case "big":
+      case "code":
+      case "em":
+      case "font":
+      case "i":
+      case "nobr":
+      case "s":
+      case "small":
+      case "strike":
+      case "strong":
+      case "tt":
+      case "u":
         return endTagFormatting(token);
-      case "applet": case "marquee": case "object":
+      case "applet":
+      case "marquee":
+      case "object":
         return endTagAppletMarqueeObject(token);
-      case "br": return endTagBr(token);
-        default: return endTagOther(token);
+      case "br":
+        return endTagBr(token);
+      default:
+        return endTagOther(token);
     }
   }
 
@@ -1238,8 +1431,17 @@ class InBodyPhase extends Phase {
   bool processEOF() {
     for (var node in tree.openElements.reversed) {
       switch (node.localName) {
-        case "dd": case "dt": case "li": case "p": case "tbody": case "td":
-        case "tfoot": case "th": case "thead": case "tr": case "body":
+        case "dd":
+        case "dt":
+        case "li":
+        case "p":
+        case "tbody":
+        case "td":
+        case "tfoot":
+        case "th":
+        case "thead":
+        case "tr":
+        case "body":
         case "html":
           continue;
       }
@@ -1257,8 +1459,8 @@ class InBodyPhase extends Phase {
     dropNewline = false;
     if (data.startsWith("\n")) {
       var lastOpen = tree.openElements.last;
-      if (const ["pre", "listing", "textarea"].contains(lastOpen.localName)
-          && !lastOpen.hasContent()) {
+      if (const ["pre", "listing", "textarea"].contains(lastOpen.localName) &&
+          !lastOpen.hasContent()) {
         data = data.substring(1);
       }
     }
@@ -1297,8 +1499,8 @@ class InBodyPhase extends Phase {
 
   void startTagBody(StartTagToken token) {
     parser.parseError(token.span, "unexpected-start-tag", {"name": "body"});
-    if (tree.openElements.length == 1
-        || tree.openElements[1].localName != "body") {
+    if (tree.openElements.length == 1 ||
+        tree.openElements[1].localName != "body") {
       assert(parser.innerHTMLMode);
     } else {
       parser.framesetOK = false;
@@ -1356,9 +1558,11 @@ class InBodyPhase extends Phase {
   void startTagListItem(StartTagToken token) {
     parser.framesetOK = false;
 
-    final stopNamesMap = const {"li": const ["li"],
-                                "dt": const ["dt", "dd"],
-                                "dd": const ["dt", "dd"]};
+    final stopNamesMap = const {
+      "li": const ["li"],
+      "dt": const ["dt", "dd"],
+      "dd": const ["dt", "dd"]
+    };
     var stopNames = stopNamesMap[token.name];
     for (var node in tree.openElements.reversed) {
       if (stopNames.contains(node.localName)) {
@@ -1391,8 +1595,8 @@ class InBodyPhase extends Phase {
       endTagP(new EndTagToken("p"));
     }
     if (headingElements.contains(tree.openElements.last.localName)) {
-      parser.parseError(token.span, "unexpected-start-tag",
-          {"name": token.name});
+      parser.parseError(
+          token.span, "unexpected-start-tag", {"name": token.name});
       tree.openElements.removeLast();
     }
     tree.insertElement(token);
@@ -1401,8 +1605,10 @@ class InBodyPhase extends Phase {
   void startTagA(StartTagToken token) {
     var afeAElement = tree.elementInActiveFormattingElements("a");
     if (afeAElement != null) {
-      parser.parseError(token.span, "unexpected-start-tag-implies-end-tag",
-          {"startName": "a", "endName": "a"});
+      parser.parseError(token.span, "unexpected-start-tag-implies-end-tag", {
+        "startName": "a",
+        "endName": "a"
+      });
       endTagFormatting(new EndTagToken("a"));
       tree.openElements.remove(afeAElement);
       tree.activeFormattingElements.remove(afeAElement);
@@ -1419,8 +1625,10 @@ class InBodyPhase extends Phase {
   void startTagNobr(StartTagToken token) {
     tree.reconstructActiveFormattingElements();
     if (tree.elementInScope("nobr")) {
-      parser.parseError(token.span, "unexpected-start-tag-implies-end-tag",
-        {"startName": "nobr", "endName": "nobr"});
+      parser.parseError(token.span, "unexpected-start-tag-implies-end-tag", {
+        "startName": "nobr",
+        "endName": "nobr"
+      });
       processEndTag(new EndTagToken("nobr"));
       // XXX Need tests that trigger the following
       tree.reconstructActiveFormattingElements();
@@ -1430,8 +1638,10 @@ class InBodyPhase extends Phase {
 
   Token startTagButton(StartTagToken token) {
     if (tree.elementInScope("button")) {
-      parser.parseError(token.span, "unexpected-start-tag-implies-end-tag",
-        {"startName": "button", "endName": "button"});
+      parser.parseError(token.span, "unexpected-start-tag-implies-end-tag", {
+        "startName": "button",
+        "endName": "button"
+      });
       processEndTag(new EndTagToken("button"));
       return token;
     } else {
@@ -1504,10 +1714,12 @@ class InBodyPhase extends Phase {
 
   void startTagImage(StartTagToken token) {
     // No really...
-    parser.parseError(token.span, "unexpected-start-tag-treated-as",
-        {"originalName": "image", "newName": "img"});
-    processStartTag(new StartTagToken("img", data: token.data,
-        selfClosing: token.selfClosing));
+    parser.parseError(token.span, "unexpected-start-tag-treated-as", {
+      "originalName": "image",
+      "newName": "img"
+    });
+    processStartTag(new StartTagToken("img",
+        data: token.data, selfClosing: token.selfClosing));
   }
 
   void startTagIsIndex(StartTagToken token) {
@@ -1533,8 +1745,8 @@ class InBodyPhase extends Phase {
     attributes.remove('action');
     attributes.remove('prompt');
     attributes["name"] = "isindex";
-    processStartTag(new StartTagToken("input",
-                    data: attributes, selfClosing: token.selfClosing));
+    processStartTag(new StartTagToken(
+        "input", data: attributes, selfClosing: token.selfClosing));
     processEndTag(new EndTagToken("label"));
     processStartTag(new StartTagToken("hr", data: {}));
     processEndTag(new EndTagToken("form"));
@@ -1627,8 +1839,8 @@ class InBodyPhase extends Phase {
   /// "option", "optgroup", "tbody", "td", "tfoot", "th", "thead",
   /// "tr", "noscript"
   void startTagMisplaced(StartTagToken token) {
-    parser.parseError(token.span, "unexpected-start-tag-ignored",
-        {"name": token.name});
+    parser.parseError(
+        token.span, "unexpected-start-tag-ignored", {"name": token.name});
   }
 
   Token startTagOther(StartTagToken token) {
@@ -1658,14 +1870,29 @@ class InBodyPhase extends Phase {
     } else if (tree.openElements.last.localName != "body") {
       for (Element node in slice(tree.openElements, 2)) {
         switch (node.localName) {
-          case "dd": case "dt": case "li": case "optgroup": case "option":
-          case "p": case "rp": case "rt": case "tbody": case "td": case "tfoot":
-          case "th": case "thead": case "tr": case "body": case "html":
+          case "dd":
+          case "dt":
+          case "li":
+          case "optgroup":
+          case "option":
+          case "p":
+          case "rp":
+          case "rt":
+          case "tbody":
+          case "td":
+          case "tfoot":
+          case "th":
+          case "thead":
+          case "tr":
+          case "body":
+          case "html":
             continue;
         }
         // Not sure this is the correct name for the parse error
-        parser.parseError(token.span, "expected-one-end-tag-but-got-another",
-            {"gotName": "body", "expectedName": node.localName});
+        parser.parseError(token.span, "expected-one-end-tag-but-got-another", {
+          "gotName": "body",
+          "expectedName": node.localName
+        });
         break;
       }
     }
@@ -1706,7 +1933,8 @@ class InBodyPhase extends Phase {
     } else {
       tree.generateImpliedEndTags();
       if (tree.openElements.last != node) {
-        parser.parseError(token.span, "end-tag-too-early-ignored", {"name": "form"});
+        parser.parseError(
+            token.span, "end-tag-too-early-ignored", {"name": "form"});
       }
       tree.openElements.remove(node);
     }
@@ -1724,7 +1952,8 @@ class InBodyPhase extends Phase {
     } else {
       tree.generateImpliedEndTags(token.name);
       if (tree.openElements.last.localName != token.name) {
-        parser.parseError(token.span, "end-tag-too-early", {"name": token.name});
+        parser.parseError(
+            token.span, "end-tag-too-early", {"name": token.name});
       }
       popOpenElementsUntil(token.name);
     }
@@ -1764,26 +1993,26 @@ class InBodyPhase extends Phase {
       outerLoopCounter += 1;
 
       // Step 1 paragraph 1
-      var formattingElement = tree.elementInActiveFormattingElements(
-          token.name);
+      var formattingElement =
+          tree.elementInActiveFormattingElements(token.name);
       if (formattingElement == null ||
           (tree.openElements.contains(formattingElement) &&
-           !tree.elementInScope(formattingElement.localName))) {
-        parser.parseError(token.span, "adoption-agency-1.1",
-            {"name": token.name});
+              !tree.elementInScope(formattingElement.localName))) {
+        parser.parseError(
+            token.span, "adoption-agency-1.1", {"name": token.name});
         return;
-      // Step 1 paragraph 2
+        // Step 1 paragraph 2
       } else if (!tree.openElements.contains(formattingElement)) {
-        parser.parseError(token.span, "adoption-agency-1.2",
-            {"name": token.name});
+        parser.parseError(
+            token.span, "adoption-agency-1.2", {"name": token.name});
         tree.activeFormattingElements.remove(formattingElement);
         return;
       }
 
       // Step 1 paragraph 3
       if (formattingElement != tree.openElements.last) {
-        parser.parseError(token.span, "adoption-agency-1.3",
-            {"name": token.name});
+        parser.parseError(
+            token.span, "adoption-agency-1.3", {"name": token.name});
       }
 
       // Step 2
@@ -1867,8 +2096,13 @@ class InBodyPhase extends Phase {
         lastNode.parentNode.nodes.remove(lastNode);
       }
 
-      if (const ["table", "tbody", "tfoot", "thead", "tr"].contains(
-          commonAncestor.localName)) {
+      if (const [
+        "table",
+        "tbody",
+        "tfoot",
+        "thead",
+        "tr"
+      ].contains(commonAncestor.localName)) {
         var nodePos = tree.getTableMisnestedNodePosition();
         nodePos[0].insertBefore(lastNode, nodePos[1]);
       } else {
@@ -1910,8 +2144,10 @@ class InBodyPhase extends Phase {
   }
 
   void endTagBr(EndTagToken token) {
-    parser.parseError(token.span, "unexpected-end-tag-treated-as",
-        {"originalName": "br", "newName": "br element"});
+    parser.parseError(token.span, "unexpected-end-tag-treated-as", {
+      "originalName": "br",
+      "newName": "br element"
+    });
     tree.reconstructActiveFormattingElements();
     tree.insertElement(new StartTagToken("br", data: {}));
     tree.openElements.removeLast();
@@ -1922,15 +2158,15 @@ class InBodyPhase extends Phase {
       if (node.localName == token.name) {
         tree.generateImpliedEndTags(token.name);
         if (tree.openElements.last.localName != token.name) {
-          parser.parseError(token.span, "unexpected-end-tag",
-              {"name": token.name});
+          parser.parseError(
+              token.span, "unexpected-end-tag", {"name": token.name});
         }
         while (tree.openElements.removeLast() != node);
         break;
       } else {
         if (specialElements.contains(getElementNameTuple(node))) {
-          parser.parseError(token.span, "unexpected-end-tag",
-              {"name": token.name});
+          parser.parseError(
+              token.span, "unexpected-end-tag", {"name": token.name});
           break;
         }
       }
@@ -1938,12 +2174,13 @@ class InBodyPhase extends Phase {
   }
 }
 
-
 class TextPhase extends Phase {
   TextPhase(parser) : super(parser);
 
   // "Tried to process start tag %s in RCDATA/RAWTEXT mode"%token.name
-  processStartTag(StartTagToken token) { assert(false); }
+  processStartTag(StartTagToken token) {
+    assert(false);
+  }
 
   processEndTag(EndTagToken token) {
     if (token.name == 'script') return endTagScript(token);
@@ -1973,7 +2210,7 @@ class TextPhase extends Phase {
   }
 
   void endTagOther(EndTagToken token) {
-    var node = tree.openElements.removeLast();
+    tree.openElements.removeLast();
     parser.phase = parser.originalPhase;
   }
 }
@@ -1984,27 +2221,54 @@ class InTablePhase extends Phase {
 
   processStartTag(StartTagToken token) {
     switch (token.name) {
-      case "html": return startTagHtml(token);
-      case "caption": return startTagCaption(token);
-      case "colgroup": return startTagColgroup(token);
-      case "col": return startTagCol(token);
-      case "tbody": case "tfoot": case "thead": return startTagRowGroup(token);
-      case "td": case "th": case "tr": return startTagImplyTbody(token);
-      case "table": return startTagTable(token);
-      case "style": case "script": return startTagStyleScript(token);
-      case "input": return startTagInput(token);
-      case "form": return startTagForm(token);
-      default: return startTagOther(token);
+      case "html":
+        return startTagHtml(token);
+      case "caption":
+        return startTagCaption(token);
+      case "colgroup":
+        return startTagColgroup(token);
+      case "col":
+        return startTagCol(token);
+      case "tbody":
+      case "tfoot":
+      case "thead":
+        return startTagRowGroup(token);
+      case "td":
+      case "th":
+      case "tr":
+        return startTagImplyTbody(token);
+      case "table":
+        return startTagTable(token);
+      case "style":
+      case "script":
+        return startTagStyleScript(token);
+      case "input":
+        return startTagInput(token);
+      case "form":
+        return startTagForm(token);
+      default:
+        return startTagOther(token);
     }
   }
 
   processEndTag(EndTagToken token) {
     switch (token.name) {
-      case "table": return endTagTable(token);
-      case "body": case "caption": case "col": case "colgroup": case "html":
-      case "tbody": case "td": case "tfoot": case "th": case "thead": case "tr":
+      case "table":
+        return endTagTable(token);
+      case "body":
+      case "caption":
+      case "col":
+      case "colgroup":
+      case "html":
+      case "tbody":
+      case "td":
+      case "tfoot":
+      case "th":
+      case "thead":
+      case "tr":
         return endTagIgnore(token);
-      default: return endTagOther(token);
+      default:
+        return endTagOther(token);
     }
   }
 
@@ -2012,7 +2276,7 @@ class InTablePhase extends Phase {
   void clearStackToTableContext() {
     // "clear the stack back to a table context"
     while (tree.openElements.last.localName != "table" &&
-           tree.openElements.last.localName != "html") {
+        tree.openElements.last.localName != "html") {
       //parser.parseError(token.span, "unexpected-implied-end-tag-in-table",
       //  {"name":  tree.openElements.last.name})
       tree.openElements.removeLast();
@@ -2086,8 +2350,10 @@ class InTablePhase extends Phase {
   }
 
   Token startTagTable(StartTagToken token) {
-    parser.parseError(token.span, "unexpected-start-tag-implies-end-tag",
-        {"startName": "table", "endName": "table"});
+    parser.parseError(token.span, "unexpected-start-tag-implies-end-tag", {
+      "startName": "table",
+      "endName": "table"
+    });
     parser.phase.processEndTag(new EndTagToken("table"));
     if (!parser.innerHTMLMode) {
       return token;
@@ -2120,8 +2386,9 @@ class InTablePhase extends Phase {
   }
 
   void startTagOther(StartTagToken token) {
-    parser.parseError(token.span, "unexpected-start-tag-implies-table-voodoo",
-        {"name": token.name});
+    parser.parseError(token.span, "unexpected-start-tag-implies-table-voodoo", {
+      "name": token.name
+    });
     // Do the table magic!
     tree.insertFromTable = true;
     parser._inBodyPhase.processStartTag(token);
@@ -2133,8 +2400,10 @@ class InTablePhase extends Phase {
       tree.generateImpliedEndTags();
       var last = tree.openElements.last;
       if (last.localName != "table") {
-        parser.parseError(token.span, "end-tag-too-early-named",
-            {"gotName": "table", "expectedName": last.localName});
+        parser.parseError(token.span, "end-tag-too-early-named", {
+          "gotName": "table",
+          "expectedName": last.localName
+        });
       }
       while (tree.openElements.last.localName != "table") {
         tree.openElements.removeLast();
@@ -2153,8 +2422,9 @@ class InTablePhase extends Phase {
   }
 
   void endTagOther(EndTagToken token) {
-    parser.parseError(token.span, "unexpected-end-tag-implies-table-voodoo",
-        {"name": token.name});
+    parser.parseError(token.span, "unexpected-end-tag-implies-table-voodoo", {
+      "name": token.name
+    });
     // Do the table magic!
     tree.insertFromTable = true;
     parser._inBodyPhase.processEndTag(token);
@@ -2229,29 +2499,48 @@ class InTableTextPhase extends Phase {
   }
 }
 
-
 class InCaptionPhase extends Phase {
   // http://www.whatwg.org/specs/web-apps/current-work///in-caption
   InCaptionPhase(parser) : super(parser);
 
   processStartTag(StartTagToken token) {
     switch (token.name) {
-      case "html": return startTagHtml(token);
-      case "caption": case "col": case "colgroup": case "tbody": case "td":
-      case "tfoot": case "th": case "thead": case "tr":
+      case "html":
+        return startTagHtml(token);
+      case "caption":
+      case "col":
+      case "colgroup":
+      case "tbody":
+      case "td":
+      case "tfoot":
+      case "th":
+      case "thead":
+      case "tr":
         return startTagTableElement(token);
-      default: return startTagOther(token);
+      default:
+        return startTagOther(token);
     }
   }
 
   processEndTag(EndTagToken token) {
     switch (token.name) {
-      case "caption": return endTagCaption(token);
-      case "table": return endTagTable(token);
-      case "body": case "col": case "colgroup": case "html": case "tbody":
-      case "td": case "tfoot": case "th": case "thead": case "tr":
+      case "caption":
+        return endTagCaption(token);
+      case "table":
+        return endTagTable(token);
+      case "body":
+      case "col":
+      case "colgroup":
+      case "html":
+      case "tbody":
+      case "td":
+      case "tfoot":
+      case "th":
+      case "thead":
+      case "tr":
         return endTagIgnore(token);
-      default: return endTagOther(token);
+      default:
+        return endTagOther(token);
     }
   }
 
@@ -2288,9 +2577,10 @@ class InCaptionPhase extends Phase {
       // AT this code is quite similar to endTagTable in "InTable"
       tree.generateImpliedEndTags();
       if (tree.openElements.last.localName != "caption") {
-        parser.parseError(token.span, "expected-one-end-tag-but-got-another",
-          {"gotName": "caption",
-           "expectedName": tree.openElements.last.localName});
+        parser.parseError(token.span, "expected-one-end-tag-but-got-another", {
+          "gotName": "caption",
+          "expectedName": tree.openElements.last.localName
+        });
       }
       while (tree.openElements.last.localName != "caption") {
         tree.openElements.removeLast();
@@ -2324,24 +2614,29 @@ class InCaptionPhase extends Phase {
   }
 }
 
-
 class InColumnGroupPhase extends Phase {
   // http://www.whatwg.org/specs/web-apps/current-work///in-column
   InColumnGroupPhase(parser) : super(parser);
 
   processStartTag(StartTagToken token) {
     switch (token.name) {
-      case "html": return startTagHtml(token);
-      case "col": return startTagCol(token);
-      default: return startTagOther(token);
+      case "html":
+        return startTagHtml(token);
+      case "col":
+        return startTagCol(token);
+      default:
+        return startTagOther(token);
     }
   }
 
   processEndTag(EndTagToken token) {
     switch (token.name) {
-      case "colgroup": return endTagColgroup(token);
-      case "col": return endTagCol(token);
-      default: return endTagOther(token);
+      case "colgroup":
+        return endTagColgroup(token);
+      case "col":
+        return endTagCol(token);
+      default:
+        return endTagOther(token);
     }
   }
 
@@ -2399,32 +2694,50 @@ class InColumnGroupPhase extends Phase {
   }
 }
 
-
 class InTableBodyPhase extends Phase {
   // http://www.whatwg.org/specs/web-apps/current-work///in-table0
   InTableBodyPhase(parser) : super(parser);
 
   processStartTag(StartTagToken token) {
     switch (token.name) {
-      case "html": return startTagHtml(token);
-      case "tr": return startTagTr(token);
-      case "td": case "th": return startTagTableCell(token);
-      case "caption": case "col": case "colgroup": case "tbody": case "tfoot":
+      case "html":
+        return startTagHtml(token);
+      case "tr":
+        return startTagTr(token);
+      case "td":
+      case "th":
+        return startTagTableCell(token);
+      case "caption":
+      case "col":
+      case "colgroup":
+      case "tbody":
+      case "tfoot":
       case "thead":
         return startTagTableOther(token);
-      default: return startTagOther(token);
+      default:
+        return startTagOther(token);
     }
   }
 
   processEndTag(EndTagToken token) {
     switch (token.name) {
-      case "tbody": case "tfoot": case "thead":
+      case "tbody":
+      case "tfoot":
+      case "thead":
         return endTagTableRowGroup(token);
-      case "table": return endTagTable(token);
-      case "body": case "caption": case "col": case "colgroup": case "html":
-      case "td": case "th": case "tr":
+      case "table":
+        return endTagTable(token);
+      case "body":
+      case "caption":
+      case "col":
+      case "colgroup":
+      case "html":
+      case "td":
+      case "th":
+      case "tr":
         return endTagIgnore(token);
-      default: return endTagOther(token);
+      default:
+        return endTagOther(token);
     }
   }
 
@@ -2462,8 +2775,8 @@ class InTableBodyPhase extends Phase {
   }
 
   Token startTagTableCell(StartTagToken token) {
-    parser.parseError(token.span, "unexpected-cell-in-table-body",
-        {"name": token.name});
+    parser.parseError(
+        token.span, "unexpected-cell-in-table-body", {"name": token.name});
     startTagTr(new StartTagToken("tr", data: {}));
     return token;
   }
@@ -2480,8 +2793,8 @@ class InTableBodyPhase extends Phase {
       tree.openElements.removeLast();
       parser.phase = parser._inTablePhase;
     } else {
-      parser.parseError(token.span, "unexpected-end-tag-in-table-body",
-          {"name": token.name});
+      parser.parseError(
+          token.span, "unexpected-end-tag-in-table-body", {"name": token.name});
     }
   }
 
@@ -2502,8 +2815,8 @@ class InTableBodyPhase extends Phase {
   }
 
   void endTagIgnore(EndTagToken token) {
-    parser.parseError(token.span, "unexpected-end-tag-in-table-body",
-        {"name": token.name});
+    parser.parseError(
+        token.span, "unexpected-end-tag-in-table-body", {"name": token.name});
   }
 
   Token endTagOther(EndTagToken token) {
@@ -2511,32 +2824,50 @@ class InTableBodyPhase extends Phase {
   }
 }
 
-
 class InRowPhase extends Phase {
   // http://www.whatwg.org/specs/web-apps/current-work///in-row
   InRowPhase(parser) : super(parser);
 
   processStartTag(StartTagToken token) {
     switch (token.name) {
-      case "html": return startTagHtml(token);
-      case "td": case "th": return startTagTableCell(token);
-      case "caption": case "col": case "colgroup": case "tbody": case "tfoot":
-      case "thead": case "tr":
+      case "html":
+        return startTagHtml(token);
+      case "td":
+      case "th":
+        return startTagTableCell(token);
+      case "caption":
+      case "col":
+      case "colgroup":
+      case "tbody":
+      case "tfoot":
+      case "thead":
+      case "tr":
         return startTagTableOther(token);
-      default: return startTagOther(token);
+      default:
+        return startTagOther(token);
     }
   }
 
   processEndTag(EndTagToken token) {
     switch (token.name) {
-      case "tr": return endTagTr(token);
-      case "table": return endTagTable(token);
-      case "tbody": case "tfoot": case "thead":
+      case "tr":
+        return endTagTr(token);
+      case "table":
+        return endTagTable(token);
+      case "tbody":
+      case "tfoot":
+      case "thead":
         return endTagTableRowGroup(token);
-      case "body": case "caption": case "col": case "colgroup": case "html":
-      case "td": case "th":
+      case "body":
+      case "caption":
+      case "col":
+      case "colgroup":
+      case "html":
+      case "td":
+      case "th":
         return endTagIgnore(token);
-      default: return endTagOther(token);
+      default:
+        return endTagOther(token);
     }
   }
 
@@ -2547,8 +2878,9 @@ class InRowPhase extends Phase {
       if (last.localName == "tr" || last.localName == "html") break;
 
       parser.parseError(last.sourceSpan,
-          "unexpected-implied-end-tag-in-table-row",
-          {"name": tree.openElements.last.localName});
+          "unexpected-implied-end-tag-in-table-row", {
+        "name": tree.openElements.last.localName
+      });
       tree.openElements.removeLast();
     }
   }
@@ -2620,8 +2952,8 @@ class InRowPhase extends Phase {
   }
 
   void endTagIgnore(EndTagToken token) {
-    parser.parseError(token.span, "unexpected-end-tag-in-table-row",
-        {"name": token.name});
+    parser.parseError(
+        token.span, "unexpected-end-tag-in-table-row", {"name": token.name});
   }
 
   Token endTagOther(EndTagToken token) {
@@ -2635,23 +2967,42 @@ class InCellPhase extends Phase {
 
   processStartTag(StartTagToken token) {
     switch (token.name) {
-      case "html": return startTagHtml(token);
-      case "caption": case "col": case "colgroup": case "tbody": case "td":
-      case "tfoot": case "th": case "thead": case "tr":
+      case "html":
+        return startTagHtml(token);
+      case "caption":
+      case "col":
+      case "colgroup":
+      case "tbody":
+      case "td":
+      case "tfoot":
+      case "th":
+      case "thead":
+      case "tr":
         return startTagTableOther(token);
-      default: return startTagOther(token);
+      default:
+        return startTagOther(token);
     }
   }
 
   processEndTag(EndTagToken token) {
     switch (token.name) {
-      case "td": case "th":
+      case "td":
+      case "th":
         return endTagTableCell(token);
-      case "body": case "caption": case "col": case "colgroup": case "html":
+      case "body":
+      case "caption":
+      case "col":
+      case "colgroup":
+      case "html":
         return endTagIgnore(token);
-      case "table": case "tbody": case "tfoot": case "thead": case "tr":
+      case "table":
+      case "tbody":
+      case "tfoot":
+      case "thead":
+      case "tr":
         return endTagImply(token);
-      default: return endTagOther(token);
+      default:
+        return endTagOther(token);
     }
   }
 
@@ -2676,7 +3027,7 @@ class InCellPhase extends Phase {
 
   Token startTagTableOther(StartTagToken token) {
     if (tree.elementInScope("td", variant: "table") ||
-      tree.elementInScope("th", variant: "table")) {
+        tree.elementInScope("th", variant: "table")) {
       closeCell();
       return token;
     } else {
@@ -2695,8 +3046,8 @@ class InCellPhase extends Phase {
     if (tree.elementInScope(token.name, variant: "table")) {
       tree.generateImpliedEndTags(token.name);
       if (tree.openElements.last.localName != token.name) {
-        parser.parseError(token.span, "unexpected-cell-end-tag",
-            {"name": token.name});
+        parser.parseError(
+            token.span, "unexpected-cell-end-tag", {"name": token.name});
         popOpenElementsUntil(token.name);
       } else {
         tree.openElements.removeLast();
@@ -2733,23 +3084,35 @@ class InSelectPhase extends Phase {
 
   processStartTag(StartTagToken token) {
     switch (token.name) {
-      case "html": return startTagHtml(token);
-      case "option": return startTagOption(token);
-      case "optgroup": return startTagOptgroup(token);
-      case "select": return startTagSelect(token);
-      case "input": case "keygen": case "textarea":
+      case "html":
+        return startTagHtml(token);
+      case "option":
+        return startTagOption(token);
+      case "optgroup":
+        return startTagOptgroup(token);
+      case "select":
+        return startTagSelect(token);
+      case "input":
+      case "keygen":
+      case "textarea":
         return startTagInput(token);
-      case "script": return startTagScript(token);
-      default: return startTagOther(token);
+      case "script":
+        return startTagScript(token);
+      default:
+        return startTagOther(token);
     }
   }
 
   processEndTag(EndTagToken token) {
     switch (token.name) {
-      case "option": return endTagOption(token);
-      case "optgroup": return endTagOptgroup(token);
-      case "select": return endTagSelect(token);
-      default: return endTagOther(token);
+      case "option":
+        return endTagOption(token);
+      case "optgroup":
+        return endTagOptgroup(token);
+      case "select":
+        return endTagSelect(token);
+      default:
+        return endTagOther(token);
     }
   }
 
@@ -2811,8 +3174,8 @@ class InSelectPhase extends Phase {
   }
 
   Token startTagOther(StartTagToken token) {
-    parser.parseError(token.span, "unexpected-start-tag-in-select",
-        {"name": token.name});
+    parser.parseError(
+        token.span, "unexpected-start-tag-in-select", {"name": token.name});
     return null;
   }
 
@@ -2820,24 +3183,25 @@ class InSelectPhase extends Phase {
     if (tree.openElements.last.localName == "option") {
       tree.openElements.removeLast();
     } else {
-      parser.parseError(token.span, "unexpected-end-tag-in-select",
-          {"name": "option"});
+      parser.parseError(
+          token.span, "unexpected-end-tag-in-select", {"name": "option"});
     }
   }
 
   void endTagOptgroup(EndTagToken token) {
     // </optgroup> implicitly closes <option>
     if (tree.openElements.last.localName == "option" &&
-      tree.openElements[tree.openElements.length - 2].localName == "optgroup") {
+        tree.openElements[tree.openElements.length - 2].localName ==
+            "optgroup") {
       tree.openElements.removeLast();
     }
     // It also closes </optgroup>
     if (tree.openElements.last.localName == "optgroup") {
       tree.openElements.removeLast();
-    // But nothing else
+      // But nothing else
     } else {
-      parser.parseError(token.span, "unexpected-end-tag-in-select",
-        {"name": "optgroup"});
+      parser.parseError(
+          token.span, "unexpected-end-tag-in-select", {"name": "optgroup"});
     }
   }
 
@@ -2853,30 +3217,43 @@ class InSelectPhase extends Phase {
   }
 
   void endTagOther(EndTagToken token) {
-    parser.parseError(token.span, "unexpected-end-tag-in-select",
-        {"name": token.name});
+    parser.parseError(
+        token.span, "unexpected-end-tag-in-select", {"name": token.name});
   }
 }
-
 
 class InSelectInTablePhase extends Phase {
   InSelectInTablePhase(parser) : super(parser);
 
   processStartTag(StartTagToken token) {
     switch (token.name) {
-      case "caption": case "table": case "tbody": case "tfoot": case "thead":
-      case "tr": case "td": case "th":
+      case "caption":
+      case "table":
+      case "tbody":
+      case "tfoot":
+      case "thead":
+      case "tr":
+      case "td":
+      case "th":
         return startTagTable(token);
-      default: return startTagOther(token);
+      default:
+        return startTagOther(token);
     }
   }
 
   processEndTag(EndTagToken token) {
     switch (token.name) {
-      case "caption": case "table": case "tbody": case "tfoot": case "thead":
-      case "tr": case "td": case "th":
+      case "caption":
+      case "table":
+      case "tbody":
+      case "tfoot":
+      case "thead":
+      case "tr":
+      case "td":
+      case "th":
         return endTagTable(token);
-      default: return endTagOther(token);
+      default:
+        return endTagOther(token);
     }
   }
 
@@ -2891,8 +3268,9 @@ class InSelectInTablePhase extends Phase {
 
   Token startTagTable(StartTagToken token) {
     parser.parseError(token.span,
-        "unexpected-table-element-start-tag-in-select-in-table",
-        {"name": token.name});
+        "unexpected-table-element-start-tag-in-select-in-table", {
+      "name": token.name
+    });
     endTagOther(new EndTagToken("select"));
     return token;
   }
@@ -2903,8 +3281,9 @@ class InSelectInTablePhase extends Phase {
 
   Token endTagTable(EndTagToken token) {
     parser.parseError(token.span,
-        "unexpected-table-element-end-tag-in-select-in-table",
-        {"name": token.name});
+        "unexpected-table-element-end-tag-in-select-in-table", {
+      "name": token.name
+    });
     if (tree.elementInScope(token.name, variant: "table")) {
       endTagOther(new EndTagToken("select"));
       return token;
@@ -2917,57 +3296,95 @@ class InSelectInTablePhase extends Phase {
   }
 }
 
-
 class InForeignContentPhase extends Phase {
   // TODO(jmesserly): this is sorted so we could binary search.
   static const breakoutElements = const [
-    'b', 'big', 'blockquote', 'body', 'br','center', 'code', 'dd', 'div', 'dl',
-    'dt', 'em', 'embed', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'head', 'hr', 'i',
-    'img', 'li', 'listing', 'menu', 'meta', 'nobr', 'ol', 'p', 'pre', 'ruby',
-    's', 'small', 'span', 'strike', 'strong', 'sub', 'sup', 'table', 'tt', 'u',
-    'ul', 'var'
+    'b',
+    'big',
+    'blockquote',
+    'body',
+    'br',
+    'center',
+    'code',
+    'dd',
+    'div',
+    'dl',
+    'dt',
+    'em',
+    'embed',
+    'h1',
+    'h2',
+    'h3',
+    'h4',
+    'h5',
+    'h6',
+    'head',
+    'hr',
+    'i',
+    'img',
+    'li',
+    'listing',
+    'menu',
+    'meta',
+    'nobr',
+    'ol',
+    'p',
+    'pre',
+    'ruby',
+    's',
+    'small',
+    'span',
+    'strike',
+    'strong',
+    'sub',
+    'sup',
+    'table',
+    'tt',
+    'u',
+    'ul',
+    'var'
   ];
 
   InForeignContentPhase(parser) : super(parser);
 
   void adjustSVGTagNames(token) {
     final replacements = const {
-      "altglyph":"altGlyph",
-      "altglyphdef":"altGlyphDef",
-      "altglyphitem":"altGlyphItem",
-      "animatecolor":"animateColor",
-      "animatemotion":"animateMotion",
-      "animatetransform":"animateTransform",
-      "clippath":"clipPath",
-      "feblend":"feBlend",
-      "fecolormatrix":"feColorMatrix",
-      "fecomponenttransfer":"feComponentTransfer",
-      "fecomposite":"feComposite",
-      "feconvolvematrix":"feConvolveMatrix",
-      "fediffuselighting":"feDiffuseLighting",
-      "fedisplacementmap":"feDisplacementMap",
-      "fedistantlight":"feDistantLight",
-      "feflood":"feFlood",
-      "fefunca":"feFuncA",
-      "fefuncb":"feFuncB",
-      "fefuncg":"feFuncG",
-      "fefuncr":"feFuncR",
-      "fegaussianblur":"feGaussianBlur",
-      "feimage":"feImage",
-      "femerge":"feMerge",
-      "femergenode":"feMergeNode",
-      "femorphology":"feMorphology",
-      "feoffset":"feOffset",
-      "fepointlight":"fePointLight",
-      "fespecularlighting":"feSpecularLighting",
-      "fespotlight":"feSpotLight",
-      "fetile":"feTile",
-      "feturbulence":"feTurbulence",
-      "foreignobject":"foreignObject",
-      "glyphref":"glyphRef",
-      "lineargradient":"linearGradient",
-      "radialgradient":"radialGradient",
-      "textpath":"textPath"
+      "altglyph": "altGlyph",
+      "altglyphdef": "altGlyphDef",
+      "altglyphitem": "altGlyphItem",
+      "animatecolor": "animateColor",
+      "animatemotion": "animateMotion",
+      "animatetransform": "animateTransform",
+      "clippath": "clipPath",
+      "feblend": "feBlend",
+      "fecolormatrix": "feColorMatrix",
+      "fecomponenttransfer": "feComponentTransfer",
+      "fecomposite": "feComposite",
+      "feconvolvematrix": "feConvolveMatrix",
+      "fediffuselighting": "feDiffuseLighting",
+      "fedisplacementmap": "feDisplacementMap",
+      "fedistantlight": "feDistantLight",
+      "feflood": "feFlood",
+      "fefunca": "feFuncA",
+      "fefuncb": "feFuncB",
+      "fefuncg": "feFuncG",
+      "fefuncr": "feFuncR",
+      "fegaussianblur": "feGaussianBlur",
+      "feimage": "feImage",
+      "femerge": "feMerge",
+      "femergenode": "feMergeNode",
+      "femorphology": "feMorphology",
+      "feoffset": "feOffset",
+      "fepointlight": "fePointLight",
+      "fespecularlighting": "feSpecularLighting",
+      "fespotlight": "feSpotLight",
+      "fetile": "feTile",
+      "feturbulence": "feTurbulence",
+      "foreignobject": "foreignObject",
+      "glyphref": "glyphRef",
+      "lineargradient": "linearGradient",
+      "radialgradient": "radialGradient",
+      "textpath": "textPath"
     };
 
     var replace = replacements[token.name];
@@ -2989,20 +3406,17 @@ class InForeignContentPhase extends Phase {
     var currentNode = tree.openElements.last;
     if (breakoutElements.contains(token.name) ||
         (token.name == "font" &&
-         (token.data.containsKey("color") ||
-          token.data.containsKey("face") ||
-          token.data.containsKey("size")))) {
-
+            (token.data.containsKey("color") ||
+                token.data.containsKey("face") ||
+                token.data.containsKey("size")))) {
       parser.parseError(token.span,
           "unexpected-html-element-in-foreign-content", {'name': token.name});
-      while (tree.openElements.last.namespaceUri !=
-           tree.defaultNamespace &&
-           !parser.isHTMLIntegrationPoint(tree.openElements.last) &&
-           !parser.isMathMLTextIntegrationPoint(tree.openElements.last)) {
+      while (tree.openElements.last.namespaceUri != tree.defaultNamespace &&
+          !parser.isHTMLIntegrationPoint(tree.openElements.last) &&
+          !parser.isMathMLTextIntegrationPoint(tree.openElements.last)) {
         tree.openElements.removeLast();
       }
       return token;
-
     } else {
       if (currentNode.namespaceUri == Namespaces.mathml) {
         parser.adjustMathMLAttributes(token);
@@ -3057,7 +3471,6 @@ class InForeignContentPhase extends Phase {
   }
 }
 
-
 class AfterBodyPhase extends Phase {
   AfterBodyPhase(parser) : super(parser);
 
@@ -3092,8 +3505,8 @@ class AfterBodyPhase extends Phase {
   }
 
   Token startTagOther(StartTagToken token) {
-    parser.parseError(token.span, "unexpected-start-tag-after-body",
-        {"name": token.name});
+    parser.parseError(
+        token.span, "unexpected-start-tag-after-body", {"name": token.name});
     parser.phase = parser._inBodyPhase;
     return token;
   }
@@ -3107,8 +3520,8 @@ class AfterBodyPhase extends Phase {
   }
 
   Token endTagOther(EndTagToken token) {
-    parser.parseError(token.span, "unexpected-end-tag-after-body",
-        {"name": token.name});
+    parser.parseError(
+        token.span, "unexpected-end-tag-after-body", {"name": token.name});
     parser.phase = parser._inBodyPhase;
     return token;
   }
@@ -3120,18 +3533,25 @@ class InFramesetPhase extends Phase {
 
   processStartTag(StartTagToken token) {
     switch (token.name) {
-      case "html": return startTagHtml(token);
-      case "frameset": return startTagFrameset(token);
-      case "frame": return startTagFrame(token);
-      case "noframes": return startTagNoframes(token);
-      default: return startTagOther(token);
+      case "html":
+        return startTagHtml(token);
+      case "frameset":
+        return startTagFrameset(token);
+      case "frame":
+        return startTagFrame(token);
+      case "noframes":
+        return startTagNoframes(token);
+      default:
+        return startTagOther(token);
     }
   }
 
   processEndTag(EndTagToken token) {
     switch (token.name) {
-      case "frameset": return endTagFrameset(token);
-      default: return endTagOther(token);
+      case "frameset":
+        return endTagFrameset(token);
+      default:
+        return endTagOther(token);
     }
   }
 
@@ -3164,16 +3584,16 @@ class InFramesetPhase extends Phase {
   }
 
   Token startTagOther(StartTagToken token) {
-    parser.parseError(token.span, "unexpected-start-tag-in-frameset",
-        {"name": token.name});
+    parser.parseError(
+        token.span, "unexpected-start-tag-in-frameset", {"name": token.name});
     return null;
   }
 
   void endTagFrameset(EndTagToken token) {
     if (tree.openElements.last.localName == "html") {
       // innerHTML case
-      parser.parseError(token.span,
-          "unexpected-frameset-in-frameset-innerhtml");
+      parser.parseError(
+          token.span, "unexpected-frameset-in-frameset-innerhtml");
     } else {
       tree.openElements.removeLast();
     }
@@ -3186,11 +3606,10 @@ class InFramesetPhase extends Phase {
   }
 
   void endTagOther(EndTagToken token) {
-    parser.parseError(token.span, "unexpected-end-tag-in-frameset",
-        {"name": token.name});
+    parser.parseError(
+        token.span, "unexpected-end-tag-in-frameset", {"name": token.name});
   }
 }
-
 
 class AfterFramesetPhase extends Phase {
   // http://www.whatwg.org/specs/web-apps/current-work///after3
@@ -3198,16 +3617,21 @@ class AfterFramesetPhase extends Phase {
 
   processStartTag(StartTagToken token) {
     switch (token.name) {
-      case "html": return startTagHtml(token);
-      case "noframes": return startTagNoframes(token);
-      default: return startTagOther(token);
+      case "html":
+        return startTagHtml(token);
+      case "noframes":
+        return startTagNoframes(token);
+      default:
+        return startTagOther(token);
     }
   }
 
   processEndTag(EndTagToken token) {
     switch (token.name) {
-      case "html": return endTagHtml(token);
-      default: return endTagOther(token);
+      case "html":
+        return endTagHtml(token);
+      default:
+        return endTagOther(token);
     }
   }
 
@@ -3224,8 +3648,9 @@ class AfterFramesetPhase extends Phase {
   }
 
   void startTagOther(StartTagToken token) {
-    parser.parseError(token.span, "unexpected-start-tag-after-frameset",
-        {"name": token.name});
+    parser.parseError(token.span, "unexpected-start-tag-after-frameset", {
+      "name": token.name
+    });
   }
 
   void endTagHtml(EndTagToken token) {
@@ -3233,11 +3658,10 @@ class AfterFramesetPhase extends Phase {
   }
 
   void endTagOther(EndTagToken token) {
-    parser.parseError(token.span, "unexpected-end-tag-after-frameset",
-        {"name": token.name});
+    parser.parseError(
+        token.span, "unexpected-end-tag-after-frameset", {"name": token.name});
   }
 }
-
 
 class AfterAfterBodyPhase extends Phase {
   AfterAfterBodyPhase(parser) : super(parser);
@@ -3269,15 +3693,15 @@ class AfterAfterBodyPhase extends Phase {
   }
 
   Token startTagOther(StartTagToken token) {
-    parser.parseError(token.span, "expected-eof-but-got-start-tag",
-        {"name": token.name});
+    parser.parseError(
+        token.span, "expected-eof-but-got-start-tag", {"name": token.name});
     parser.phase = parser._inBodyPhase;
     return token;
   }
 
   Token processEndTag(EndTagToken token) {
-    parser.parseError(token.span, "expected-eof-but-got-end-tag",
-        {"name": token.name});
+    parser.parseError(
+        token.span, "expected-eof-but-got-end-tag", {"name": token.name});
     parser.phase = parser._inBodyPhase;
     return token;
   }
@@ -3288,9 +3712,12 @@ class AfterAfterFramesetPhase extends Phase {
 
   processStartTag(StartTagToken token) {
     switch (token.name) {
-      case "html": return startTagHtml(token);
-      case "noframes": return startTagNoFrames(token);
-      default: return startTagOther(token);
+      case "html":
+        return startTagHtml(token);
+      case "noframes":
+        return startTagNoFrames(token);
+      default:
+        return startTagOther(token);
     }
   }
 
@@ -3319,17 +3746,16 @@ class AfterAfterFramesetPhase extends Phase {
   }
 
   void startTagOther(StartTagToken token) {
-    parser.parseError(token.span, "expected-eof-but-got-start-tag",
-        {"name": token.name});
+    parser.parseError(
+        token.span, "expected-eof-but-got-start-tag", {"name": token.name});
   }
 
   Token processEndTag(EndTagToken token) {
-    parser.parseError(token.span, "expected-eof-but-got-end-tag",
-        {"name": token.name});
+    parser.parseError(
+        token.span, "expected-eof-but-got-end-tag", {"name": token.name});
     return null;
   }
 }
-
 
 /// Error in parsed document.
 class ParseError implements SourceSpanException {
@@ -3356,7 +3782,6 @@ class ParseError implements SourceSpanException {
     return span.sourceUrl == null ? 'ParserError on $res' : 'On $res';
   }
 }
-
 
 /// Convenience function to get the pair of namespace and localName.
 Pair<String, String> getElementNameTuple(Element e) {

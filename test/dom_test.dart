@@ -6,7 +6,6 @@ import 'package:html5lib/dom.dart';
 import 'package:html5lib/parser.dart';
 
 main() {
-
   group('Element', () {
     test('classes', () {
       final barBaz = new Element.html('<div class=" bar baz"></div>');
@@ -20,9 +19,9 @@ main() {
 
   group('Document', () {
     final doc = parse('<div id=foo>'
-          '<div class=" bar baz"></div>'
-          '<div class="qux  baz "></div>'
-          '<div id=Foo>');
+        '<div class=" bar baz"></div>'
+        '<div class="qux  baz "></div>'
+        '<div id=Foo>');
 
     test('getElementById', () {
       var foo = doc.body.nodes[0];

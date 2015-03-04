@@ -16,8 +16,7 @@ class ListProxy<E> extends IterableBase<E> implements List<E> {
   /// Creates a list proxy.
   /// You can optionally specify the list to use for [storage] of the items,
   /// otherwise this will create a [List<E>].
-  ListProxy([List<E> storage])
-     : _list = storage != null ? storage : <E>[];
+  ListProxy([List<E> storage]) : _list = storage != null ? storage : <E>[];
 
   // TODO(jmesserly): This should be on List.
   // See http://code.google.com/p/dart/issues/detail?id=947
@@ -43,18 +42,34 @@ class ListProxy<E> extends IterableBase<E> implements List<E> {
 
   // From List
   E operator [](int index) => _list[index];
-  operator []=(int index, E value) { _list[index] = value; }
-  set length(int value) { _list.length = value; }
-  void add(E value) { _list.add(value); }
+  operator []=(int index, E value) {
+    _list[index] = value;
+  }
+  set length(int value) {
+    _list.length = value;
+  }
+  void add(E value) {
+    _list.add(value);
+  }
 
-  void addLast(E value) { add(value); }
-  void addAll(Iterable<E> collection) { _list.addAll(collection); }
-  void sort([int compare(E a, E b)]) { _list.sort(compare); }
-  void shuffle([Random random]) { _list.shuffle(random); }
+  void addLast(E value) {
+    add(value);
+  }
+  void addAll(Iterable<E> collection) {
+    _list.addAll(collection);
+  }
+  void sort([int compare(E a, E b)]) {
+    _list.sort(compare);
+  }
+  void shuffle([Random random]) {
+    _list.shuffle(random);
+  }
 
   int indexOf(E element, [int start = 0]) => _list.indexOf(element, start);
   int lastIndexOf(E element, [int start]) => _list.lastIndexOf(element, start);
-  void clear() { _list.clear(); }
+  void clear() {
+    _list.clear();
+  }
 
   E removeAt(int index) => _list.removeAt(index);
   E removeLast() => _list.removeLast();
@@ -69,7 +84,9 @@ class ListProxy<E> extends IterableBase<E> implements List<E> {
   void setRange(int start, int length, List<E> from, [int startFrom = 0]) {
     _list.setRange(start, length, from, startFrom);
   }
-  void removeRange(int start, int length) { _list.removeRange(start, length); }
+  void removeRange(int start, int length) {
+    _list.removeRange(start, length);
+  }
   void insertAll(int index, Iterable<E> iterable) {
     _list.insertAll(index, iterable);
   }
@@ -83,6 +100,6 @@ class ListProxy<E> extends IterableBase<E> implements List<E> {
 
   void setAll(int index, Iterable<E> iterable) => _list.setAll(index, iterable);
 
-  void fillRange(int start, int end, [E fillValue])
-      => _list.fillRange(start, end, fillValue);
+  void fillRange(int start, int end, [E fillValue]) =>
+      _list.fillRange(start, end, fillValue);
 }

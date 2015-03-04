@@ -69,9 +69,8 @@ class HtmlInputStream {
   ///
   /// [parseMeta] - Look for a <meta> element containing encoding information
   HtmlInputStream(source, [String encoding, bool parseMeta = true,
-        this.generateSpans = false, this.sourceUrl])
+      this.generateSpans = false, this.sourceUrl])
       : charEncodingName = codecName(encoding) {
-
     if (source is String) {
       _rawChars = toCodepoints(source);
       charEncodingName = 'utf-8';
@@ -139,7 +138,6 @@ class HtmlInputStream {
     // generated.
     fileInfo = new SourceFile.decoded(_chars, url: sourceUrl);
   }
-
 
   void detectEncoding([bool parseMeta = true]) {
     // First look for a BOM
@@ -259,7 +257,6 @@ class HtmlInputStream {
   }
 }
 
-
 // TODO(jmesserly): the Python code used a regex to check for this. But
 // Dart doesn't let you create a regexp with invalid characters.
 bool invalidUnicode(int c) {
@@ -269,15 +266,41 @@ bool invalidUnicode(int c) {
   if (0xD800 <= c && c <= 0xDFFF) return true;
   if (0xFDD0 <= c && c <= 0xFDEF) return true;
   switch (c) {
-    case 0x000B: case 0xFFFE: case 0xFFFF: case 0x01FFFE: case 0x01FFFF:
-    case 0x02FFFE: case 0x02FFFF: case 0x03FFFE: case 0x03FFFF:
-    case 0x04FFFE: case 0x04FFFF: case 0x05FFFE: case 0x05FFFF:
-    case 0x06FFFE: case 0x06FFFF: case 0x07FFFE: case 0x07FFFF:
-    case 0x08FFFE: case 0x08FFFF: case 0x09FFFE: case 0x09FFFF:
-    case 0x0AFFFE: case 0x0AFFFF: case 0x0BFFFE: case 0x0BFFFF:
-    case 0x0CFFFE: case 0x0CFFFF: case 0x0DFFFE: case 0x0DFFFF:
-    case 0x0EFFFE: case 0x0EFFFF: case 0x0FFFFE: case 0x0FFFFF:
-    case 0x10FFFE: case 0x10FFFF:
+    case 0x000B:
+    case 0xFFFE:
+    case 0xFFFF:
+    case 0x01FFFE:
+    case 0x01FFFF:
+    case 0x02FFFE:
+    case 0x02FFFF:
+    case 0x03FFFE:
+    case 0x03FFFF:
+    case 0x04FFFE:
+    case 0x04FFFF:
+    case 0x05FFFE:
+    case 0x05FFFF:
+    case 0x06FFFE:
+    case 0x06FFFF:
+    case 0x07FFFE:
+    case 0x07FFFF:
+    case 0x08FFFE:
+    case 0x08FFFF:
+    case 0x09FFFE:
+    case 0x09FFFF:
+    case 0x0AFFFE:
+    case 0x0AFFFF:
+    case 0x0BFFFE:
+    case 0x0BFFFF:
+    case 0x0CFFFE:
+    case 0x0CFFFF:
+    case 0x0DFFFE:
+    case 0x0DFFFF:
+    case 0x0EFFFE:
+    case 0x0EFFFF:
+    case 0x0FFFFE:
+    case 0x0FFFFF:
+    case 0x10FFFE:
+    case 0x10FFFF:
       return true;
   }
   return false;

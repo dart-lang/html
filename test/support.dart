@@ -14,7 +14,7 @@ Map _treeTypes;
 Map<String, TreeBuilderFactory> get treeTypes {
   if (_treeTypes == null) {
     // TODO(jmesserly): add DOM here once it's implemented
-    _treeTypes = { "simpletree": (useNs) => new TreeBuilder(useNs) };
+    _treeTypes = {"simpletree": (useNs) => new TreeBuilder(useNs)};
   }
   return _treeTypes;
 }
@@ -45,7 +45,6 @@ class TestData extends IterableBase<Map> {
     var key = null;
     var result = <Map>[];
     var lines = _text.split('\n');
-    int numLines = lines.length;
     // Remove trailing newline to match Python
     if (lines.last == '') {
       lines.removeLast();
