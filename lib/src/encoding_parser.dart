@@ -1,6 +1,5 @@
 library encoding_parser;
 
-import 'dart:collection';
 import 'constants.dart';
 import 'inputstream.dart';
 
@@ -9,13 +8,11 @@ import 'inputstream.dart';
 /// String-like object with an associated position and various extra methods
 /// If the position is ever greater than the string length then an exception is
 /// raised.
-class EncodingBytes extends IterableBase<String> {
+class EncodingBytes {
   final String _bytes;
   int _position = -1;
 
   EncodingBytes(this._bytes);
-
-  Iterator<String> get iterator => _bytes.split('').iterator;
 
   int get length => _bytes.length;
 
@@ -145,25 +142,21 @@ class EncodingParser {
     ];
 
     try {
-      for (var byte in data) {
-        var keepParsing = true;
+      for (;;) {
         for (var dispatch in methodDispatch) {
           if (data.matchBytes(dispatch[0])) {
-            try {
-              keepParsing = dispatch[1]();
-              break;
-            } on StateError catch (e) {
-              keepParsing = false;
-              break;
-            }
+            var keepParsing = dispatch[1]();
+            if (keepParsing) break;
+
+            // We found an encoding. Stop.
+            return encoding;
           }
         }
-        if (!keepParsing) {
-          break;
-        }
+        data.position += 1;
       }
     } on StateError catch (e) {
       // Catch this here to match behavior of Python's StopIteration
+      // TODO(jmesserly): refactor to not use exceptions
     }
     return encoding;
   }
