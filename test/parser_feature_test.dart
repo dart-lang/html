@@ -5,6 +5,7 @@ import 'package:unittest/unittest.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart';
 import 'package:html/src/constants.dart';
+import 'package:html/src/encoding_parser.dart';
 import 'package:html/src/treebuilder.dart';
 
 main() {
@@ -290,5 +291,30 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
     expect(c.data, 'qux');
     expect(c.text, 'qux');
     expect(e.text, 'bar');
+  });
+
+  group('Encoding pre-parser', () {
+    getEncoding(s) => new EncodingParser(s.codeUnits).getEncoding();
+
+    test('gets encoding from meta charset', () {
+      expect(getEncoding('<meta charset="utf-16">'), 'utf-16');
+    });
+
+    test('gets encoding from meta in head', () {
+      expect(getEncoding('<head><meta charset="utf-16">'), 'utf-16');
+    });
+
+    test('skips comments', () {
+      expect(getEncoding('<!--comment--><meta charset="utf-16">'), 'utf-16');
+    });
+
+    test('stops if no match', () {
+      // missing closing tag
+      expect(getEncoding('<meta charset="utf-16"'), null);
+    });
+
+    test('ignores whitespace', () {
+      expect(getEncoding('  <meta charset="utf-16">'), 'utf-16');
+    });
   });
 }
