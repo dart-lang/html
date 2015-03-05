@@ -7,9 +7,9 @@
 /// As usual with ports: being faithful to the original style is more important
 /// than other style goals, as it reduces friction to integrating changes
 /// from upstream.
-library html5lib.test.selectors.level1_lib;
+library html.test.selectors.level1_lib;
 
-import 'package:html5lib/dom.dart';
+import 'package:html/dom.dart';
 import 'package:unittest/unittest.dart' as unittest;
 
 Document doc;
@@ -280,7 +280,7 @@ traverse(Node elem, fn) {
     fn(elem);
   }
 
-  // Dart note: changed this since html5lib doens't support nextNode yet.
+  // Dart note: changed this since our DOM API doesn't support nextNode yet.
   for (var node in elem.nodes) {
     traverse(node, fn);
   }

@@ -1,11 +1,11 @@
-/// Query selector implementation for html5lib's DOM.
-library html5lib.src.query;
+/// Query selector implementation for our DOM.
+library html.src.query;
 
 import 'package:csslib/parser.dart' as css;
 import 'package:csslib/parser.dart' show TokenKind;
 import 'package:csslib/visitor.dart'; // the CSSOM
-import 'package:html5lib/dom.dart';
-import 'package:html5lib/src/constants.dart' show isWhitespaceCC;
+import 'package:html/dom.dart';
+import 'package:html/src/constants.dart' show isWhitespaceCC;
 
 bool matches(Node node, String selector) =>
     new SelectorEvaluator().matches(node, _parseSelectorList(selector));

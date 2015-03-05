@@ -1,6 +1,6 @@
 /// Test for the Selectors API ported from
 /// <https://github.com/w3c/web-platform-tests/tree/master/selectors-api>
-library html5lib.test.selectors.selectors;
+library html.test.selectors.selectors;
 
 // Bit-mapped flags to indicate which tests the selector is suitable for
 var TEST_QSA_BASELINE =

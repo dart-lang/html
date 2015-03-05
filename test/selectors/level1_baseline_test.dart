@@ -3,11 +3,11 @@
 ///
 /// Note, unlike the original we don't operate in-browser on a DOM loaded into
 /// an iframe, but instead operate over a parsed DOM.
-library html5lib.test.selectors.level1_baseline_test;
+library html.test.selectors.level1_baseline_test;
 
 import 'dart:io';
-import 'package:html5lib/dom.dart';
-import 'package:html5lib/parser.dart';
+import 'package:html/dom.dart';
+import 'package:html/parser.dart';
 import 'package:unittest/unittest.dart';
 import 'level1_lib.dart' hide test;
 import 'selectors.dart';

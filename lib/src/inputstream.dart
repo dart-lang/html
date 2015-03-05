@@ -87,7 +87,7 @@ class HtmlInputStream {
         // Unfortunately dart:io InputStream is async only, which won't work.
         throw new ArgumentError("'source' must be a String or "
             "List<int> (of bytes). You can also pass a RandomAccessFile if you"
-            "`import 'package:html5lib/parser_console.dart'` and call "
+            "`import 'package:html/parser_console.dart'` and call "
             "`useConsole()`.");
       }
     }
