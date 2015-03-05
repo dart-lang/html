@@ -43,10 +43,7 @@ Running Tests
 -------------
 
 ```bash
-# From Dart SVN checkout
-./tools/build.py -m release
-./tools/test.py -m release html5lib
-./tools/test.py -m release -r drt html5lib
+./test/run.sh
 ```
 
 [dart]: http://www.dartlang.org/
