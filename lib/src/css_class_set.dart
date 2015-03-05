@@ -3,10 +3,10 @@
 // BSD-style license that can be found in the LICENSE file.
 
 // TODO(jmesserly): everything in this file is copied straight from "dart:html".
-library html5lib.dom.src;
+library html.dom.src;
 
 import 'dart:collection';
-import 'package:html5lib/dom.dart';
+import 'package:html/dom.dart';
 
 class ElementCssClassSet extends CssClassSetImpl {
   final Element _element;

@@ -1,5 +1,5 @@
-html5lib in Pure Dart
-=====================
+html5 parser in dart
+====================
 
 This is a pure [Dart][dart] [html5 parser][html5parse]. It's a port of
 [html5lib](http://code.google.com/p/html5lib/) from Python. Since it's 100%
@@ -14,7 +14,7 @@ Installation
 Add this to your `pubspec.yaml` (or create it):
 ```yaml
 dependencies:
-  html5lib: any
+  html: any
 ```
 Then run the [Pub Package Manager][pub] (comes with the Dart SDK):
 
@@ -25,8 +25,8 @@ Usage
 
 Parsing HTML is easy!
 ```dart
-import 'package:html5lib/parser.dart' show parse;
-import 'package:html5lib/dom.dart';
+import 'package:html/parser.dart' show parse;
+import 'package:html/dom.dart';
 
 main() {
   var document = parse(
@@ -43,10 +43,7 @@ Running Tests
 -------------
 
 ```bash
-# From Dart SVN checkout
-./tools/build.py -m release
-./tools/test.py -m release html5lib
-./tools/test.py -m release -r drt html5lib
+./test/run.sh
 ```
 
 [dart]: http://www.dartlang.org/

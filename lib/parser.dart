@@ -1,8 +1,8 @@
 /// This library has a parser for HTML5 documents, that lets you parse HTML
 /// easily from a script or server side application:
 ///
-///     import 'package:html5lib/parser.dart' show parse;
-///     import 'package:html5lib/dom.dart';
+///     import 'package:html/parser.dart' show parse;
+///     import 'package:html/dom.dart';
 ///     main() {
 ///       var document = parse(
 ///           '<body>Hello world! <a href="www.html5rocks.com">HTML5 rocks!');

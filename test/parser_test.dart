@@ -4,10 +4,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:path/path.dart' as pathos;
 import 'package:unittest/unittest.dart';
-import 'package:html5lib/dom.dart';
-import 'package:html5lib/parser.dart';
-import 'package:html5lib/parser_console.dart' as parser_console;
-import 'package:html5lib/src/inputstream.dart' as inputstream;
+import 'package:html/dom.dart';
+import 'package:html/parser.dart';
+import 'package:html/parser_console.dart' as parser_console;
+import 'package:html/src/inputstream.dart' as inputstream;
 import 'support.dart';
 
 // Run the parse error checks

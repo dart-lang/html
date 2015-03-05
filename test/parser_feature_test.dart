@@ -2,10 +2,10 @@
 library parser_feature_test;
 
 import 'package:unittest/unittest.dart';
-import 'package:html5lib/dom.dart';
-import 'package:html5lib/parser.dart';
-import 'package:html5lib/src/constants.dart';
-import 'package:html5lib/src/treebuilder.dart';
+import 'package:html/dom.dart';
+import 'package:html/parser.dart';
+import 'package:html/src/constants.dart';
+import 'package:html/src/treebuilder.dart';
 
 main() {
   test('doctype is cloneable', () {
