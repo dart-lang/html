@@ -47,8 +47,25 @@ class EndTagToken extends TagToken {
 }
 
 abstract class StringToken extends Token {
-  String data;
-  StringToken(this.data);
+  StringBuffer _buffer;
+
+  String _string;
+  String get data {
+    if (_string == null) {
+      _string = _buffer.toString();
+      _buffer = null;
+    }
+    return _string;
+  }
+
+  StringToken(string)
+      : _string = string,
+        _buffer = string == null ? new StringBuffer() : null;
+
+  StringToken add(String data) {
+    _buffer.write(data);
+    return this;
+  }
 }
 
 class ParseErrorToken extends StringToken {
@@ -64,6 +81,13 @@ class CharactersToken extends StringToken {
   CharactersToken([String data]) : super(data);
 
   int get kind => TokenKind.characters;
+
+  /// Replaces the token's [data]. This should only be used to wholly replace
+  /// data, not to append data.
+  void replaceData(String newData) {
+    _string = newData;
+    _buffer = null;
+  }
 }
 
 class SpaceCharactersToken extends StringToken {
@@ -103,7 +127,7 @@ class TagAttribute {
   int startValue;
   int endValue;
 
-  TagAttribute(this.name, [this.value = '']);
+  TagAttribute();
 }
 
 class TokenKind {

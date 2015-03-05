@@ -402,17 +402,31 @@ class DocumentType extends Node {
 }
 
 class Text extends Node {
-  String data;
+  /// The text node's data, stored as either a String or StringBuffer.
+  /// We support storing a StringBuffer here to support fast [appendData].
+  /// It will flatten back to a String on read.
+  var _data;
 
-  Text(this.data) : super._();
+  Text(String data) : _data = data != null ? data : '', super._();
 
   int get nodeType => Node.TEXT_NODE;
+
+  String get data => _data = _data.toString();
+  set data(String value) {
+    _data = value != null ? value : '';
+  }
 
   String toString() => '"$data"';
 
   void _addOuterHtml(StringBuffer str) => writeTextNodeAsHtml(str, this);
 
   Text clone(bool deep) => new Text(data);
+
+  void appendData(String data) {
+    if (_data is! StringBuffer) _data = new StringBuffer(_data);
+    StringBuffer sb = _data;
+    sb.write(data);
+  }
 
   String get text => data;
   set text(String value) {
@@ -539,13 +553,19 @@ class Element extends Node with _ParentNode, _ElementAndDocument {
   void _addOuterHtml(StringBuffer str) {
     // http://www.whatwg.org/specs/web-apps/current-work/multipage/the-end.html#serializing-html-fragments
     // Element is the most complicated one.
-    str.write('<${_getSerializationPrefix(namespaceUri)}$localName');
+    str.write('<');
+    str.write(_getSerializationPrefix(namespaceUri));
+    str.write(localName);
 
     if (attributes.length > 0) {
       attributes.forEach((key, v) {
         // Note: AttributeName.toString handles serialization of attribute
         // namespace, if needed.
-        str.write(' $key="${htmlSerializeEscape(v, attributeMode: true)}"');
+        str.write(' ');
+        str.write(key);
+        str.write('="');
+        str.write(htmlSerializeEscape(v, attributeMode: true));
+        str.write('"');
       });
     }
 

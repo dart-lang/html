@@ -3395,7 +3395,7 @@ class InForeignContentPhase extends Phase {
 
   Token processCharacters(CharactersToken token) {
     if (token.data == "\u0000") {
-      token.data = "\uFFFD";
+      token.replaceData("\uFFFD");
     } else if (parser.framesetOK && !allWhitespace(token.data)) {
       parser.framesetOK = false;
     }
