@@ -1,3 +1,12 @@
+# This package has been renamed to 'html'.
+
+**Future releases of this package will happen in the `html` package.**
+
+**To continue using `html5lib` without deprecation warnings, change your pubspec
+to depend on `html5lib: '<=0.12.0'`.**
+
+**See the [html package](https://pub.dartlang.org/packages/html) for details.**
+
 html5lib in Pure Dart
 =====================
 

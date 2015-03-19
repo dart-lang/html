@@ -11,6 +11,9 @@
 ///
 /// The resulting document you get back has a DOM-like API for easy tree
 /// traversal and manipulation.
+///
+/// **DEPRECATED**. This package has been renamed `html`.
+@deprecated('Use the "html" package instead.')
 library parser;
 
 import 'dart:collection';

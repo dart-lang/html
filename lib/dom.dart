@@ -1,5 +1,8 @@
 /// A simple tree API that results from parsing html. Intended to be compatible
 /// with dart:html, but it is missing many types and APIs.
+///
+/// **DEPRECATED**. This package has been renamed `html`.
+@deprecated('Use the "html" package instead.')
 library dom;
 
 // TODO(jmesserly): lots to do here. Originally I wanted to generate this using

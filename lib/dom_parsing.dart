@@ -1,5 +1,8 @@
 /// This library contains extra APIs that aren't in the DOM, but are useful
 /// when interacting with the parse tree.
+///
+/// **DEPRECATED**. This package has been renamed `html`.
+@deprecated('Use the "html" package instead.')
 library dom_parsing;
 
 import 'dom.dart';
