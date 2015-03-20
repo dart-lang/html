@@ -3,7 +3,7 @@
 /// a [RandomAccessFile] as input, in addition to the other input types.
 ///
 /// **DEPRECATED**. This package has been renamed `html`.
-@deprecated('Use the "html" package instead.')
+@Deprecated('Use the "html" package instead.')
 library parser_console;
 
 import 'dart:io';

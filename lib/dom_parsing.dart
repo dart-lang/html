@@ -2,7 +2,7 @@
 /// when interacting with the parse tree.
 ///
 /// **DEPRECATED**. This package has been renamed `html`.
-@deprecated('Use the "html" package instead.')
+@Deprecated('Use the "html" package instead.')
 library dom_parsing;
 
 import 'dom.dart';
