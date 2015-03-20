@@ -15,7 +15,7 @@ pushd $DIR/..
 # TODO(jmesserly): switch to new analyzer. Note: it's missing a lot of the
 # tests for implemented members; we should get that fixed before switching.
 echo Analyzing library for warnings or type errors
-dartanalyzer --fatal-warnings --fatal-type-errors lib/*.dart || \
+dartanalyzer --fatal-warnings lib/*.dart || \
   echo "ignore analyzer errors"
 popd
 
