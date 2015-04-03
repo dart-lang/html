@@ -3,6 +3,9 @@
 This file contains highlights of what changes on each version of the html
 package.
 
+#### Pub version 0.12.0+1
+  * Support `csslib` version `0.12.0`.
+
 #### Rename to package:html 0.12.0
   * package has been renamed to `html`
 
