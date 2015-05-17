@@ -8,7 +8,7 @@ Dart you can use it safely from a script or server side app.
 Eventually the parse tree API will be compatible with [dart:html][d_html], so
 the same code will work on the client and the server.
 
-(Formally known as _html5lib_.)
+(Formerly known as _html5lib_.)
 
 Installation
 ------------
