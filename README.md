@@ -2,7 +2,7 @@ html5 parser in dart
 ====================
 
 This is a pure [Dart][dart] [html5 parser][html5parse]. It's a port of
-[html5lib](http://code.google.com/p/html5lib/) from Python. Since it's 100%
+[html5lib](https://github.com/html5lib/html5lib-python) from Python. Since it's 100%
 Dart you can use it safely from a script or server side app.
 
 Eventually the parse tree API will be compatible with [dart:html][d_html], so
