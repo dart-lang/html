@@ -293,6 +293,20 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
     expect(e.text, 'bar');
   });
 
+  test('foreignObject end tag', () {
+    var p = new HtmlParser('''
+<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"
+     version="1.1">
+    <foreignObject width="320px" height="200px">
+        <x-flow></x-flow>
+    </foreignObject>
+</svg>''');
+    var doc = p.parseFragment();
+    expect(p.errors, isEmpty);
+    var svg = doc.querySelector('svg');
+    expect(svg.children[0].children[0].localName, 'x-flow');
+  });
+
   group('Encoding pre-parser', () {
     getEncoding(s) => new EncodingParser(s.codeUnits).getEncoding();
 

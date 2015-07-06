@@ -3438,7 +3438,7 @@ class InForeignContentPhase extends Phase {
   Token processEndTag(EndTagToken token) {
     var nodeIndex = tree.openElements.length - 1;
     var node = tree.openElements.last;
-    if (node.localName != token.name) {
+    if (asciiUpper2Lower(node.localName) != token.name) {
       parser.parseError(token.span, "unexpected-end-tag", {"name": token.name});
     }
 
