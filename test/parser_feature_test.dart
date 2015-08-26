@@ -7,8 +7,10 @@ import 'package:html/parser.dart';
 import 'package:html/src/constants.dart';
 import 'package:html/src/encoding_parser.dart';
 import 'package:html/src/treebuilder.dart';
+import 'package:source_span/source_span.dart';
 
 main() {
+  _testElementSpans();
   test('doctype is cloneable', () {
     var doc = parse('<!doctype HTML>');
     DocumentType doctype = doc.nodes[0];
@@ -329,6 +331,146 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
 
     test('ignores whitespace', () {
       expect(getEncoding('  <meta charset="utf-16">'), 'utf-16');
+    });
+  });
+}
+
+_testElementSpans() {
+  assertSpan(SourceSpan span, int offset, int end, String text) {
+    expect(span, isNotNull);
+    expect(span.start.offset, offset);
+    expect(span.end.offset, end);
+    expect(span.text, text);
+  }
+
+  group('element spans', () {
+    test('html and body', () {
+      var text = '<html><body>123</body></html>';
+      var doc = parse(text, generateSpans: true);
+      {
+        var elem = doc.querySelector('html');
+        assertSpan(elem.sourceSpan, 0, 6, '<html>');
+        assertSpan(elem.endSourceSpan, 22, 29, '</html>');
+      }
+      {
+        var elem = doc.querySelector('body');
+        assertSpan(elem.sourceSpan, 6, 12, '<body>');
+        assertSpan(elem.endSourceSpan, 15, 22, '</body>');
+      }
+    });
+
+    test('normal', () {
+      var text = '<div><element><span></span></element></div>';
+      var doc = parse(text, generateSpans: true);
+      var elem = doc.querySelector('element');
+      assertSpan(elem.sourceSpan, 5, 14, '<element>');
+      assertSpan(elem.endSourceSpan, 27, 37, '</element>');
+    });
+
+    test('block', () {
+      var text = '<div>123</div>';
+      var doc = parse(text, generateSpans: true);
+      var elem = doc.querySelector('div');
+      assertSpan(elem.sourceSpan, 0, 5, '<div>');
+      assertSpan(elem.endSourceSpan, 8, 14, '</div>');
+    });
+
+    test('form', () {
+      var text = '<form>123</form>';
+      var doc = parse(text, generateSpans: true);
+      var elem = doc.querySelector('form');
+      assertSpan(elem.sourceSpan, 0, 6, '<form>');
+      assertSpan(elem.endSourceSpan, 9, 16, '</form>');
+    });
+
+    test('p explicit end', () {
+      var text = '<p>123</p>';
+      var doc = parse(text, generateSpans: true);
+      var elem = doc.querySelector('p');
+      assertSpan(elem.sourceSpan, 0, 3, '<p>');
+      assertSpan(elem.endSourceSpan, 6, 10, '</p>');
+    });
+
+    test('p implicit end', () {
+      var text = '<div><p>123<p>456</div>';
+      var doc = parse(text, generateSpans: true);
+      var elem = doc.querySelector('p');
+      assertSpan(elem.sourceSpan, 5, 8, '<p>');
+      expect(elem.endSourceSpan, isNull);
+    });
+
+    test('li', () {
+      var text = '<li>123</li>';
+      var doc = parse(text, generateSpans: true);
+      var elem = doc.querySelector('li');
+      assertSpan(elem.sourceSpan, 0, 4, '<li>');
+      assertSpan(elem.endSourceSpan, 7, 12, '</li>');
+    });
+
+    test('heading', () {
+      var text = '<h1>123</h1>';
+      var doc = parse(text, generateSpans: true);
+      var elem = doc.querySelector('h1');
+      assertSpan(elem.sourceSpan, 0, 4, '<h1>');
+      assertSpan(elem.endSourceSpan, 7, 12, '</h1>');
+    });
+
+    test('formatting', () {
+      var text = '<b>123</b>';
+      var doc = parse(text, generateSpans: true);
+      var elem = doc.querySelector('b');
+      assertSpan(elem.sourceSpan, 0, 3, '<b>');
+      assertSpan(elem.endSourceSpan, 6, 10, '</b>');
+    });
+
+    test('table tbody', () {
+      var text = '<table><tbody>  </tbody></table>';
+      var doc = parse(text, generateSpans: true);
+      {
+        var elem = doc.querySelector('tbody');
+        assertSpan(elem.sourceSpan, 7, 14, '<tbody>');
+        assertSpan(elem.endSourceSpan, 16, 24, '</tbody>');
+      }
+    });
+
+    test('table tr td', () {
+      var text = '<table><tr><td>123</td></tr></table>';
+      var doc = parse(text, generateSpans: true);
+      {
+        var elem = doc.querySelector('table');
+        assertSpan(elem.sourceSpan, 0, 7, '<table>');
+        assertSpan(elem.endSourceSpan, 28, 36, '</table>');
+      }
+      {
+        var elem = doc.querySelector('tr');
+        assertSpan(elem.sourceSpan, 7, 11, '<tr>');
+        assertSpan(elem.endSourceSpan, 23, 28, '</tr>');
+      }
+      {
+        var elem = doc.querySelector('td');
+        assertSpan(elem.sourceSpan, 11, 15, '<td>');
+        assertSpan(elem.endSourceSpan, 18, 23, '</td>');
+      }
+    });
+
+    test('select optgroup option', () {
+      var text = '<select><optgroup><option>123</option></optgroup></select>';
+      var doc = parse(text, generateSpans: true);
+      {
+        var elem = doc.querySelector('select');
+        assertSpan(elem.sourceSpan, 0, 8, '<select>');
+        assertSpan(elem.endSourceSpan, 49, 58, '</select>');
+      }
+      {
+        var elem = doc.querySelector('optgroup');
+        assertSpan(elem.sourceSpan, 8, 18, '<optgroup>');
+        assertSpan(elem.endSourceSpan, 38, 49, '</optgroup>');
+      }
+      {
+        var elem = doc.querySelector('option');
+        assertSpan(elem.sourceSpan, 18, 26, '<option>');
+        assertSpan(elem.endSourceSpan, 29, 38, '</option>');
+      }
     });
   });
 }
