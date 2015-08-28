@@ -3,6 +3,9 @@
 This file contains highlights of what changes on each version of the html
 package.
 
+#### Pub version 0.12.2
+  * Added `Element.endSourceSpan`, containing the span of a closing tag.
+
 #### Pub version 0.12.0+1
   * Support `csslib` version `0.12.0`.
 
