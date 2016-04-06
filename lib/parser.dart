@@ -210,7 +210,7 @@ class HtmlParser {
       try {
         mainLoop();
         break;
-      } on ReparseException catch (e) {
+      } on ReparseException {
         // Note: this happens if we start parsing but the character encoding
         // changes. So we should only need to restart very early in the parse.
         reset();
