@@ -3,6 +3,9 @@
 This file contains highlights of what changes on each version of the html
 package.
 
+#### Pub version 0.12.2+2
+  * Support `csslib` versions `0.13.x`.
+  
 #### Pub version 0.12.2+1
   * Exclude `.packages` file from the published package.
 
