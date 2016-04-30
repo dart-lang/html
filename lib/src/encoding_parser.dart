@@ -154,7 +154,7 @@ class EncodingParser {
         }
         data.position += 1;
       }
-    } on StateError catch (e) {
+    } on StateError {
       // Catch this here to match behavior of Python's StopIteration
       // TODO(jmesserly): refactor to not use exceptions
     }
@@ -352,12 +352,12 @@ class ContentAttrParser {
         try {
           data.skipUntil(isWhitespace);
           return data.slice(oldPosition, data.position);
-        } on StateError catch (e) {
+        } on StateError {
           //Return the whole remaining value
           return data.slice(oldPosition);
         }
       }
-    } on StateError catch (e) {
+    } on StateError {
       return null;
     }
   }
