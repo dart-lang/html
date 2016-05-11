@@ -742,16 +742,17 @@ class NodeList extends ListProxy<Node> {
 
   // TODO(jmesserly): These aren't implemented in DOM _NodeListImpl, see
   // http://code.google.com/p/dart/issues/detail?id=5371
-  void setRange(int start, int rangeLength, List<Node> from,
+  void setRange(int start, int rangeLength, Iterable<Node> from,
       [int startFrom = 0]) {
-    if (from is NodeList) {
+    List<Node> from_ = from as List<Node>;
+    if (from_ is NodeList) {
       // Note: this is presumed to make a copy
-      from = from.sublist(startFrom, startFrom + rangeLength);
+      from_ = from_.sublist(startFrom, startFrom + rangeLength);
     }
     // Note: see comment in [addAll]. We need to be careful about the order of
     // operations if [from] is also a NodeList.
     for (int i = rangeLength - 1; i >= 0; i--) {
-      this[start + i] = from[startFrom + i];
+      this[start + i] = from_[startFrom + i];
     }
   }
 
@@ -765,14 +766,14 @@ class NodeList extends ListProxy<Node> {
     super.removeRange(start, rangeLength);
   }
 
-  void removeWhere(bool test(Element e)) {
+  void removeWhere(bool test(Node e)) {
     for (var node in where(test)) {
       node.parentNode = null;
     }
     super.removeWhere(test);
   }
 
-  void retainWhere(bool test(Element e)) {
+  void retainWhere(bool test(Node e)) {
     for (var node in where((n) => !test(n))) {
       node.parentNode = null;
     }
@@ -786,11 +787,11 @@ class NodeList extends ListProxy<Node> {
     super.insertAll(index, list);
   }
 
-  _flattenDocFragments(Iterable<Node> collection) {
+  List<Node> _flattenDocFragments(Iterable<Node> collection) {
     // Note: this function serves two purposes:
     //  * it flattens document fragments
     //  * it creates a copy of [collections] when `collection is NodeList`.
-    var result = [];
+    var result = <Node>[];
     for (var node in collection) {
       if (node is DocumentFragment) {
         result.addAll(node.nodes);
@@ -860,7 +861,7 @@ class FilteredElementList extends IterableBase<Element> with ListMixin<Element>
     }
   }
 
-  bool contains(Element element) {
+  bool contains(Object element) {
     return element is Element && _childNodes.contains(element);
   }
 
@@ -901,9 +902,10 @@ class FilteredElementList extends IterableBase<Element> with ListMixin<Element>
     return result;
   }
 
-  Iterable map(f(Element element)) => _filtered.map(f);
+  Iterable/*<T>*/ map/*<T>*/(/*=T*/ f(Element element)) => _filtered.map(f);
   Iterable<Element> where(bool f(Element element)) => _filtered.where(f);
-  Iterable expand(Iterable f(Element element)) => _filtered.expand(f);
+  Iterable/*<T>*/ expand/*<T>*/(Iterable/*<T>*/ f(Element element)) =>
+      _filtered.expand(f);
 
   void insert(int index, Element value) {
     _childNodes.insert(index, value);
@@ -935,8 +937,8 @@ class FilteredElementList extends IterableBase<Element> with ListMixin<Element>
     return _filtered.reduce(combine);
   }
 
-  dynamic fold(dynamic initialValue,
-      dynamic combine(dynamic previousValue, Element element)) {
+  dynamic/*=T*/ fold/*<T>*/(var/*=T*/ initialValue,
+      dynamic/*=T*/ combine(var/*=T*/ previousValue, Element element)) {
     return _filtered.fold(initialValue, combine);
   }
 
@@ -968,10 +970,14 @@ class FilteredElementList extends IterableBase<Element> with ListMixin<Element>
   List<Element> sublist(int start, [int end]) => _filtered.sublist(start, end);
   Iterable<Element> getRange(int start, int end) =>
       _filtered.getRange(start, end);
-  int indexOf(Element element, [int start = 0]) =>
+  // TODO(sigmund): this should be typed Element, but we currently run into a
+  // bug where ListMixin<E>.indexOf() expects Object as the argument.
+  int indexOf(element, [int start = 0]) =>
       _filtered.indexOf(element, start);
 
-  int lastIndexOf(Element element, [int start = null]) {
+  // TODO(sigmund): this should be typed Element, but we currently run into a
+  // bug where ListMixin<E>.lastIndexOf() expects Object as the argument.
+  int lastIndexOf(element, [int start = null]) {
     if (start == null) start = length - 1;
     return _filtered.lastIndexOf(element, start);
   }

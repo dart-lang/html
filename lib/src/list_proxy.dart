@@ -20,11 +20,14 @@ class ListProxy<E> extends IterableBase<E> implements List<E> {
 
   // TODO(jmesserly): This should be on List.
   // See http://code.google.com/p/dart/issues/detail?id=947
-  bool remove(E item) {
-    int i = indexOf(item);
-    if (i == -1) return false;
-    removeAt(i);
-    return true;
+  bool remove(Object item) {
+    if (item is E) {
+      int i = indexOf(item);
+      if (i == -1) return false;
+      removeAt(i);
+      return true;
+    }
+    return false;
   }
 
   void insert(int index, E item) => _list.insert(index, item);
@@ -81,7 +84,7 @@ class ListProxy<E> extends IterableBase<E> implements List<E> {
 
   List<E> getRange(int start, int end) => _list.getRange(start, end);
 
-  void setRange(int start, int length, List<E> from, [int startFrom = 0]) {
+  void setRange(int start, int length, Iterable<E> from, [int startFrom = 0]) {
     _list.setRange(start, length, from, startFrom);
   }
   void removeRange(int start, int length) {

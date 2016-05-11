@@ -25,12 +25,12 @@ main() {
 
   test('namespace html elements on', () {
     var doc = new HtmlParser('', tree: new TreeBuilder(true)).parse();
-    expect(doc.nodes[0].namespaceUri, Namespaces.html);
+    expect((doc.nodes[0] as Element).namespaceUri, Namespaces.html);
   });
 
   test('namespace html elements off', () {
     var doc = new HtmlParser('', tree: new TreeBuilder(false)).parse();
-    expect(doc.nodes[0].namespaceUri, null);
+    expect((doc.nodes[0] as Element).namespaceUri, null);
   });
 
   test('parse error spans - full', () {
@@ -290,7 +290,7 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
     expect(e.text, 'bar');
 
     c.text = 'qux';
-    expect(c.data, 'qux');
+    expect((c as Comment).data, 'qux');
     expect(c.text, 'qux');
     expect(e.text, 'bar');
   });
@@ -310,7 +310,7 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
   });
 
   group('Encoding pre-parser', () {
-    getEncoding(s) => new EncodingParser(s.codeUnits).getEncoding();
+    getEncoding(String s) => new EncodingParser(s.codeUnits).getEncoding();
 
     test('gets encoding from meta charset', () {
       expect(getEncoding('<meta charset="utf-16">'), 'utf-16');

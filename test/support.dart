@@ -10,7 +10,7 @@ import 'package:html/dom_parsing.dart';
 
 typedef TreeBuilder TreeBuilderFactory(bool namespaceHTMLElements);
 
-Map _treeTypes;
+Map<String, TreeBuilderFactory> _treeTypes;
 Map<String, TreeBuilderFactory> get treeTypes {
   if (_treeTypes == null) {
     // TODO(jmesserly): add DOM here once it's implemented
@@ -133,13 +133,16 @@ class TestSerializer extends TreeVisitor {
     indent -= 2;
   }
 
-  visitDocument(node) {
+  visitDocument(node) => _visitDocumentOrFragment(node);
+
+  _visitDocumentOrFragment(node) {
     indent += 1;
     for (var child in node.nodes) visit(child);
     indent -= 1;
   }
 
-  visitDocumentFragment(DocumentFragment node) => visitDocument(node);
+  visitDocumentFragment(DocumentFragment node) =>
+      _visitDocumentOrFragment(node);
 
   visitElement(Element node) {
     _newline();

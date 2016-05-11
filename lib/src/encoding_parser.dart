@@ -121,6 +121,14 @@ class EncodingBytes {
   }
 }
 
+typedef bool _MethodHandler();
+
+class _DispatchEntry {
+  final String pattern;
+  final _MethodHandler handler;
+  _DispatchEntry(this.pattern, this.handler);
+}
+
 /// Mini parser for detecting character encoding from meta elements.
 class EncodingParser {
   final EncodingBytes data;
@@ -133,19 +141,19 @@ class EncodingParser {
 
   String getEncoding() {
     final methodDispatch = [
-      ["<!--", handleComment],
-      ["<meta", handleMeta],
-      ["</", handlePossibleEndTag],
-      ["<!", handleOther],
-      ["<?", handleOther],
-      ["<", handlePossibleStartTag]
+        new _DispatchEntry("<!--", handleComment),
+        new _DispatchEntry("<meta", handleMeta),
+        new _DispatchEntry("</", handlePossibleEndTag),
+        new _DispatchEntry("<!", handleOther),
+        new _DispatchEntry("<?", handleOther),
+        new _DispatchEntry("<", handlePossibleStartTag),
     ];
 
     try {
       for (;;) {
         for (var dispatch in methodDispatch) {
-          if (data.matchBytes(dispatch[0])) {
-            var keepParsing = dispatch[1]();
+          if (data.matchBytes(dispatch.pattern)) {
+            var keepParsing = dispatch.handler();
             if (keepParsing) break;
 
             // We found an encoding. Stop.
@@ -154,7 +162,7 @@ class EncodingParser {
         }
         data.position += 1;
       }
-    } on StateError catch (e) {
+    } on StateError catch (_) {
       // Catch this here to match behavior of Python's StopIteration
       // TODO(jmesserly): refactor to not use exceptions
     }
@@ -352,12 +360,12 @@ class ContentAttrParser {
         try {
           data.skipUntil(isWhitespace);
           return data.slice(oldPosition, data.position);
-        } on StateError catch (e) {
+        } on StateError catch (_) {
           //Return the whole remaining value
           return data.slice(oldPosition);
         }
       }
-    } on StateError catch (e) {
+    } on StateError catch (_) {
       return null;
     }
   }

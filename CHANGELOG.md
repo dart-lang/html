@@ -3,6 +3,14 @@
 This file contains highlights of what changes on each version of the html
 package.
 
+## 0.13.0
+
+ * **BREAKING** Fix all [strong mode][] errors and warnings.
+   This involved adding more precise types on some public APIs, which is why it
+   may break users.
+
+[strong mode]: https://github.com/dart-lang/dev_compiler/blob/master/STRONG_MODE.md
+
 #### Pub version 0.12.2+2
   * Support `csslib` versions `0.13.x`.
   

@@ -210,7 +210,7 @@ class HtmlParser {
       try {
         mainLoop();
         break;
-      } on ReparseException catch (e) {
+      } on ReparseException catch (_) {
         // Note: this happens if we start parsing but the character encoding
         // changes. So we should only need to restart very early in the parse.
         reset();
@@ -819,7 +819,8 @@ class BeforeHtmlPhase extends Phase {
 
   // helper methods
   void insertHtmlElement() {
-    tree.insertRoot(new StartTagToken("html", data: {}));
+    tree.insertRoot(new StartTagToken("html",
+        data: new LinkedHashMap<dynamic, String>()));
     parser.phase = parser._beforeHeadPhase;
   }
 
@@ -875,7 +876,8 @@ class BeforeHeadPhase extends Phase {
       case 'html':
         return startTagHtml(token);
       case 'head':
-        return startTagHead(token);
+        startTagHead(token);
+        return null;
       default:
         return startTagOther(token);
     }
@@ -889,12 +891,14 @@ class BeforeHeadPhase extends Phase {
       case "br":
         return endTagImplyHead(token);
       default:
-        return endTagOther(token);
+        endTagOther(token);
+        return null;
     }
   }
 
   bool processEOF() {
-    startTagHead(new StartTagToken("head", data: {}));
+    startTagHead(new StartTagToken("head",
+        data: new LinkedHashMap<dynamic, String>()));
     return true;
   }
 
@@ -903,7 +907,8 @@ class BeforeHeadPhase extends Phase {
   }
 
   Token processCharacters(CharactersToken token) {
-    startTagHead(new StartTagToken("head", data: {}));
+    startTagHead(new StartTagToken("head",
+        data: new LinkedHashMap<dynamic, String>()));
     return token;
   }
 
@@ -918,12 +923,14 @@ class BeforeHeadPhase extends Phase {
   }
 
   Token startTagOther(StartTagToken token) {
-    startTagHead(new StartTagToken("head", data: {}));
+    startTagHead(new StartTagToken("head",
+        data: new LinkedHashMap<dynamic, String>()));
     return token;
   }
 
   Token endTagImplyHead(EndTagToken token) {
-    startTagHead(new StartTagToken("head", data: {}));
+    startTagHead(new StartTagToken("head",
+        data: new LinkedHashMap<dynamic, String>()));
     return token;
   }
 
@@ -941,23 +948,29 @@ class InHeadPhase extends Phase {
       case "html":
         return startTagHtml(token);
       case "title":
-        return startTagTitle(token);
+        startTagTitle(token);
+        return null;
       case "noscript":
       case "noframes":
       case "style":
-        return startTagNoScriptNoFramesStyle(token);
+        startTagNoScriptNoFramesStyle(token);
+        return null;
       case "script":
-        return startTagScript(token);
+        startTagScript(token);
+        return null;
       case "base":
       case "basefont":
       case "bgsound":
       case "command":
       case "link":
-        return startTagBaseLinkCommand(token);
+        startTagBaseLinkCommand(token);
+        return null;
       case "meta":
-        return startTagMeta(token);
+        startTagMeta(token);
+        return null;
       case "head":
-        return startTagHead(token);
+        startTagHead(token);
+        return null;
       default:
         return startTagOther(token);
     }
@@ -966,13 +979,15 @@ class InHeadPhase extends Phase {
   processEndTag(EndTagToken token) {
     switch (token.name) {
       case "head":
-        return endTagHead(token);
+        endTagHead(token);
+        return null;
       case "br":
       case "html":
       case "body":
         return endTagHtmlBodyBr(token);
       default:
-        return endTagOther(token);
+        endTagOther(token);
+        return null;
     }
   }
 
@@ -1075,9 +1090,11 @@ class AfterHeadPhase extends Phase {
       case "html":
         return startTagHtml(token);
       case "body":
-        return startTagBody(token);
+        startTagBody(token);
+        return null;
       case "frameset":
-        return startTagFrameset(token);
+        startTagFrameset(token);
+        return null;
       case "base":
       case "basefont":
       case "bgsound":
@@ -1087,9 +1104,11 @@ class AfterHeadPhase extends Phase {
       case "script":
       case "style":
       case "title":
-        return startTagFromHead(token);
+        startTagFromHead(token);
+        return null;
       case "head":
-        return startTagHead(token);
+        startTagHead(token);
+        return null;
       default:
         return startTagOther(token);
     }
@@ -1102,7 +1121,8 @@ class AfterHeadPhase extends Phase {
       case "br":
         return endTagHtmlBodyBr(token);
       default:
-        return endTagOther(token);
+        endTagOther(token);
+        return null;
     }
   }
 
@@ -1164,7 +1184,8 @@ class AfterHeadPhase extends Phase {
   }
 
   void anythingElse() {
-    tree.insertElement(new StartTagToken("body", data: {}));
+    tree.insertElement(new StartTagToken("body",
+        data: new LinkedHashMap<dynamic, String>()));
     parser.phase = parser._inBodyPhase;
     parser.framesetOK = true;
   }
@@ -1195,9 +1216,11 @@ class InBodyPhase extends Phase {
       case "title":
         return startTagProcessInHead(token);
       case "body":
-        return startTagBody(token);
+        startTagBody(token);
+        return null;
       case "frameset":
-        return startTagFrameset(token);
+        startTagFrameset(token);
+        return null;
       case "address":
       case "article":
       case "aside":
@@ -1221,7 +1244,8 @@ class InBodyPhase extends Phase {
       case "section":
       case "summary":
       case "ul":
-        return startTagCloseP(token);
+        startTagCloseP(token);
+        return null;
       // headingElements
       case "h1":
       case "h2":
@@ -1229,20 +1253,26 @@ class InBodyPhase extends Phase {
       case "h4":
       case "h5":
       case "h6":
-        return startTagHeading(token);
+        startTagHeading(token);
+        return null;
       case "pre":
       case "listing":
-        return startTagPreListing(token);
+        startTagPreListing(token);
+        return null;
       case "form":
-        return startTagForm(token);
+        startTagForm(token);
+        return null;
       case "li":
       case "dd":
       case "dt":
-        return startTagListItem(token);
+        startTagListItem(token);
+        return null;
       case "plaintext":
-        return startTagPlaintext(token);
+        startTagPlaintext(token);
+        return null;
       case "a":
-        return startTagA(token);
+        startTagA(token);
+        return null;
       case "b":
       case "big":
       case "code":
@@ -1255,58 +1285,77 @@ class InBodyPhase extends Phase {
       case "strong":
       case "tt":
       case "u":
-        return startTagFormatting(token);
+        startTagFormatting(token);
+        return null;
       case "nobr":
-        return startTagNobr(token);
+        startTagNobr(token);
+        return null;
       case "button":
         return startTagButton(token);
       case "applet":
       case "marquee":
       case "object":
-        return startTagAppletMarqueeObject(token);
+        startTagAppletMarqueeObject(token);
+        return null;
       case "xmp":
-        return startTagXmp(token);
+        startTagXmp(token);
+        return null;
       case "table":
-        return startTagTable(token);
+        startTagTable(token);
+        return null;
       case "area":
       case "br":
       case "embed":
       case "img":
       case "keygen":
       case "wbr":
-        return startTagVoidFormatting(token);
+        startTagVoidFormatting(token);
+        return null;
       case "param":
       case "source":
       case "track":
-        return startTagParamSource(token);
+        startTagParamSource(token);
+        return null;
       case "input":
-        return startTagInput(token);
+        startTagInput(token);
+        return null;
       case "hr":
-        return startTagHr(token);
+        startTagHr(token);
+        return null;
       case "image":
-        return startTagImage(token);
+        startTagImage(token);
+        return null;
       case "isindex":
-        return startTagIsIndex(token);
+        startTagIsIndex(token);
+        return null;
       case "textarea":
-        return startTagTextarea(token);
+        startTagTextarea(token);
+        return null;
       case "iframe":
-        return startTagIFrame(token);
+        startTagIFrame(token);
+        return null;
       case "noembed":
       case "noframes":
       case "noscript":
-        return startTagRawtext(token);
+        startTagRawtext(token);
+        return null;
       case "select":
-        return startTagSelect(token);
+        startTagSelect(token);
+        return null;
       case "rp":
       case "rt":
-        return startTagRpRt(token);
+        startTagRpRt(token);
+        return null;
       case "option":
       case "optgroup":
-        return startTagOpt(token);
+        startTagOpt(token);
+        return null;
       case "math":
-        return startTagMath(token);
+        startTagMath(token);
+        return null;
       case "svg":
-        return startTagSvg(token);
+        startTagSvg(token);
+        return null;
       case "caption":
       case "col":
       case "colgroup":
@@ -1318,7 +1367,8 @@ class InBodyPhase extends Phase {
       case "th":
       case "thead":
       case "tr":
-        return startTagMisplaced(token);
+        startTagMisplaced(token);
+        return null;
       default:
         return startTagOther(token);
     }
@@ -1327,7 +1377,8 @@ class InBodyPhase extends Phase {
   processEndTag(EndTagToken token) {
     switch (token.name) {
       case "body":
-        return endTagBody(token);
+        endTagBody(token);
+        return null;
       case "html":
         return endTagHtml(token);
       case "address":
@@ -1353,15 +1404,19 @@ class InBodyPhase extends Phase {
       case "section":
       case "summary":
       case "ul":
-        return endTagBlock(token);
+        endTagBlock(token);
+        return null;
       case "form":
-        return endTagForm(token);
+        endTagForm(token);
+        return null;
       case "p":
-        return endTagP(token);
+        endTagP(token);
+        return null;
       case "dd":
       case "dt":
       case "li":
-        return endTagListItem(token);
+        endTagListItem(token);
+        return null;
       // headingElements
       case "h1":
       case "h2":
@@ -1369,7 +1424,8 @@ class InBodyPhase extends Phase {
       case "h4":
       case "h5":
       case "h6":
-        return endTagHeading(token);
+        endTagHeading(token);
+        return null;
       case "a":
       case "b":
       case "big":
@@ -1384,15 +1440,19 @@ class InBodyPhase extends Phase {
       case "strong":
       case "tt":
       case "u":
-        return endTagFormatting(token);
+        endTagFormatting(token);
+        return null;
       case "applet":
       case "marquee":
       case "object":
-        return endTagAppletMarqueeObject(token);
+        endTagAppletMarqueeObject(token);
+        return null;
       case "br":
-        return endTagBr(token);
+        endTagBr(token);
+        return null;
       default:
-        return endTagOther(token);
+        endTagOther(token);
+        return null;
     }
   }
 
@@ -1733,28 +1793,31 @@ class InBodyPhase extends Phase {
     if (tree.formPointer != null) {
       return;
     }
-    var formAttrs = {};
+    var formAttrs = new LinkedHashMap<dynamic, String>();
     var dataAction = token.data["action"];
     if (dataAction != null) {
       formAttrs["action"] = dataAction;
     }
     processStartTag(new StartTagToken("form", data: formAttrs));
-    processStartTag(new StartTagToken("hr", data: {}));
-    processStartTag(new StartTagToken("label", data: {}));
+    processStartTag(new StartTagToken("hr",
+        data: new LinkedHashMap<dynamic, String>()));
+    processStartTag(new StartTagToken("label",
+        data: new LinkedHashMap<dynamic, String>()));
     // XXX Localization ...
     var prompt = token.data["prompt"];
     if (prompt == null) {
       prompt = "This is a searchable index. Enter search keywords: ";
     }
     processCharacters(new CharactersToken(prompt));
-    var attributes = new LinkedHashMap.from(token.data);
+    var attributes = new LinkedHashMap<dynamic, String>.from(token.data);
     attributes.remove('action');
     attributes.remove('prompt');
     attributes["name"] = "isindex";
     processStartTag(new StartTagToken(
         "input", data: attributes, selfClosing: token.selfClosing));
     processEndTag(new EndTagToken("label"));
-    processStartTag(new StartTagToken("hr", data: {}));
+    processStartTag(new StartTagToken("hr",
+        data: new LinkedHashMap<dynamic, String>()));
     processEndTag(new EndTagToken("form"));
   }
 
@@ -1857,7 +1920,8 @@ class InBodyPhase extends Phase {
 
   void endTagP(EndTagToken token) {
     if (!tree.elementInScope("p", variant: "button")) {
-      startTagCloseP(new StartTagToken("p", data: {}));
+      startTagCloseP(new StartTagToken("p",
+          data: new LinkedHashMap<dynamic, String>()));
       parser.parseError(token.span, "unexpected-end-tag", {"name": "p"});
       endTagP(new EndTagToken("p"));
     } else {
@@ -1994,7 +2058,7 @@ class InBodyPhase extends Phase {
   }
 
   /// The much-feared adoption agency algorithm.
-  endTagFormatting(EndTagToken token) {
+  void endTagFormatting(EndTagToken token) {
     // http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#adoptionAgency
     // TODO(jmesserly): the comments here don't match the numbered steps in the
     // updated spec. This needs a pass over it to verify that it still matches.
@@ -2164,7 +2228,8 @@ class InBodyPhase extends Phase {
       "newName": "br element"
     });
     tree.reconstructActiveFormattingElements();
-    tree.insertElement(new StartTagToken("br", data: {}));
+    tree.insertElement(new StartTagToken("br",
+        data: new LinkedHashMap<dynamic, String>()));
     tree.openElements.removeLast();
   }
 
@@ -2199,8 +2264,11 @@ class TextPhase extends Phase {
   }
 
   processEndTag(EndTagToken token) {
-    if (token.name == 'script') return endTagScript(token);
-    return endTagOther(token);
+    if (token.name == 'script') {
+      endTagScript(token);
+      return null;
+    }
+    endTagOther(token);
   }
 
   Token processCharacters(CharactersToken token) {
@@ -2240,15 +2308,18 @@ class InTablePhase extends Phase {
       case "html":
         return startTagHtml(token);
       case "caption":
-        return startTagCaption(token);
+        startTagCaption(token);
+        return null;
       case "colgroup":
-        return startTagColgroup(token);
+        startTagColgroup(token);
+        return null;
       case "col":
         return startTagCol(token);
       case "tbody":
       case "tfoot":
       case "thead":
-        return startTagRowGroup(token);
+        startTagRowGroup(token);
+        return null;
       case "td":
       case "th":
       case "tr":
@@ -2259,18 +2330,22 @@ class InTablePhase extends Phase {
       case "script":
         return startTagStyleScript(token);
       case "input":
-        return startTagInput(token);
+        startTagInput(token);
+        return null;
       case "form":
-        return startTagForm(token);
+        startTagForm(token);
+        return null;
       default:
-        return startTagOther(token);
+        startTagOther(token);
+        return null;
     }
   }
 
   processEndTag(EndTagToken token) {
     switch (token.name) {
       case "table":
-        return endTagTable(token);
+        endTagTable(token);
+        return null;
       case "body":
       case "caption":
       case "col":
@@ -2282,9 +2357,11 @@ class InTablePhase extends Phase {
       case "th":
       case "thead":
       case "tr":
-        return endTagIgnore(token);
+        endTagIgnore(token);
+        return null;
       default:
-        return endTagOther(token);
+        endTagOther(token);
+        return null;
     }
   }
 
@@ -2350,7 +2427,8 @@ class InTablePhase extends Phase {
   }
 
   Token startTagCol(StartTagToken token) {
-    startTagColgroup(new StartTagToken("colgroup", data: {}));
+    startTagColgroup(new StartTagToken("colgroup",
+        data: new LinkedHashMap<dynamic, String>()));
     return token;
   }
 
@@ -2361,7 +2439,8 @@ class InTablePhase extends Phase {
   }
 
   Token startTagImplyTbody(StartTagToken token) {
-    startTagRowGroup(new StartTagToken("tbody", data: {}));
+    startTagRowGroup(new StartTagToken("tbody",
+        data: new LinkedHashMap<dynamic, String>()));
     return token;
   }
 
@@ -2542,7 +2621,8 @@ class InCaptionPhase extends Phase {
   processEndTag(EndTagToken token) {
     switch (token.name) {
       case "caption":
-        return endTagCaption(token);
+        endTagCaption(token);
+        return null;
       case "table":
         return endTagTable(token);
       case "body":
@@ -2555,7 +2635,8 @@ class InCaptionPhase extends Phase {
       case "th":
       case "thead":
       case "tr":
-        return endTagIgnore(token);
+        endTagIgnore(token);
+        return null;
       default:
         return endTagOther(token);
     }
@@ -2641,7 +2722,8 @@ class InColumnGroupPhase extends Phase {
       case "html":
         return startTagHtml(token);
       case "col":
-        return startTagCol(token);
+        startTagCol(token);
+        return null;
       default:
         return startTagOther(token);
     }
@@ -2650,9 +2732,11 @@ class InColumnGroupPhase extends Phase {
   processEndTag(EndTagToken token) {
     switch (token.name) {
       case "colgroup":
-        return endTagColgroup(token);
+        endTagColgroup(token);
+        return null;
       case "col":
-        return endTagCol(token);
+        endTagCol(token);
+        return null;
       default:
         return endTagOther(token);
     }
@@ -2722,7 +2806,8 @@ class InTableBodyPhase extends Phase {
       case "html":
         return startTagHtml(token);
       case "tr":
-        return startTagTr(token);
+        startTagTr(token);
+        return null;
       case "td":
       case "th":
         return startTagTableCell(token);
@@ -2743,7 +2828,8 @@ class InTableBodyPhase extends Phase {
       case "tbody":
       case "tfoot":
       case "thead":
-        return endTagTableRowGroup(token);
+        endTagTableRowGroup(token);
+        return null;
       case "table":
         return endTagTable(token);
       case "body":
@@ -2754,7 +2840,8 @@ class InTableBodyPhase extends Phase {
       case "td":
       case "th":
       case "tr":
-        return endTagIgnore(token);
+        endTagIgnore(token);
+        return null;
       default:
         return endTagOther(token);
     }
@@ -2796,7 +2883,8 @@ class InTableBodyPhase extends Phase {
   Token startTagTableCell(StartTagToken token) {
     parser.parseError(
         token.span, "unexpected-cell-in-table-body", {"name": token.name});
-    startTagTr(new StartTagToken("tr", data: {}));
+    startTagTr(new StartTagToken("tr",
+        data: new LinkedHashMap<dynamic, String>()));
     return token;
   }
 
@@ -2854,7 +2942,8 @@ class InRowPhase extends Phase {
         return startTagHtml(token);
       case "td":
       case "th":
-        return startTagTableCell(token);
+        startTagTableCell(token);
+        return null;
       case "caption":
       case "col":
       case "colgroup":
@@ -2871,7 +2960,8 @@ class InRowPhase extends Phase {
   processEndTag(EndTagToken token) {
     switch (token.name) {
       case "tr":
-        return endTagTr(token);
+        endTagTr(token);
+        return null;
       case "table":
         return endTagTable(token);
       case "tbody":
@@ -2885,7 +2975,8 @@ class InRowPhase extends Phase {
       case "html":
       case "td":
       case "th":
-        return endTagIgnore(token);
+        endTagIgnore(token);
+        return null;
       default:
         return endTagOther(token);
     }
@@ -3009,13 +3100,15 @@ class InCellPhase extends Phase {
     switch (token.name) {
       case "td":
       case "th":
-        return endTagTableCell(token);
+        endTagTableCell(token);
+        return null;
       case "body":
       case "caption":
       case "col":
       case "colgroup":
       case "html":
-        return endTagIgnore(token);
+        endTagIgnore(token);
+        return null;
       case "table":
       case "tbody":
       case "tfoot":
@@ -3109,11 +3202,14 @@ class InSelectPhase extends Phase {
       case "html":
         return startTagHtml(token);
       case "option":
-        return startTagOption(token);
+        startTagOption(token);
+        return null;
       case "optgroup":
-        return startTagOptgroup(token);
+        startTagOptgroup(token);
+        return null;
       case "select":
-        return startTagSelect(token);
+        startTagSelect(token);
+        return null;
       case "input":
       case "keygen":
       case "textarea":
@@ -3128,13 +3224,17 @@ class InSelectPhase extends Phase {
   processEndTag(EndTagToken token) {
     switch (token.name) {
       case "option":
-        return endTagOption(token);
+        endTagOption(token);
+        return null;
       case "optgroup":
-        return endTagOptgroup(token);
+        endTagOptgroup(token);
+        return null;
       case "select":
-        return endTagSelect(token);
+        endTagSelect(token);
+        return null;
       default:
-        return endTagOther(token);
+        endTagOther(token);
+        return null;
     }
   }
 
@@ -3504,7 +3604,10 @@ class AfterBodyPhase extends Phase {
   }
 
   processEndTag(EndTagToken token) {
-    if (token.name == "html") return endTagHtml(token);
+    if (token.name == "html") {
+      endTagHtml(token);
+      return null;
+    }
     return endTagOther(token);
   }
 
@@ -3566,9 +3669,11 @@ class InFramesetPhase extends Phase {
       case "html":
         return startTagHtml(token);
       case "frameset":
-        return startTagFrameset(token);
+        startTagFrameset(token);
+        return null;
       case "frame":
-        return startTagFrame(token);
+        startTagFrame(token);
+        return null;
       case "noframes":
         return startTagNoframes(token);
       default:
@@ -3579,9 +3684,11 @@ class InFramesetPhase extends Phase {
   processEndTag(EndTagToken token) {
     switch (token.name) {
       case "frameset":
-        return endTagFrameset(token);
+        endTagFrameset(token);
+        return null;
       default:
-        return endTagOther(token);
+        endTagOther(token);
+        return null;
     }
   }
 
@@ -3653,16 +3760,19 @@ class AfterFramesetPhase extends Phase {
       case "noframes":
         return startTagNoframes(token);
       default:
-        return startTagOther(token);
+        startTagOther(token);
+        return null;
     }
   }
 
   processEndTag(EndTagToken token) {
     switch (token.name) {
       case "html":
-        return endTagHtml(token);
+        endTagHtml(token);
+        return null;
       default:
-        return endTagOther(token);
+        endTagOther(token);
+        return null;
     }
   }
 
@@ -3748,7 +3858,8 @@ class AfterAfterFramesetPhase extends Phase {
       case "noframes":
         return startTagNoFrames(token);
       default:
-        return startTagOther(token);
+        startTagOther(token);
+        return null;
     }
   }
 

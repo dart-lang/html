@@ -43,7 +43,7 @@ bool startsWithAny(String str, List<String> prefixes) {
 }
 
 // Like the python [:] operator.
-List slice(List list, int start, [int end]) {
+List/*<T>*/ slice/*<T>*/(List/*<T>*/ list, int start, [int end]) {
   if (end == null) end = list.length;
   if (end < 0) end += list.length;
 

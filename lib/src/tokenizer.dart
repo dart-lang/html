@@ -12,7 +12,7 @@ import 'utils.dart';
 // TODO(jmesserly): we could use a better data structure here like a trie, if
 // we had it implemented in Dart.
 Map<String, List<String>> entitiesByFirstChar = (() {
-  var result = {};
+  var result = <String, List<String>>{};
   for (var k in entities.keys) {
     result.putIfAbsent(k[0], () => []).add(k);
   }

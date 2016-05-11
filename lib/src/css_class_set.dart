@@ -55,7 +55,7 @@ abstract class CssClassSet implements Set<String> {
    * This is the Dart equivalent of jQuery's
    * [hasClass](http://api.jquery.com/hasClass/).
    */
-  bool contains(String value);
+  bool contains(Object value);
 
   /**
    * Add the class [value] to element.
@@ -93,7 +93,7 @@ abstract class CssClassSet implements Set<String> {
    * This is the Dart equivalent of jQuery's
    * [removeClass](http://api.jquery.com/removeClass/).
    */
-  void removeAll(Iterable<String> iterable);
+  void removeAll(Iterable<Object> iterable);
 
   /**
    * Toggles all classes specified in [iterable] on element.
@@ -151,11 +151,11 @@ abstract class CssClassSetImpl implements CssClassSet {
 
   String join([String separator = ""]) => readClasses().join(separator);
 
-  Iterable map(f(String element)) => readClasses().map(f);
+  Iterable/*<T>*/ map/*<T>*/(/*=T*/ f(String e)) => readClasses().map(f);
 
   Iterable<String> where(bool f(String element)) => readClasses().where(f);
 
-  Iterable expand(Iterable f(String element)) => readClasses().expand(f);
+  Iterable/*<T>*/ expand/*<T>*/(Iterable/*<T>*/ f(String element)) => readClasses().expand(f);
 
   bool every(bool f(String element)) => readClasses().every(f);
 
@@ -171,8 +171,8 @@ abstract class CssClassSetImpl implements CssClassSet {
     return readClasses().reduce(combine);
   }
 
-  dynamic fold(dynamic initialValue,
-      dynamic combine(dynamic previousValue, String element)) {
+  dynamic/*=T*/ fold/*<T>*/(var/*=T*/ initialValue,
+      dynamic/*=T*/ combine(var/*=T*/ previousValue, String element)) {
     return readClasses().fold(initialValue, combine);
   }
   // interface Collection - END
@@ -184,10 +184,10 @@ abstract class CssClassSetImpl implements CssClassSet {
    * This is the Dart equivalent of jQuery's
    * [hasClass](http://api.jquery.com/hasClass/).
    */
-  bool contains(String value) => readClasses().contains(value);
+  bool contains(Object value) => readClasses().contains(value);
 
   /** Lookup from the Set interface. Not interesting for a String set. */
-  String lookup(String value) => contains(value) ? value : null;
+  String lookup(Object value) => contains(value) ? value as String : null;
 
   /**
    * Add the class [value] to element.
@@ -233,7 +233,7 @@ abstract class CssClassSetImpl implements CssClassSet {
    * This is the Dart equivalent of jQuery's
    * [removeClass](http://api.jquery.com/removeClass/).
    */
-  void removeAll(Iterable<String> iterable) {
+  void removeAll(Iterable<Object> iterable) {
     modify((s) => s.removeAll(iterable));
   }
 
@@ -251,7 +251,7 @@ abstract class CssClassSetImpl implements CssClassSet {
     iterable.forEach((e) => toggle(e, shouldAdd));
   }
 
-  void retainAll(Iterable<String> iterable) {
+  void retainAll(Iterable<Object> iterable) {
     modify((s) => s.retainAll(iterable));
   }
 
@@ -263,10 +263,10 @@ abstract class CssClassSetImpl implements CssClassSet {
     modify((s) => s.retainWhere(test));
   }
 
-  bool containsAll(Iterable<String> collection) =>
+  bool containsAll(Iterable<Object> collection) =>
       readClasses().containsAll(collection);
 
-  Set<String> intersection(Set<String> other) =>
+  Set<String> intersection(Set<Object> other) =>
       readClasses().intersection(other);
 
   Set<String> union(Set<String> other) => readClasses().union(other);
@@ -285,9 +285,9 @@ abstract class CssClassSetImpl implements CssClassSet {
   Iterable<String> skip(int n) => readClasses().skip(n);
   Iterable<String> skipWhile(bool test(String value)) =>
       readClasses().skipWhile(test);
-  dynamic firstWhere(bool test(String value), {Object orElse()}) =>
+  String firstWhere(bool test(String value), {String orElse()}) =>
       readClasses().firstWhere(test, orElse: orElse);
-  dynamic lastWhere(bool test(String value), {Object orElse()}) =>
+  String lastWhere(bool test(String value), {String orElse()}) =>
       readClasses().lastWhere(test, orElse: orElse);
   String singleWhere(bool test(String value)) =>
       readClasses().singleWhere(test);

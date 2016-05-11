@@ -17,7 +17,7 @@ main(List<String> args) {
   var pattern = new RegExp(args.length > 0 ? args[0] : '.');
   useCompactVMConfiguration();
 
-  void addGroup(testFile, testMain) {
+  void addGroup(testFile, void testMain()) {
     if (pattern.hasMatch(testFile)) {
       group(testFile.replaceAll('_test.dart', ':'), testMain);
     }

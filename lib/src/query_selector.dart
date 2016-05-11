@@ -3,6 +3,7 @@ library html.src.query;
 
 import 'package:csslib/parser.dart' as css;
 import 'package:csslib/parser.dart' show TokenKind;
+import 'package:csslib/src/messages.dart' show Message;
 import 'package:csslib/visitor.dart'; // the CSSOM
 import 'package:html/dom.dart';
 import 'package:html/src/constants.dart' show isWhitespaceCC;
@@ -14,7 +15,7 @@ Element querySelector(Node node, String selector) =>
     new SelectorEvaluator().querySelector(node, _parseSelectorList(selector));
 
 List<Element> querySelectorAll(Node node, String selector) {
-  var results = [];
+  var results = <Element>[];
   new SelectorEvaluator().querySelectorAll(
       node, _parseSelectorList(selector), results);
   return results;
@@ -22,7 +23,7 @@ List<Element> querySelectorAll(Node node, String selector) {
 
 // http://dev.w3.org/csswg/selectors-4/#grouping
 SelectorGroup _parseSelectorList(String selector) {
-  var errors = [];
+  var errors = <Message>[];
   var group = css.parseSelectorGroup(selector, errors: errors);
   if (group == null || errors.isNotEmpty) {
     throw new FormatException("'$selector' is not a valid selector: $errors");
