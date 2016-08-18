@@ -251,7 +251,7 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
         'ParserError on line 1, column 4: Unexpected non-space characters. '
         'Expected DOCTYPE.\n'
         'foo\n'
-        '  ^');
+        '   ^');
   });
 
   test('Element.text', () {

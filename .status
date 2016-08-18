@@ -26,3 +26,4 @@ test/selectors/*: Skip
 
 [ $runtime == vm ]
 test/browser/browser_test: Skip
+test/selectors/level1_baseline_test: RuntimeError # Issue 37
