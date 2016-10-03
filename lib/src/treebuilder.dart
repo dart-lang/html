@@ -352,7 +352,7 @@ class TreeBuilder {
     // XXX - this is really inelegant
     Node lastTable = null;
     Node fosterParent = null;
-    var insertBefore = null;
+    Node insertBefore = null;
     for (var elm in openElements.reversed) {
       if (elm.localName == "table") {
         lastTable = elm;
