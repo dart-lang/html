@@ -3,6 +3,9 @@
 This file contains highlights of what changes on each version of the html
 package.
 
+## 0.13.1
+ * Update Set.difference to take a Set<Object>.
+
 ## 0.13.0
 
  * **BREAKING** Fix all [strong mode][] errors and warnings.
