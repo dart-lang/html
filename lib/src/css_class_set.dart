@@ -271,7 +271,7 @@ abstract class CssClassSetImpl implements CssClassSet {
 
   Set<String> union(Set<String> other) => readClasses().union(other);
 
-  Set<String> difference(Set<String> other) => readClasses().difference(other);
+  Set<String> difference(Set<Object> other) => readClasses().difference(other);
 
   String get first => readClasses().first;
   String get last => readClasses().last;
