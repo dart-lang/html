@@ -570,7 +570,8 @@ class HtmlTokenizer implements Iterator<Token> {
     } else if (data == ">") {
       emitCurrentToken();
     } else if (data == EOF) {
-      _addToken(new ParseErrorToken("eof-in-tag-name"));
+      _addToken(new CharactersToken("<" + currentTagToken.name));
+      stream.unget(data);
       state = dataState;
     } else if (data == "/") {
       state = selfClosingStartTagState;
