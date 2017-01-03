@@ -820,6 +820,7 @@ class FilteredElementList extends IterableBase<Element> with ListMixin<Element>
   FilteredElementList(Node node)
       : _childNodes = node.nodes;
 
+
   // We can't memoize this, since it's possible that children will be messed
   // with externally to this class.
   //
