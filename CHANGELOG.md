@@ -1,7 +1,6 @@
-# changelog
+## 0.13.2
 
-This file contains highlights of what changes on each version of the html
-package.
+ * Support the latest release of `pkg/csslib`.
 
 ## 0.13.1
  * Update Set.difference to take a Set<Object>.
