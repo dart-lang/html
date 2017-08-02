@@ -1,7 +1,7 @@
 /// Additional feature tests that aren't based on test data.
 library dom_test;
 
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart';
 

@@ -3,7 +3,8 @@ library support;
 
 import 'dart:io';
 import 'dart:collection';
-import 'package:path/path.dart' as path;
+
+import 'package:path/path.dart' as p;
 import 'package:html/src/treebuilder.dart';
 import 'package:html/dom.dart';
 import 'package:html/dom_parsing.dart';
@@ -19,10 +20,12 @@ Map<String, TreeBuilderFactory> get treeTypes {
   return _treeTypes;
 }
 
-final testDataDir = Platform.script.resolve('data').toFilePath();
+final testDir = p.join(p.dirname(p.fromUri(Platform.packageConfig)), 'test');
+
+final testDataDir = p.join(testDir, 'data');
 
 Iterable<String> getDataFiles(String subdirectory) {
-  var dir = new Directory(path.join(testDataDir, subdirectory));
+  var dir = new Directory(p.join(testDataDir, subdirectory));
   return dir.listSync().where((f) => f is File).map((f) => f.path);
 }
 

@@ -5,8 +5,7 @@
 
 library test.run_all;
 
-import 'package:unittest/compact_vm_config.dart';
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 
 import 'dom_test.dart' as dom_test;
 import 'parser_feature_test.dart' as parser_feature_test;
@@ -15,7 +14,6 @@ import 'tokenizer_test.dart' as tokenizer_test;
 
 main(List<String> args) {
   var pattern = new RegExp(args.length > 0 ? args[0] : '.');
-  useCompactVMConfiguration();
 
   void addGroup(testFile, void testMain()) {
     if (pattern.hasMatch(testFile)) {

@@ -10,7 +10,7 @@
 library html.test.selectors.level1_lib;
 
 import 'package:html/dom.dart';
-import 'package:unittest/unittest.dart' as unittest;
+import 'package:test/test.dart' as unittest;
 
 Document doc;
 

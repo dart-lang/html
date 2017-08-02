@@ -8,12 +8,14 @@ library html.test.selectors.level1_baseline_test;
 import 'dart:io';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart';
-import 'package:unittest/unittest.dart';
+import 'package:path/path.dart' as p;
+import 'package:test/test.dart';
 import 'level1_lib.dart' hide test;
 import 'selectors.dart';
+import '../support.dart';
 
 Document getTestContentDocument() {
-  var testPath = Platform.script.resolve('level1-content.html').toFilePath();
+  var testPath = p.join(testDir, 'selectors', 'level1-content.html');
   return parse(new File(testPath).readAsStringSync());
 }
 

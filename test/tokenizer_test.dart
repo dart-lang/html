@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:mirrors';
 import 'package:path/path.dart' as pathos;
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 import 'package:html/src/char_encodings.dart';
 import 'package:html/src/token.dart';
 import 'package:html/src/tokenizer.dart';
