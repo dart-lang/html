@@ -68,8 +68,11 @@ class HtmlInputStream {
   /// element)
   ///
   /// [parseMeta] - Look for a <meta> element containing encoding information
-  HtmlInputStream(source, [String encoding, bool parseMeta = true,
-      this.generateSpans = false, this.sourceUrl])
+  HtmlInputStream(source,
+      [String encoding,
+      bool parseMeta = true,
+      this.generateSpans = false,
+      this.sourceUrl])
       : charEncodingName = codecName(encoding) {
     if (source is String) {
       _rawChars = toCodepoints(source);

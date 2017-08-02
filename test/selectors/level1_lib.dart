@@ -155,8 +155,8 @@ runSpecialSelectorTests(type, root) {
     var elm = root.querySelector('undefined');
     assert_not_equals(elm, 'undefined', "This should find an element.");
     // TODO(jmesserly): change "localName" back to "tagName" once implemented.
-    assert_equals(elm.localName.toUpperCase(),
-        "UNDEFINED", "The tag name should be 'UNDEFINED'.");
+    assert_equals(elm.localName.toUpperCase(), "UNDEFINED",
+        "The tag name should be 'UNDEFINED'.");
   }, type + ".querySelector undefined");
 
   test(() {

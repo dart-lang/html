@@ -9,7 +9,6 @@ import 'dart:math' show Random;
 
 // TOOD(jmesserly): this needs to be removed, but fixing NodeList is tricky.
 class ListProxy<E> extends IterableBase<E> implements List<E> {
-
   /// The inner [List<T>] with the actual storage.
   final List<E> _list;
 
@@ -48,9 +47,11 @@ class ListProxy<E> extends IterableBase<E> implements List<E> {
   operator []=(int index, E value) {
     _list[index] = value;
   }
+
   set length(int value) {
     _list.length = value;
   }
+
   void add(E value) {
     _list.add(value);
   }
@@ -58,12 +59,15 @@ class ListProxy<E> extends IterableBase<E> implements List<E> {
   void addLast(E value) {
     add(value);
   }
+
   void addAll(Iterable<E> collection) {
     _list.addAll(collection);
   }
+
   void sort([int compare(E a, E b)]) {
     _list.sort(compare);
   }
+
   void shuffle([Random random]) {
     _list.shuffle(random);
   }
@@ -87,9 +91,11 @@ class ListProxy<E> extends IterableBase<E> implements List<E> {
   void setRange(int start, int length, Iterable<E> from, [int startFrom = 0]) {
     _list.setRange(start, length, from, startFrom);
   }
+
   void removeRange(int start, int length) {
     _list.removeRange(start, length);
   }
+
   void insertAll(int index, Iterable<E> iterable) {
     _list.insertAll(index, iterable);
   }

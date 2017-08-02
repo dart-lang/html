@@ -30,10 +30,14 @@ String namespaceHtml(String expected) {
   return lines.join("\n");
 }
 
-void runParserTest(String groupName, String innerHTML, String input,
-    String expected, List errors, TreeBuilderFactory treeCtor,
+void runParserTest(
+    String groupName,
+    String innerHTML,
+    String input,
+    String expected,
+    List errors,
+    TreeBuilderFactory treeCtor,
     bool namespaceHTMLElements) {
-
   // XXX - move this out into the setup function
   // concatenate all consecutive character tokens into a single token
   var builder = treeCtor(namespaceHTMLElements);
@@ -53,14 +57,15 @@ void runParserTest(String groupName, String innerHTML, String input,
   }
 
   expect(output, equals(expected),
-      reason: "\n\nInput:\n$input\n\nExpected:\n$expected\n\nReceived:\n$output");
+      reason:
+          "\n\nInput:\n$input\n\nExpected:\n$expected\n\nReceived:\n$output");
 
   if (checkParseErrors) {
     expect(parser.errors.length, equals(errors.length),
         reason: "\n\nInput:\n$input\n\nExpected errors (${errors.length}):\n"
-        "${errors.join('\n')}\n\n"
-        "Actual errors (${parser.errors.length}):\n"
-        "${parser.errors.map((e) => '$e').join('\n')}");
+            "${errors.join('\n')}\n\n"
+            "Actual errors (${parser.errors.length}):\n"
+            "${parser.errors.map((e) => '$e').join('\n')}");
   }
 }
 

@@ -378,16 +378,8 @@ class TreeBuilder {
     var name = openElements.last.localName;
     // XXX td, th and tr are not actually needed
     if (name != exclude &&
-        const [
-      "dd",
-      "dt",
-      "li",
-      "option",
-      "optgroup",
-      "p",
-      "rp",
-      "rt"
-    ].contains(name)) {
+        const ["dd", "dt", "li", "option", "optgroup", "p", "rp", "rt"]
+            .contains(name)) {
       openElements.removeLast();
       // XXX This is not entirely what the specification says. We should
       // investigate it more closely.

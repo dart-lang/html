@@ -141,12 +141,12 @@ class EncodingParser {
 
   String getEncoding() {
     final methodDispatch = [
-        new _DispatchEntry("<!--", handleComment),
-        new _DispatchEntry("<meta", handleMeta),
-        new _DispatchEntry("</", handlePossibleEndTag),
-        new _DispatchEntry("<!", handleOther),
-        new _DispatchEntry("<?", handleOther),
-        new _DispatchEntry("<", handlePossibleStartTag),
+      new _DispatchEntry("<!--", handleComment),
+      new _DispatchEntry("<meta", handleMeta),
+      new _DispatchEntry("</", handlePossibleEndTag),
+      new _DispatchEntry("<!", handleOther),
+      new _DispatchEntry("<?", handleOther),
+      new _DispatchEntry("<", handlePossibleStartTag),
     ];
 
     try {
