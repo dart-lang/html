@@ -6,6 +6,7 @@
 library html.dom.src;
 
 import 'dart:collection';
+
 import 'package:html/dom.dart';
 
 class ElementCssClassSet extends CssClassSetImpl {
@@ -33,7 +34,6 @@ class ElementCssClassSet extends CssClassSetImpl {
 
 /** A Set that stores the CSS class names for an element. */
 abstract class CssClassSet implements Set<String> {
-
   /**
    * Adds the class [value] to the element if it is not on it, removes it if it
    * is.
@@ -151,11 +151,12 @@ abstract class CssClassSetImpl implements CssClassSet {
 
   String join([String separator = ""]) => readClasses().join(separator);
 
-  Iterable/*<T>*/ map/*<T>*/(/*=T*/ f(String e)) => readClasses().map(f);
+  Iterable<T> map<T>(T f(String e)) => readClasses().map(f);
 
   Iterable<String> where(bool f(String element)) => readClasses().where(f);
 
-  Iterable/*<T>*/ expand/*<T>*/(Iterable/*<T>*/ f(String element)) => readClasses().expand(f);
+  Iterable<T> expand<T>(Iterable<T> f(String element)) =>
+      readClasses().expand(f);
 
   bool every(bool f(String element)) => readClasses().every(f);
 
@@ -171,8 +172,7 @@ abstract class CssClassSetImpl implements CssClassSet {
     return readClasses().reduce(combine);
   }
 
-  dynamic/*=T*/ fold/*<T>*/(var/*=T*/ initialValue,
-      dynamic/*=T*/ combine(var/*=T*/ previousValue, String element)) {
+  T fold<T>(T initialValue, T combine(T previousValue, String element)) {
     return readClasses().fold(initialValue, combine);
   }
   // interface Collection - END
