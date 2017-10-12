@@ -267,7 +267,7 @@ abstract class Node {
     nodes.clear();
   }
 
-  bool hasChildNodes() => !nodes.isEmpty;
+  bool hasChildNodes() => nodes.isNotEmpty;
 
   bool contains(Node node) => nodes.contains(node);
 
@@ -838,7 +838,7 @@ class FilteredElementList extends IterableBase<Element>
     this[index].replaceWith(value);
   }
 
-  void set length(int newLength) {
+  set length(int newLength) {
     final len = this.length;
     if (newLength >= len) {
       return;
@@ -974,7 +974,7 @@ class FilteredElementList extends IterableBase<Element>
 
   // TODO(sigmund): this should be typed Element, but we currently run into a
   // bug where ListMixin<E>.lastIndexOf() expects Object as the argument.
-  int lastIndexOf(element, [int start = null]) {
+  int lastIndexOf(element, [int start]) {
     if (start == null) start = length - 1;
     return _filtered.lastIndexOf(element, start);
   }

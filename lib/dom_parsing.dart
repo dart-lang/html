@@ -128,10 +128,10 @@ class CodeMarkupVisitor extends TreeVisitor {
 String htmlSerializeEscape(String text, {bool attributeMode: false}) {
   // TODO(jmesserly): is it faster to build up a list of codepoints?
   // StringBuffer seems cleaner assuming Dart can unbox 1-char strings.
-  StringBuffer result = null;
+  StringBuffer result;
   for (int i = 0; i < text.length; i++) {
     var ch = text[i];
-    String replace = null;
+    String replace;
     switch (ch) {
       case '&':
         replace = '&amp;';

@@ -310,7 +310,7 @@ class HtmlTokenizer implements Iterator<Token> {
 
       // At this point we have a string that starts with some characters
       // that may match an entity
-      String entityName = null;
+      String entityName;
 
       // Try to find the longest entity the string will match to take care
       // of &noti for instance.

@@ -1,8 +1,8 @@
 /// Support code for the tests in this directory.
 library support;
 
-import 'dart:io';
 import 'dart:collection';
+import 'dart:io';
 
 import 'package:path/path.dart' as p;
 import 'package:html/src/treebuilder.dart';
@@ -45,7 +45,7 @@ class TestData extends IterableBase<Map> {
 
   List<Map> _getData() {
     var data = <String, String>{};
-    var key = null;
+    String key;
     var result = <Map>[];
     var lines = _text.split('\n');
     // Remove trailing newline to match Python

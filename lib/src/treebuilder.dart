@@ -350,9 +350,9 @@ class TreeBuilder {
     // The foster parent element is the one which comes before the most
     // recently opened table element
     // XXX - this is really inelegant
-    Node lastTable = null;
-    Node fosterParent = null;
-    Node insertBefore = null;
+    Node lastTable;
+    Node fosterParent;
+    Node insertBefore;
     for (var elm in openElements.reversed) {
       if (elm.localName == "table") {
         lastTable = elm;

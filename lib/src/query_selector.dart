@@ -67,7 +67,7 @@ class SelectorEvaluator extends Visitor {
     var result = true;
 
     // Note: evaluate selectors right-to-left as it's more efficient.
-    int combinator = null;
+    int combinator;
     for (var s in selector.simpleSelectorSequences.reversed) {
       if (combinator == null) {
         result = s.simpleSelector.visit(this);

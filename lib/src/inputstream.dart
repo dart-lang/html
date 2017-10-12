@@ -5,8 +5,8 @@ import 'package:utf/utf.dart';
 import 'package:source_span/source_span.dart';
 import 'char_encodings.dart';
 import 'constants.dart';
-import 'utils.dart';
 import 'encoding_parser.dart';
+import 'utils.dart';
 
 /// Hooks to call into dart:io without directly referencing it.
 class ConsoleSupport {

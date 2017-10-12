@@ -20,7 +20,7 @@ class ElementCssClassSet extends CssClassSetImpl {
 
     for (String name in classname.split(' ')) {
       String trimmed = name.trim();
-      if (!trimmed.isEmpty) {
+      if (trimmed.isNotEmpty) {
         s.add(trimmed);
       }
     }

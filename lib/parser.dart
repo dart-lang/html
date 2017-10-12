@@ -17,13 +17,13 @@ import 'dart:collection';
 import 'dart:math';
 import 'package:source_span/source_span.dart';
 
-import 'src/treebuilder.dart';
+import 'dom.dart';
 import 'src/constants.dart';
 import 'src/encoding_parser.dart';
 import 'src/token.dart';
 import 'src/tokenizer.dart';
+import 'src/treebuilder.dart';
 import 'src/utils.dart';
-import 'dom.dart';
 
 /// Parse the [input] html5 document into a tree. The [input] can be
 /// a [String], [List<int>] of bytes or an [HtmlTokenizer].
@@ -2092,7 +2092,7 @@ class InBodyPhase extends Phase {
       // Step 2
       // Start of the adoption agency algorithm proper
       var afeIndex = tree.openElements.indexOf(formattingElement);
-      Node furthestBlock = null;
+      Node furthestBlock;
       for (Node element in slice(tree.openElements, afeIndex)) {
         if (specialElements.contains(getElementNameTuple(element))) {
           furthestBlock = element;
@@ -2517,7 +2517,7 @@ class InTableTextPhase extends Phase {
   Phase originalPhase;
   List<StringToken> characterTokens;
 
-  InTableTextPhase(parser)
+  InTableTextPhase(HtmlParser parser)
       : characterTokens = <StringToken>[],
         super(parser);
 
@@ -2526,7 +2526,7 @@ class InTableTextPhase extends Phase {
 
     // TODO(sigmund,jmesserly): remove '' (dartbug.com/8480)
     var data = characterTokens.map((t) => t.data).join('');
-    var span = null;
+    FileSpan span;
 
     if (parser.generateSpans) {
       span = characterTokens[0].span.expand(characterTokens.last.span);
@@ -3551,7 +3551,7 @@ class InForeignContentPhase extends Phase {
       parser.parseError(token.span, "unexpected-end-tag", {"name": token.name});
     }
 
-    var newToken = null;
+    var newToken;
     while (true) {
       if (asciiUpper2Lower(node.localName) == token.name) {
         //XXX this isn't in the spec but it seems necessary

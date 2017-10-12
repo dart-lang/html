@@ -116,10 +116,10 @@ class IterableWindows1252Decoder extends IterableBase<int> {
   final int length;
   final int replacementCodepoint;
 
-  IterableWindows1252Decoder(List<int> this.bytes,
-      [int this.offset = 0,
-      int this.length = null,
-      int this.replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]);
+  IterableWindows1252Decoder(this.bytes,
+      [this.offset = 0,
+      this.length,
+      this.replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]);
 
   Windows1252Decoder get iterator =>
       new Windows1252Decoder(bytes, offset, length, replacementCodepoint);

@@ -10,9 +10,10 @@ import 'package:html/dom.dart';
 import 'package:html/parser.dart';
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
+
+import '../support.dart';
 import 'level1_lib.dart' hide test;
 import 'selectors.dart';
-import '../support.dart';
 
 Document getTestContentDocument() {
   var testPath = p.join(testDir, 'selectors', 'level1-content.html');
