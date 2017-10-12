@@ -3,6 +3,9 @@
 ///
 /// Note, unlike the original we don't operate in-browser on a DOM loaded into
 /// an iframe, but instead operate over a parsed DOM.
+
+@Skip()
+
 library html.test.selectors.level1_baseline_test;
 
 import 'dart:io';
