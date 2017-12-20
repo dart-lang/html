@@ -290,8 +290,10 @@ abstract class CssClassSetImpl implements CssClassSet {
       readClasses().firstWhere(test, orElse: orElse);
   String lastWhere(bool test(String value), {String orElse()}) =>
       readClasses().lastWhere(test, orElse: orElse);
-  String singleWhere(bool test(String value)) =>
-      readClasses().singleWhere(test);
+  String singleWhere(bool test(String value), {String orElse()}) {
+    if (orElse != null) throw new UnimplementedError("singleWhere:orElse");
+    return readClasses().singleWhere(test);
+  }
   String elementAt(int index) => readClasses().elementAt(index);
 
   void clear() {
