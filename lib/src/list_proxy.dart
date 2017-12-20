@@ -38,4 +38,10 @@ abstract class ListProxy<E> extends ListBase<E> {
   void insertAll(int index, Iterable<E> iterable) {
     _list.insertAll(index, iterable);
   }
+
+  E removeAt(int index) => _list.removeAt(index);
+
+  void removeRange(int start, int length) {
+    _list.removeRange(start, length);
+  }
 }
