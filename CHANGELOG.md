@@ -1,3 +1,7 @@
+## 0.14.0
+
+*  * add stubs to support Dart 2.0 library changes to Iterable and Set.
+
 ## 0.13.2
 
  * Support the latest release of `pkg/csslib`.

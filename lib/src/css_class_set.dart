@@ -106,6 +106,7 @@ abstract class CssClassSet implements Set<String> {
    * [iterable] from the element.
    */
   void toggleAll(Iterable<String> iterable, [bool shouldAdd]);
+
 }
 
 abstract class CssClassSetImpl implements CssClassSet {
@@ -327,4 +328,36 @@ abstract class CssClassSetImpl implements CssClassSet {
    * This is intended to be overridden by specific implementations.
    */
   void writeClasses(Set<String> s);
+
+  @override
+  // TODO: Dart 2.0 requires this method to be implemented.
+  // See https://github.com/dart-lang/sdk/issues/31664
+  // ignore: override_on_non_overriding_method
+  Iterable<T> whereType<T>() {
+    throw new UnimplementedError("whereType");
+  }
+
+  @override
+  // TODO: Dart 2.0 requires this method to be implemented.
+  // See https://github.com/dart-lang/sdk/issues/31664
+  // ignore: override_on_non_overriding_method
+  Iterable<T> followedBy<T>(Iterable<T> other) {
+    throw new UnimplementedError("followedBy");
+  }
+
+  @override
+  // TODO: Dart 2.0 requires this method to be implemented.
+  // See https://github.com/dart-lang/sdk/issues/31664
+  // ignore: override_on_non_overriding_method
+  Set<T> cast<T>() {
+    throw new UnimplementedError("cast");
+  }
+
+  @override
+  // TODO: Dart 2.0 requires this method to be implemented.
+  // See https://github.com/dart-lang/sdk/issues/31664
+  // ignore: override_on_non_overriding_method
+  Set<T> retype<T>() {
+    throw new UnimplementedError("cast");
+  }
 }
