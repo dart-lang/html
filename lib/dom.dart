@@ -682,8 +682,6 @@ class NodeList extends ListProxy<Node> {
 
   NodeList._();
 
-  Node get first => this[0];
-
   Node _setParent(Node node) {
     // Note: we need to remove the node from its previous parent node, if any,
     // before updating its parent pointer to point at our parent.

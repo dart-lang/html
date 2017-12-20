@@ -18,7 +18,6 @@ const Node Marker = null;
 // TODO(jmesserly): this should extend ListBase<Element>, but my simple attempt
 // didn't work.
 class ActiveFormattingElements extends ListProxy<Element> {
-  ActiveFormattingElements() : super();
 
   // Override the "add" method.
   // TODO(jmesserly): I'd rather not override this; can we do this in the
