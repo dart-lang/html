@@ -33,7 +33,7 @@ class ElementCssClassSet extends CssClassSetImpl {
 }
 
 /** A Set that stores the CSS class names for an element. */
-abstract class CssClassSet implements Set<String> {
+abstract class CssClassSet extends SetBase<String> {
   /**
    * Adds the class [value] to the element if it is not on it, removes it if it
    * is.
@@ -106,6 +106,7 @@ abstract class CssClassSet implements Set<String> {
    * [iterable] from the element.
    */
   void toggleAll(Iterable<String> iterable, [bool shouldAdd]);
+
 }
 
 abstract class CssClassSetImpl implements CssClassSet {
@@ -289,8 +290,10 @@ abstract class CssClassSetImpl implements CssClassSet {
       readClasses().firstWhere(test, orElse: orElse);
   String lastWhere(bool test(String value), {String orElse()}) =>
       readClasses().lastWhere(test, orElse: orElse);
-  String singleWhere(bool test(String value)) =>
-      readClasses().singleWhere(test);
+  String singleWhere(bool test(String value), {String orElse()}) {
+    if (orElse != null) throw new UnimplementedError("singleWhere:orElse");
+    return readClasses().singleWhere(test);
+  }
   String elementAt(int index) => readClasses().elementAt(index);
 
   void clear() {
@@ -327,4 +330,5 @@ abstract class CssClassSetImpl implements CssClassSet {
    * This is intended to be overridden by specific implementations.
    */
   void writeClasses(Set<String> s);
+  
 }
