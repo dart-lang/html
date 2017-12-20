@@ -1,3 +1,4 @@
+@TestOn('vm')
 library parser_test;
 
 import 'dart:convert';

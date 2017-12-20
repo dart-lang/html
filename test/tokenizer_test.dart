@@ -1,3 +1,4 @@
+@TestOn('vm')
 library tokenizer_test;
 
 // Note: mirrors used to match the getattr usage in the original test
