@@ -4,8 +4,7 @@
 /// Note, unlike the original we don't operate in-browser on a DOM loaded into
 /// an iframe, but instead operate over a parsed DOM.
 
-@Skip()
-
+@TestOn('vm')
 library html.test.selectors.level1_baseline_test;
 
 import 'dart:io';
@@ -15,7 +14,7 @@ import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 
 import '../support.dart';
-import 'level1_lib.dart' hide test;
+import 'level1_lib.dart';
 import 'selectors.dart';
 
 Document getTestContentDocument() {
