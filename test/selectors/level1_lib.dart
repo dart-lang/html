@@ -232,7 +232,7 @@ runValidSelectorTest(type, root, selectors, testType, docType) {
       test(() {
         found = root.querySelector(q);
 
-        if (e.length > 0) {
+        if (e.isNotEmpty) {
           assert_not_equals(found, null, "The method should return a match.");
           assert_equals(found.attributes["id"], e[0],
               "The method should return the first match.");

@@ -254,7 +254,7 @@ class EncodingParser {
     while (true) {
       if (c == null) {
         return null;
-      } else if (c == "=" && attrName.length > 0) {
+      } else if (c == "=" && attrName.isNotEmpty) {
         break;
       } else if (isWhitespace(c)) {
         // Step 6!

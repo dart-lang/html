@@ -257,7 +257,7 @@ abstract class Node {
 
   // TODO(jmesserly): should this be a property or remove?
   /// Return true if the node has children or text.
-  bool hasContent() => nodes.length > 0;
+  bool hasContent() => nodes.isNotEmpty;
 
   /// Move all the children of the current node to [newParent].
   /// This is needed so that trees that don't store text as nodes move the
@@ -406,7 +406,7 @@ class Text extends Node {
   /// The text node's data, stored as either a String or StringBuffer.
   /// We support storing a StringBuffer here to support fast [appendData].
   /// It will flatten back to a String on read.
-  var _data;
+  dynamic _data;
 
   Text(String data)
       : _data = data != null ? data : '',
@@ -565,7 +565,7 @@ class Element extends Node with _ParentNode, _ElementAndDocument {
     str.write(_getSerializationPrefix(namespaceUri));
     str.write(localName);
 
-    if (attributes.length > 0) {
+    if (attributes.isNotEmpty) {
       attributes.forEach((key, v) {
         // Note: AttributeName.toString handles serialization of attribute
         // namespace, if needed.
@@ -579,7 +579,7 @@ class Element extends Node with _ParentNode, _ElementAndDocument {
 
     str.write('>');
 
-    if (nodes.length > 0) {
+    if (nodes.isNotEmpty) {
       if (localName == 'pre' ||
           localName == 'textarea' ||
           localName == 'listing') {

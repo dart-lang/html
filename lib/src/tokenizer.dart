@@ -125,16 +125,16 @@ class HtmlTokenizer implements Iterator<Token> {
   bool moveNext() {
     // Start processing. When EOF is reached state will return false;
     // instead of true and the loop will terminate.
-    while (stream.errors.length == 0 && tokenQueue.length == 0) {
+    while (stream.errors.isEmpty && tokenQueue.isEmpty) {
       if (!state()) {
         _current = null;
         return false;
       }
     }
-    if (stream.errors.length > 0) {
+    if (stream.errors.isNotEmpty) {
       _current = new ParseErrorToken(stream.errors.removeFirst());
     } else {
-      assert(tokenQueue.length > 0);
+      assert(tokenQueue.isNotEmpty);
       _current = tokenQueue.removeFirst();
     }
     return true;
@@ -302,7 +302,7 @@ class HtmlTokenizer implements Iterator<Token> {
         filteredEntityList =
             filteredEntityList.where((e) => e.startsWith(name)).toList();
 
-        if (filteredEntityList.length == 0) {
+        if (filteredEntityList.isEmpty) {
           break;
         }
         charStack.add(stream.char());
@@ -349,7 +349,7 @@ class HtmlTokenizer implements Iterator<Token> {
     if (fromAttribute) {
       _attributeValue.write(output);
     } else {
-      var token;
+      Token token;
       if (isWhitespace(output)) {
         token = new SpaceCharactersToken(output);
       } else {
@@ -1316,7 +1316,7 @@ class HtmlTokenizer implements Iterator<Token> {
       }
     } else if (charStack.last == "[" &&
         parser != null &&
-        parser.tree.openElements.length > 0 &&
+        parser.tree.openElements.isNotEmpty &&
         parser.tree.openElements.last.namespaceUri !=
             parser.tree.defaultNamespace) {
       var matched = true;
@@ -1335,7 +1335,7 @@ class HtmlTokenizer implements Iterator<Token> {
 
     _addToken(new ParseErrorToken("expected-dashes-or-doctype"));
 
-    while (charStack.length > 0) {
+    while (charStack.isNotEmpty) {
       stream.unget(charStack.removeLast());
     }
     state = bogusCommentState;
@@ -1904,7 +1904,7 @@ class HtmlTokenizer implements Iterator<Token> {
       }
     }
 
-    if (data.length > 0) {
+    if (data.isNotEmpty) {
       _addToken(new CharactersToken(data.join()));
     }
     state = dataState;

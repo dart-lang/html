@@ -85,14 +85,14 @@ class CodeMarkupVisitor extends TreeVisitor {
   visitElement(Element node) {
     final tag = node.localName;
     _str.write('&lt;<code class="markup element-name">$tag</code>');
-    if (node.attributes.length > 0) {
+    if (node.attributes.isNotEmpty) {
       node.attributes.forEach((key, v) {
         v = htmlSerializeEscape(v, attributeMode: true);
         _str.write(' <code class="markup attribute-name">$key</code>'
             '=<code class="markup attribute-value">"$v"</code>');
       });
     }
-    if (node.nodes.length > 0) {
+    if (node.nodes.isNotEmpty) {
       _str.write(">");
       visitChildren(node);
     } else if (isVoidElement(tag)) {

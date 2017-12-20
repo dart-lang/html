@@ -55,7 +55,7 @@ class TestData extends IterableBase<Map> {
     for (var line in lines) {
       var heading = sectionHeading(line);
       if (heading != null) {
-        if (data.length > 0 && heading == newTestHeading) {
+        if (data.isNotEmpty && heading == newTestHeading) {
           // Remove trailing newline
           data[key] = data[key].substring(0, data[key].length - 1);
           result.add(normaliseOutput(data));
@@ -68,7 +68,7 @@ class TestData extends IterableBase<Map> {
       }
     }
 
-    if (data.length > 0) {
+    if (data.isNotEmpty) {
       result.add(normaliseOutput(data));
     }
     return result;
@@ -150,7 +150,7 @@ class TestSerializer extends TreeVisitor {
   visitElement(Element node) {
     _newline();
     _str.write(node);
-    if (node.attributes.length > 0) {
+    if (node.attributes.isNotEmpty) {
       indent += 2;
       var keys = new List.from(node.attributes.keys);
       keys.sort((x, y) => x.compareTo(y));

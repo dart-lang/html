@@ -276,7 +276,7 @@ class HtmlParser {
   }
 
   bool inForeignContent(Token token, int type) {
-    if (tree.openElements.length == 0) return false;
+    if (tree.openElements.isEmpty) return false;
 
     var node = tree.openElements.last;
     if (node.namespaceUri == tree.defaultNamespace) return false;
@@ -1235,7 +1235,6 @@ class InBodyPhase extends Phase {
       case "blockquote":
       case "center":
       case "details":
-      case "details":
       case "dir":
       case "div":
       case "dl":
@@ -1343,7 +1342,6 @@ class InBodyPhase extends Phase {
         startTagIFrame(token);
         return null;
       case "noembed":
-      case "noframes":
       case "noscript":
         startTagRawtext(token);
         return null;
@@ -1538,7 +1536,7 @@ class InBodyPhase extends Phase {
         data = data.substring(1);
       }
     }
-    if (data.length > 0) {
+    if (data.isNotEmpty) {
       tree.reconstructActiveFormattingElements();
       tree.insertText(data, token.span);
     }
@@ -2012,7 +2010,7 @@ class InBodyPhase extends Phase {
   }
 
   void endTagListItem(EndTagToken token) {
-    var variant;
+    String variant;
     if (token.name == "li") {
       variant = "list";
     } else {
@@ -2232,7 +2230,9 @@ class InBodyPhase extends Phase {
           parser.parseError(
               token.span, "unexpected-end-tag", {"name": token.name});
         }
-        while (tree.openElements.removeLast() != node);
+        while (tree.openElements.removeLast() != node) {
+          // noop
+        }
         node.endSourceSpan = token.span;
         break;
       } else {
@@ -2522,7 +2522,7 @@ class InTableTextPhase extends Phase {
         super(parser);
 
   void flushCharacters() {
-    if (characterTokens.length == 0) return;
+    if (characterTokens.isEmpty) return;
 
     // TODO(sigmund,jmesserly): remove '' (dartbug.com/8480)
     var data = characterTokens.map((t) => t.data).join('');
@@ -2534,7 +2534,7 @@ class InTableTextPhase extends Phase {
 
     if (!allWhitespace(data)) {
       parser._inTablePhase.insertText(new CharactersToken(data)..span = span);
-    } else if (data.length > 0) {
+    } else if (data.isNotEmpty) {
       tree.insertText(data, span);
     }
     characterTokens = <StringToken>[];
@@ -3551,7 +3551,7 @@ class InForeignContentPhase extends Phase {
       parser.parseError(token.span, "unexpected-end-tag", {"name": token.name});
     }
 
-    var newToken;
+    Token newToken;
     while (true) {
       if (asciiUpper2Lower(node.localName) == token.name) {
         //XXX this isn't in the spec but it seems necessary
@@ -3561,7 +3561,7 @@ class InForeignContentPhase extends Phase {
           parser.phase = inTableText.originalPhase;
         }
         while (tree.openElements.removeLast() != node) {
-          assert(tree.openElements.length > 0);
+          assert(tree.openElements.isNotEmpty);
         }
         newToken = null;
         break;
