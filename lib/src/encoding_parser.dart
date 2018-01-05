@@ -13,7 +13,7 @@ class EncodingBytes {
   int _position = -1;
 
   EncodingBytes(this._bytes);
-  
+
   int get length => _bytes.length;
 
   String next() {

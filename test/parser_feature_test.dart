@@ -337,7 +337,10 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
     });
 
     test('parses content attr', () {
-      expect(getEncoding('<meta http-equiv="content-type" content="text/html; charset=UTF-8">'), null);
+      expect(
+          getEncoding(
+              '<meta http-equiv="content-type" content="text/html; charset=UTF-8">'),
+          null);
     });
   });
 }
