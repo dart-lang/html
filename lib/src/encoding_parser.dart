@@ -117,7 +117,7 @@ class EncodingBytes {
   String slice(int start, [int end]) {
     if (end == null) end = length;
     if (end < 0) end += length;
-    return _bytes.substring(start, end - start);
+    return _bytes.substring(start, end);
   }
 }
 
