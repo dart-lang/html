@@ -951,7 +951,7 @@ class FilteredElementList extends IterableBase<Element>
     return _filtered.lastWhere(test, orElse: orElse);
   }
 
-  Element singleWhere(bool test(Element value)) {
+  Element singleWhere(bool test(Element value), {Element orElse()}) {
     return _filtered.singleWhere(test);
   }
 
