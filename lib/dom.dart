@@ -952,6 +952,7 @@ class FilteredElementList extends IterableBase<Element>
   }
 
   Element singleWhere(bool test(Element value), {Element orElse()}) {
+    if (orElse != null) throw new UnimplementedError('orElse');
     return _filtered.singleWhere(test);
   }
 
