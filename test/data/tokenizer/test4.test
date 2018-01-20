@@ -152,14 +152,6 @@
 "input":"&#4294967361;",
 "output":["ParseError", ["Character", "\uFFFD"]]},
 
-{"description":"65-bit hex numeric entity",
-"input":"&#x10000000000000041;",
-"output":["ParseError", ["Character", "\uFFFD"]]},
-
-{"description":"65-bit decimal numeric entity",
-"input":"&#18446744073709551681;",
-"output":["ParseError", ["Character", "\uFFFD"]]},
-
 {"description":"Surrogate code point edge cases",
 "input":"&#xD7FF;&#xD800;&#xD801;&#xDFFE;&#xDFFF;&#xE000;",
 "output":[["Character", "\uD7FF"], "ParseError", ["Character", "\uFFFD"], "ParseError", ["Character", "\uFFFD"], "ParseError", ["Character", "\uFFFD"], "ParseError", ["Character", "\uFFFD\uE000"]]},
