@@ -824,7 +824,7 @@ class FilteredElementList extends ListBase<Element> {
   // TODO(nweiz): we don't always need to create a new list. For example
   // forEach, every, any, ... could directly work on the _childNodes.
   List<Element> get _filtered => new List<Element>.from(
-      _childNodes.where((n) => n is Element).retype<Element>());
+      _childNodes.where((n) => n is Element).map<Element>((x) => x));
 
   void forEach(void f(Element element)) {
     _filtered.forEach(f);
