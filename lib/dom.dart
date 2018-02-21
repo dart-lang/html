@@ -807,9 +807,7 @@ class NodeList extends ListProxy<Node> {
 /// filtered so that only elements are in the collection.
 // TODO(jmesserly): this was copied from dart:html
 // TODO(jmesserly): "implements List<Element>" is a workaround for analyzer bug.
-class FilteredElementList extends IterableBase<Element>
-    with ListMixin<Element>
-    implements List<Element> {
+class FilteredElementList extends ListBase<Element> {
   final List<Node> _childNodes;
 
   /// Creates a collection of the elements that descend from a node.
@@ -825,8 +823,8 @@ class FilteredElementList extends IterableBase<Element>
   //
   // TODO(nweiz): we don't always need to create a new list. For example
   // forEach, every, any, ... could directly work on the _childNodes.
-  List<Element> get _filtered =>
-      new List<Element>.from(_childNodes.where((n) => n is Element));
+  List<Element> get _filtered => new List<Element>.from(
+      _childNodes.where((n) => n is Element).retype<Element>());
 
   void forEach(void f(Element element)) {
     _filtered.forEach(f);

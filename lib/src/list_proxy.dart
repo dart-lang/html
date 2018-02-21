@@ -41,7 +41,7 @@ abstract class ListProxy<E> extends ListBase<E> {
 
   E removeAt(int index) => _list.removeAt(index);
 
-  void removeRange(int start, int length) {
-    _list.removeRange(start, length);
+  void removeRange(int start, int end) {
+    _list.removeRange(start, end);
   }
 }
