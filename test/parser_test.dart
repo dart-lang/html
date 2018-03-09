@@ -118,5 +118,5 @@ _nameFor(String input) {
       .replaceAll(new RegExp('\u0000'), '_')
       .replaceAll('"', '\\"')
       .replaceAll(new RegExp('[\n\r\t]'), '_');
-  return JSON.decode('"$escapeQuote"');
+  return json.decode('"$escapeQuote"');
 }
