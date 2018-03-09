@@ -969,7 +969,8 @@ class FilteredElementList extends IterableBase<Element>
       _filtered.getRange(start, end);
   // TODO(sigmund): this should be typed Element, but we currently run into a
   // bug where ListMixin<E>.indexOf() expects Object as the argument.
-  int indexOf(Object element, [int start = 0]) => _filtered.indexOf(element, start);
+  int indexOf(Object element, [int start = 0]) =>
+      _filtered.indexOf(element, start);
 
   // TODO(sigmund): this should be typed Element, but we currently run into a
   // bug where ListMixin<E>.lastIndexOf() expects Object as the argument.
