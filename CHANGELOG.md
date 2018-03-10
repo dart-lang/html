@@ -1,12 +1,17 @@
+## 0.13.3
+
+ * Update the signatures of `FilteredElementList.indexOf` and
+   `FilteredElementList.lastIndexOf` to include type annotations.
+
 ## 0.13.2+2
 
-* Update signature for implementations of `Iterable.singleWhere` to include 
-  optional argument.
+ * Update signature for implementations of `Iterable.singleWhere` to include
+   optional argument.
 
 ## 0.13.2+1
 
-* Changed the implementation of `Set` and `List` classes to use base classes
-  from `dart:collection`.
+ * Changed the implementation of `Set` and `List` classes to use base classes
+   from `dart:collection`.
 
 ## 0.13.2
 
