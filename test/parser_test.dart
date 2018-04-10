@@ -112,11 +112,11 @@ void main() {
 
 /// Extract the name for the test based on the test input data.
 _nameFor(String input) {
-  // Using JSON.decode to unescape other unicode characters
+  // Using jsonDecode to unescape other unicode characters
   var escapeQuote = input
       .replaceAll(new RegExp('\\\\.'), '_')
       .replaceAll(new RegExp('\u0000'), '_')
       .replaceAll('"', '\\"')
       .replaceAll(new RegExp('[\n\r\t]'), '_');
-  return JSON.decode('"$escapeQuote"');
+  return jsonDecode('"$escapeQuote"');
 }
