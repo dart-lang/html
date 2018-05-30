@@ -204,10 +204,10 @@ void runTokenizerTest(Map testInfo) {
 }
 
 Map unescape(Map testInfo) {
-  // TODO(sigmundch,jmesserly): we currently use JSON.decode to unescape the
+  // TODO(sigmundch,jmesserly): we currently use jsonDecode to unescape the
   // unicode characters in the string, we should use a decoding that works with
   // any control characters.
-  decode(inp) => inp == '\u0000' ? inp : JSON.decode('"$inp"');
+  decode(inp) => inp == '\u0000' ? inp : jsonDecode('"$inp"');
 
   testInfo["input"] = decode(testInfo["input"]);
   for (var token in testInfo["output"]) {
@@ -244,7 +244,7 @@ void main() {
     if (!path.endsWith('.test')) continue;
 
     var text = new File(path).readAsStringSync();
-    var tests = JSON.decode(text);
+    var tests = jsonDecode(text);
     var testName = pathos.basenameWithoutExtension(path);
     var testList = tests['tests'];
     if (testList == null) continue;

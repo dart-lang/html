@@ -1,8 +1,6 @@
 language: dart
 dart:
   - dev
-  - stable
-
 dart_task:
   - test: -p vm
   - test: -p chrome,firefox
