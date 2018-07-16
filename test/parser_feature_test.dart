@@ -85,7 +85,7 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
     var html = '<body><div>$textContent</div>';
     var doc = parse(html, generateSpans: true);
     Text text = doc.body.nodes[0].nodes[0];
-    expect(text, new isInstanceOf<Text>());
+    expect(text, new TypeMatcher<Text>());
     expect(text.data, textContent);
     expect(text.sourceSpan.start.offset, html.indexOf(textContent));
     expect(text.sourceSpan.length, textContent.length);
@@ -229,7 +229,7 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
       ''');
       var n = doc.querySelector('desc');
       var keys = n.attributes.keys.toList();
-      expect(keys[0], new isInstanceOf<AttributeName>());
+      expect(keys[0], new TypeMatcher<AttributeName>());
       expect(keys[0].prefix, 'xlink');
       expect(keys[0].namespace, 'http://www.w3.org/1999/xlink');
       expect(keys[0].name, 'type');

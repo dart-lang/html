@@ -74,9 +74,9 @@ void main() {
   test('dart:io', () {
     // ensure IO support is unregistered
     expect(inputstream.consoleSupport,
-        new isInstanceOf<inputstream.ConsoleSupport>());
+        new TypeMatcher<inputstream.ConsoleSupport>());
     var file = new File('$testDataDir/parser_feature/raw_file.html').openSync();
-    expect(() => parse(file), throwsA(new isInstanceOf<ArgumentError>()));
+    expect(() => parse(file), throwsA(new TypeMatcher<ArgumentError>()));
     parser_console.useConsole();
     expect(parse(file).body.innerHtml.trim(), 'Hello world!');
   });
