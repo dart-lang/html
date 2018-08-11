@@ -880,7 +880,7 @@ class BeforeHtmlPhase extends Phase {
 class BeforeHeadPhase extends Phase {
   BeforeHeadPhase(parser) : super(parser);
 
-  processStartTag(StartTagToken token) {
+  Token processStartTag(StartTagToken token) {
     switch (token.name) {
       case 'html':
         return startTagHtml(token);
@@ -892,7 +892,7 @@ class BeforeHeadPhase extends Phase {
     }
   }
 
-  processEndTag(EndTagToken token) {
+  Token processEndTag(EndTagToken token) {
     switch (token.name) {
       case "head":
       case "body":
@@ -952,7 +952,7 @@ class BeforeHeadPhase extends Phase {
 class InHeadPhase extends Phase {
   InHeadPhase(parser) : super(parser);
 
-  processStartTag(StartTagToken token) {
+  Token processStartTag(StartTagToken token) {
     switch (token.name) {
       case "html":
         return startTagHtml(token);
@@ -985,7 +985,7 @@ class InHeadPhase extends Phase {
     }
   }
 
-  processEndTag(EndTagToken token) {
+  Token processEndTag(EndTagToken token) {
     switch (token.name) {
       case "head":
         endTagHead(token);
@@ -1094,7 +1094,7 @@ class InHeadPhase extends Phase {
 class AfterHeadPhase extends Phase {
   AfterHeadPhase(parser) : super(parser);
 
-  processStartTag(StartTagToken token) {
+  Token processStartTag(StartTagToken token) {
     switch (token.name) {
       case "html":
         return startTagHtml(token);
@@ -1123,7 +1123,7 @@ class AfterHeadPhase extends Phase {
     }
   }
 
-  processEndTag(EndTagToken token) {
+  Token processEndTag(EndTagToken token) {
     switch (token.name) {
       case "body":
       case "html":
@@ -1208,7 +1208,7 @@ class InBodyPhase extends Phase {
   // the really-really-really-very crazy mode
   InBodyPhase(parser) : super(parser);
 
-  processStartTag(StartTagToken token) {
+  Token processStartTag(StartTagToken token) {
     switch (token.name) {
       case "html":
         return startTagHtml(token);
@@ -1380,7 +1380,7 @@ class InBodyPhase extends Phase {
     }
   }
 
-  processEndTag(EndTagToken token) {
+  Token processEndTag(EndTagToken token) {
     switch (token.name) {
       case "body":
         endTagBody(token);
@@ -2250,16 +2250,18 @@ class TextPhase extends Phase {
   TextPhase(parser) : super(parser);
 
   // "Tried to process start tag %s in RCDATA/RAWTEXT mode"%token.name
-  processStartTag(StartTagToken token) {
+  // ignore: missing_return
+  Token processStartTag(StartTagToken token) {
     assert(false);
   }
 
-  processEndTag(EndTagToken token) {
+  Token processEndTag(EndTagToken token) {
     if (token.name == 'script') {
       endTagScript(token);
       return null;
     }
     endTagOther(token);
+    return null;
   }
 
   Token processCharacters(CharactersToken token) {
@@ -2294,7 +2296,7 @@ class InTablePhase extends Phase {
   // http://www.whatwg.org/specs/web-apps/current-work///in-table
   InTablePhase(parser) : super(parser);
 
-  processStartTag(StartTagToken token) {
+  Token processStartTag(StartTagToken token) {
     switch (token.name) {
       case "html":
         return startTagHtml(token);
@@ -2332,7 +2334,7 @@ class InTablePhase extends Phase {
     }
   }
 
-  processEndTag(EndTagToken token) {
+  Token processEndTag(EndTagToken token) {
     switch (token.name) {
       case "table":
         endTagTable(token);
@@ -2584,7 +2586,7 @@ class InCaptionPhase extends Phase {
   // http://www.whatwg.org/specs/web-apps/current-work///in-caption
   InCaptionPhase(parser) : super(parser);
 
-  processStartTag(StartTagToken token) {
+  Token processStartTag(StartTagToken token) {
     switch (token.name) {
       case "html":
         return startTagHtml(token);
@@ -2603,7 +2605,7 @@ class InCaptionPhase extends Phase {
     }
   }
 
-  processEndTag(EndTagToken token) {
+  Token processEndTag(EndTagToken token) {
     switch (token.name) {
       case "caption":
         endTagCaption(token);
@@ -2702,7 +2704,7 @@ class InColumnGroupPhase extends Phase {
   // http://www.whatwg.org/specs/web-apps/current-work///in-column
   InColumnGroupPhase(parser) : super(parser);
 
-  processStartTag(StartTagToken token) {
+  Token processStartTag(StartTagToken token) {
     switch (token.name) {
       case "html":
         return startTagHtml(token);
@@ -2714,7 +2716,7 @@ class InColumnGroupPhase extends Phase {
     }
   }
 
-  processEndTag(EndTagToken token) {
+  Token processEndTag(EndTagToken token) {
     switch (token.name) {
       case "colgroup":
         endTagColgroup(token);
@@ -2786,7 +2788,7 @@ class InTableBodyPhase extends Phase {
   // http://www.whatwg.org/specs/web-apps/current-work///in-table0
   InTableBodyPhase(parser) : super(parser);
 
-  processStartTag(StartTagToken token) {
+  Token processStartTag(StartTagToken token) {
     switch (token.name) {
       case "html":
         return startTagHtml(token);
@@ -2808,7 +2810,7 @@ class InTableBodyPhase extends Phase {
     }
   }
 
-  processEndTag(EndTagToken token) {
+  Token processEndTag(EndTagToken token) {
     switch (token.name) {
       case "tbody":
       case "tfoot":
@@ -2921,7 +2923,7 @@ class InRowPhase extends Phase {
   // http://www.whatwg.org/specs/web-apps/current-work///in-row
   InRowPhase(parser) : super(parser);
 
-  processStartTag(StartTagToken token) {
+  Token processStartTag(StartTagToken token) {
     switch (token.name) {
       case "html":
         return startTagHtml(token);
@@ -2942,7 +2944,7 @@ class InRowPhase extends Phase {
     }
   }
 
-  processEndTag(EndTagToken token) {
+  Token processEndTag(EndTagToken token) {
     switch (token.name) {
       case "tr":
         endTagTr(token);
@@ -3062,7 +3064,7 @@ class InCellPhase extends Phase {
   // http://www.whatwg.org/specs/web-apps/current-work///in-cell
   InCellPhase(parser) : super(parser);
 
-  processStartTag(StartTagToken token) {
+  Token processStartTag(StartTagToken token) {
     switch (token.name) {
       case "html":
         return startTagHtml(token);
@@ -3081,7 +3083,7 @@ class InCellPhase extends Phase {
     }
   }
 
-  processEndTag(EndTagToken token) {
+  Token processEndTag(EndTagToken token) {
     switch (token.name) {
       case "td":
       case "th":
@@ -3182,7 +3184,7 @@ class InCellPhase extends Phase {
 class InSelectPhase extends Phase {
   InSelectPhase(parser) : super(parser);
 
-  processStartTag(StartTagToken token) {
+  Token processStartTag(StartTagToken token) {
     switch (token.name) {
       case "html":
         return startTagHtml(token);
@@ -3206,7 +3208,7 @@ class InSelectPhase extends Phase {
     }
   }
 
-  processEndTag(EndTagToken token) {
+  Token processEndTag(EndTagToken token) {
     switch (token.name) {
       case "option":
         endTagOption(token);
@@ -3334,7 +3336,7 @@ class InSelectPhase extends Phase {
 class InSelectInTablePhase extends Phase {
   InSelectInTablePhase(parser) : super(parser);
 
-  processStartTag(StartTagToken token) {
+  Token processStartTag(StartTagToken token) {
     switch (token.name) {
       case "caption":
       case "table":
@@ -3350,7 +3352,7 @@ class InSelectInTablePhase extends Phase {
     }
   }
 
-  processEndTag(EndTagToken token) {
+  Token processEndTag(EndTagToken token) {
     switch (token.name) {
       case "caption":
       case "table":
@@ -3583,12 +3585,12 @@ class InForeignContentPhase extends Phase {
 class AfterBodyPhase extends Phase {
   AfterBodyPhase(parser) : super(parser);
 
-  processStartTag(StartTagToken token) {
+  Token processStartTag(StartTagToken token) {
     if (token.name == "html") return startTagHtml(token);
     return startTagOther(token);
   }
 
-  processEndTag(EndTagToken token) {
+  Token processEndTag(EndTagToken token) {
     if (token.name == "html") {
       endTagHtml(token);
       return null;
@@ -3649,7 +3651,7 @@ class InFramesetPhase extends Phase {
   // http://www.whatwg.org/specs/web-apps/current-work///in-frameset
   InFramesetPhase(parser) : super(parser);
 
-  processStartTag(StartTagToken token) {
+  Token processStartTag(StartTagToken token) {
     switch (token.name) {
       case "html":
         return startTagHtml(token);
@@ -3666,7 +3668,7 @@ class InFramesetPhase extends Phase {
     }
   }
 
-  processEndTag(EndTagToken token) {
+  Token processEndTag(EndTagToken token) {
     switch (token.name) {
       case "frameset":
         endTagFrameset(token);
@@ -3738,7 +3740,7 @@ class AfterFramesetPhase extends Phase {
   // http://www.whatwg.org/specs/web-apps/current-work///after3
   AfterFramesetPhase(parser) : super(parser);
 
-  processStartTag(StartTagToken token) {
+  Token processStartTag(StartTagToken token) {
     switch (token.name) {
       case "html":
         return startTagHtml(token);
@@ -3750,7 +3752,7 @@ class AfterFramesetPhase extends Phase {
     }
   }
 
-  processEndTag(EndTagToken token) {
+  Token processEndTag(EndTagToken token) {
     switch (token.name) {
       case "html":
         endTagHtml(token);
@@ -3791,7 +3793,7 @@ class AfterFramesetPhase extends Phase {
 class AfterAfterBodyPhase extends Phase {
   AfterAfterBodyPhase(parser) : super(parser);
 
-  processStartTag(StartTagToken token) {
+  Token processStartTag(StartTagToken token) {
     if (token.name == 'html') return startTagHtml(token);
     return startTagOther(token);
   }
@@ -3835,7 +3837,7 @@ class AfterAfterBodyPhase extends Phase {
 class AfterAfterFramesetPhase extends Phase {
   AfterAfterFramesetPhase(parser) : super(parser);
 
-  processStartTag(StartTagToken token) {
+  Token processStartTag(StartTagToken token) {
     switch (token.name) {
       case "html":
         return startTagHtml(token);

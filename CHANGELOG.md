@@ -1,3 +1,8 @@
+## 0.13.3+3
+
+* Fix missing_return analyzer errors in `processStartTag` and `processEndTag`
+  methods.
+
 ## 0.13.3+2
 
 * Set max SDK version to `<3.0.0`, and adjust other dependencies.

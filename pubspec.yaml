@@ -1,5 +1,5 @@
 name: html
-version: 0.13.3+2
+version: 0.13.3+3
 
 description: A library for working with HTML documents. Previously known as html5lib.
 author: Dart Team <misc@dartlang.org>
