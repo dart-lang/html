@@ -357,7 +357,7 @@ class ContentAttrParser {
         var oldPosition = data.position;
         try {
           data.skipUntil(isWhitespace);
-          return data.slice(oldPosition, data.position);
+          return data.slice(oldPosition, oldPosition != data.position ? data.position : data.length);
         } on StateError catch (_) {
           //Return the whole remaining value
           return data.slice(oldPosition);
