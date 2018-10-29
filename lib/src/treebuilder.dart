@@ -72,7 +72,7 @@ class TreeBuilder {
 
   final List<Element> openElements = <Element>[];
 
-  final activeFormattingElements = new ActiveFormattingElements();
+  final activeFormattingElements = ActiveFormattingElements();
 
   Node headPointer;
 
@@ -97,7 +97,7 @@ class TreeBuilder {
 
     insertFromTable = false;
 
-    document = new Document();
+    document = Document();
   }
 
   bool elementInScope(target, {String variant}) {
@@ -111,29 +111,29 @@ class TreeBuilder {
     if (variant != null) {
       switch (variant) {
         case "button":
-          listElements2 = const [const Pair(Namespaces.html, "button")];
+          listElements2 = const [Pair(Namespaces.html, "button")];
           break;
         case "list":
           listElements2 = const [
-            const Pair(Namespaces.html, "ol"),
-            const Pair(Namespaces.html, "ul")
+            Pair(Namespaces.html, "ol"),
+            Pair(Namespaces.html, "ul")
           ];
           break;
         case "table":
           listElements1 = const [
-            const Pair(Namespaces.html, "html"),
-            const Pair(Namespaces.html, "table")
+            Pair(Namespaces.html, "html"),
+            Pair(Namespaces.html, "table")
           ];
           break;
         case "select":
           listElements1 = const [
-            const Pair(Namespaces.html, "optgroup"),
-            const Pair(Namespaces.html, "option")
+            Pair(Namespaces.html, "optgroup"),
+            Pair(Namespaces.html, "option")
           ];
           invert = true;
           break;
         default:
-          throw new StateError('We should never reach this point');
+          throw StateError('We should never reach this point');
       }
     }
 
@@ -148,7 +148,7 @@ class TreeBuilder {
       }
     }
 
-    throw new StateError('We should never reach this point');
+    throw StateError('We should never reach this point');
   }
 
   void reconstructActiveFormattingElements() {
@@ -188,9 +188,9 @@ class TreeBuilder {
       entry = activeFormattingElements[i];
 
       // TODO(jmesserly): optimize this. No need to create a token.
-      var cloneToken = new StartTagToken(entry.localName,
+      var cloneToken = StartTagToken(entry.localName,
           namespace: entry.namespaceUri,
-          data: new LinkedHashMap.from(entry.attributes))
+          data: LinkedHashMap.from(entry.attributes))
         ..span = entry.sourceSpan;
 
       // Step 9
@@ -236,7 +236,7 @@ class TreeBuilder {
   }
 
   void insertDoctype(DoctypeToken token) {
-    var doctype = new DocumentType(token.name, token.publicId, token.systemId)
+    var doctype = DocumentType(token.name, token.publicId, token.systemId)
       ..sourceSpan = token.span;
     document.nodes.add(doctype);
   }
@@ -245,7 +245,7 @@ class TreeBuilder {
     if (parent == null) {
       parent = openElements.last;
     }
-    parent.nodes.add(new Comment(token.data)..sourceSpan = token.span);
+    parent.nodes.add(Comment(token.data)..sourceSpan = token.span);
   }
 
   /// Create an element but don't insert it anywhere
@@ -329,7 +329,7 @@ class TreeBuilder {
               span.file.span(last.sourceSpan.start.offset, span.end.offset);
         }
       } else {
-        nodes.add(new Text(data)..sourceSpan = span);
+        nodes.add(Text(data)..sourceSpan = span);
       }
     } else {
       int index = nodes.indexOf(refNode);
@@ -337,7 +337,7 @@ class TreeBuilder {
         Text last = nodes[index - 1];
         last.appendData(data);
       } else {
-        nodes.insert(index, new Text(data)..sourceSpan = span);
+        nodes.insert(index, Text(data)..sourceSpan = span);
       }
     }
   }
@@ -391,7 +391,7 @@ class TreeBuilder {
   /// Return the final fragment.
   DocumentFragment getFragment() {
     //XXX assert innerHTML
-    var fragment = new DocumentFragment();
+    var fragment = DocumentFragment();
     openElements[0].reparentChildren(fragment);
     return fragment;
   }

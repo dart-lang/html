@@ -22,7 +22,7 @@ class TreeVisitor {
       case Node.DOCUMENT_TYPE_NODE:
         return visitDocumentType(node);
       default:
-        throw new UnsupportedError('DOM node type ${node.nodeType}');
+        throw UnsupportedError('DOM node type ${node.nodeType}');
     }
   }
 
@@ -54,7 +54,7 @@ class TreeVisitor {
 /// displaying the HTML's source code with CSS colors for different parts of the
 /// markup. See also [CodeMarkupVisitor].
 String htmlToCodeMarkup(Node node) {
-  return (new CodeMarkupVisitor()..visit(node)).toString();
+  return (CodeMarkupVisitor()..visit(node)).toString();
 }
 
 /// Converts the DOM tree into an HTML string with code markup suitable for
@@ -63,7 +63,7 @@ String htmlToCodeMarkup(Node node) {
 class CodeMarkupVisitor extends TreeVisitor {
   final StringBuffer _str;
 
-  CodeMarkupVisitor() : _str = new StringBuffer();
+  CodeMarkupVisitor() : _str = StringBuffer();
 
   String toString() => _str.toString();
 
@@ -125,7 +125,7 @@ class CodeMarkupVisitor extends TreeVisitor {
 ///
 /// [1]: http://www.whatwg.org/specs/web-apps/current-work/multipage/the-end.html#serializing-html-fragments
 /// [2]: http://www.whatwg.org/specs/web-apps/current-work/multipage/the-end.html#escapingString
-String htmlSerializeEscape(String text, {bool attributeMode: false}) {
+String htmlSerializeEscape(String text, {bool attributeMode = false}) {
   // TODO(jmesserly): is it faster to build up a list of codepoints?
   // StringBuffer seems cleaner assuming Dart can unbox 1-char strings.
   StringBuffer result;
@@ -150,7 +150,7 @@ String htmlSerializeEscape(String text, {bool attributeMode: false}) {
         break;
     }
     if (replace != null) {
-      if (result == null) result = new StringBuffer(text.substring(0, i));
+      if (result == null) result = StringBuffer(text.substring(0, i));
       result.write(replace);
     } else if (result != null) {
       result.write(ch);

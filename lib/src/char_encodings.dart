@@ -36,7 +36,7 @@ Iterable<int> decodeBytes(String encoding, List<int> bytes,
           // TODO(jmesserly): ideally this would be DecoderException, like the
           // one thrown in runtime/bin/string_stream.dart, but we don't want to
           // depend on dart:io.
-          throw new FormatException("Illegal ASCII character $byte");
+          throw FormatException("Illegal ASCII character $byte");
         }
       }
       return bytes;
@@ -69,7 +69,7 @@ Iterable<int> decodeBytes(String encoding, List<int> bytes,
       return decodeUtf32leAsIterable(bytes, offset, length, true, replace);
 
     default:
-      throw new ArgumentError('Encoding $encoding not supported');
+      throw ArgumentError('Encoding $encoding not supported');
   }
 }
 
@@ -103,7 +103,7 @@ IterableWindows1252Decoder decodeWindows1252AsIterable(List<int> bytes,
     [int offset = 0,
     int length,
     int replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]) {
-  return new IterableWindows1252Decoder(
+  return IterableWindows1252Decoder(
       bytes, offset, length, replacementCodepoint);
 }
 
@@ -122,7 +122,7 @@ class IterableWindows1252Decoder extends IterableBase<int> {
       this.replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]);
 
   Windows1252Decoder get iterator =>
-      new Windows1252Decoder(bytes, offset, length, replacementCodepoint);
+      Windows1252Decoder(bytes, offset, length, replacementCodepoint);
 }
 
 /// Provides an iterator of Unicode codepoints from windows-1252 encoded bytes.
@@ -218,7 +218,7 @@ class Windows1252Decoder implements Iterator<int> {
       case 0x90:
       case 0x9D:
         if (replacementCodepoint == null) {
-          throw new ArgumentError(
+          throw ArgumentError(
               "Invalid windows-1252 code point $char at $_offset");
         }
         return replacementCodepoint;

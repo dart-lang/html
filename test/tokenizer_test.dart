@@ -25,16 +25,16 @@ class TokenizerTestParser {
   List parse(String str) {
     // Note: we need to pass bytes to the tokenizer if we want it to handle BOM.
     var bytes = codepointsToUtf8(toCodepoints(str));
-    var tokenizer = new HtmlTokenizer(bytes, encoding: 'utf-8');
+    var tokenizer = HtmlTokenizer(bytes, encoding: 'utf-8');
     outputTokens = [];
 
     // Note: we can't get a closure of the state method. However, we can
     // create a new closure to invoke it via mirrors.
     var mtok = reflect(tokenizer);
-    tokenizer.state = () => mtok.invoke(new Symbol(_state), const []).reflectee;
+    tokenizer.state = () => mtok.invoke(Symbol(_state), const []).reflectee;
 
     if (_lastStartTag != null) {
-      tokenizer.currentToken = new StartTagToken(_lastStartTag);
+      tokenizer.currentToken = StartTagToken(_lastStartTag);
     }
 
     while (tokenizer.moveNext()) {
@@ -182,8 +182,8 @@ void runTokenizerTest(Map testInfo) {
   if (!testInfo.containsKey('lastStartTag')) {
     testInfo['lastStartTag'] = null;
   }
-  var parser = new TokenizerTestParser(
-      testInfo['initialState'], testInfo['lastStartTag']);
+  var parser =
+      TokenizerTestParser(testInfo['initialState'], testInfo['lastStartTag']);
   var tokens = parser.parse(testInfo['input']);
   tokens = concatenateCharacterTokens(tokens);
   var received = normalizeTokens(tokens);
@@ -230,8 +230,8 @@ Map unescape(Map testInfo) {
 
 String camelCase(String s) {
   s = s.toLowerCase();
-  var result = new StringBuffer();
-  for (var match in new RegExp(r"\W+(\w)(\w+)").allMatches(s)) {
+  var result = StringBuffer();
+  for (var match in RegExp(r"\W+(\w)(\w+)").allMatches(s)) {
     if (result.length == 0) result.write(s.substring(0, match.start));
     result.write(match.group(1).toUpperCase());
     result.write(match.group(2));
@@ -243,7 +243,7 @@ void main() {
   for (var path in getDataFiles('tokenizer')) {
     if (!path.endsWith('.test')) continue;
 
-    var text = new File(path).readAsStringSync();
+    var text = File(path).readAsStringSync();
     var tests = jsonDecode(text);
     var testName = pathos.basenameWithoutExtension(path);
     var testList = tests['tests'];

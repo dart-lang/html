@@ -1,3 +1,7 @@
+## 0.13.4
+
+* Require Dart 2.0 stable.
+
 ## 0.13.3+3
 
 * Fix missing_return analyzer errors in `processStartTag` and `processEndTag`

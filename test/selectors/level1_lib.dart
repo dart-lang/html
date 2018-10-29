@@ -208,7 +208,7 @@ runValidSelectorTest(String type, root, List<Map<String, dynamic>> selectors,
       nodeType = "fragment";
       break;
     default:
-      throw new StateError("Reached unreachable code path.");
+      throw StateError("Reached unreachable code path.");
   }
 
   for (var i = 0; i < selectors.length; i++) {

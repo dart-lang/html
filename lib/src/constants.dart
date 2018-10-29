@@ -6,7 +6,7 @@ import 'utils.dart';
 // lookup than linear search "contains". In the Python code they were
 // frozensets.
 
-final String EOF = null;
+final String eof = null;
 
 class ReparseException implements Exception {
   final String message;
@@ -19,7 +19,7 @@ class ReparseException implements Exception {
 /// These are error messages emitted by [HtmlParser]. The values use Python
 /// style string formatting, as implemented by [formatStr]. That function only
 /// supports the subset of format functionality used here.
-const Map<String, String> errorMessages = const {
+const Map<String, String> errorMessages = {
   "null-character": "Null character in input stream, replaced with U+FFFD.",
   "invalid-codepoint": "Invalid codepoint in stream.",
   "incorrectly-placed-solidus": "Solidus (/) incorrectly placed in tag.",
@@ -264,139 +264,139 @@ class Namespaces {
   }
 }
 
-const List scopingElements = const [
-  const Pair(Namespaces.html, "applet"),
-  const Pair(Namespaces.html, "caption"),
-  const Pair(Namespaces.html, "html"),
-  const Pair(Namespaces.html, "marquee"),
-  const Pair(Namespaces.html, "object"),
-  const Pair(Namespaces.html, "table"),
-  const Pair(Namespaces.html, "td"),
-  const Pair(Namespaces.html, "th"),
-  const Pair(Namespaces.mathml, "mi"),
-  const Pair(Namespaces.mathml, "mo"),
-  const Pair(Namespaces.mathml, "mn"),
-  const Pair(Namespaces.mathml, "ms"),
-  const Pair(Namespaces.mathml, "mtext"),
-  const Pair(Namespaces.mathml, "annotation-xml"),
-  const Pair(Namespaces.svg, "foreignObject"),
-  const Pair(Namespaces.svg, "desc"),
-  const Pair(Namespaces.svg, "title")
+const List scopingElements = [
+  Pair(Namespaces.html, "applet"),
+  Pair(Namespaces.html, "caption"),
+  Pair(Namespaces.html, "html"),
+  Pair(Namespaces.html, "marquee"),
+  Pair(Namespaces.html, "object"),
+  Pair(Namespaces.html, "table"),
+  Pair(Namespaces.html, "td"),
+  Pair(Namespaces.html, "th"),
+  Pair(Namespaces.mathml, "mi"),
+  Pair(Namespaces.mathml, "mo"),
+  Pair(Namespaces.mathml, "mn"),
+  Pair(Namespaces.mathml, "ms"),
+  Pair(Namespaces.mathml, "mtext"),
+  Pair(Namespaces.mathml, "annotation-xml"),
+  Pair(Namespaces.svg, "foreignObject"),
+  Pair(Namespaces.svg, "desc"),
+  Pair(Namespaces.svg, "title")
 ];
 
-const formattingElements = const [
-  const Pair(Namespaces.html, "a"),
-  const Pair(Namespaces.html, "b"),
-  const Pair(Namespaces.html, "big"),
-  const Pair(Namespaces.html, "code"),
-  const Pair(Namespaces.html, "em"),
-  const Pair(Namespaces.html, "font"),
-  const Pair(Namespaces.html, "i"),
-  const Pair(Namespaces.html, "nobr"),
-  const Pair(Namespaces.html, "s"),
-  const Pair(Namespaces.html, "small"),
-  const Pair(Namespaces.html, "strike"),
-  const Pair(Namespaces.html, "strong"),
-  const Pair(Namespaces.html, "tt"),
-  const Pair(Namespaces.html, "")
+const formattingElements = [
+  Pair(Namespaces.html, "a"),
+  Pair(Namespaces.html, "b"),
+  Pair(Namespaces.html, "big"),
+  Pair(Namespaces.html, "code"),
+  Pair(Namespaces.html, "em"),
+  Pair(Namespaces.html, "font"),
+  Pair(Namespaces.html, "i"),
+  Pair(Namespaces.html, "nobr"),
+  Pair(Namespaces.html, "s"),
+  Pair(Namespaces.html, "small"),
+  Pair(Namespaces.html, "strike"),
+  Pair(Namespaces.html, "strong"),
+  Pair(Namespaces.html, "tt"),
+  Pair(Namespaces.html, "")
 ];
 
-const specialElements = const [
-  const Pair(Namespaces.html, "address"),
-  const Pair(Namespaces.html, "applet"),
-  const Pair(Namespaces.html, "area"),
-  const Pair(Namespaces.html, "article"),
-  const Pair(Namespaces.html, "aside"),
-  const Pair(Namespaces.html, "base"),
-  const Pair(Namespaces.html, "basefont"),
-  const Pair(Namespaces.html, "bgsound"),
-  const Pair(Namespaces.html, "blockquote"),
-  const Pair(Namespaces.html, "body"),
-  const Pair(Namespaces.html, "br"),
-  const Pair(Namespaces.html, "button"),
-  const Pair(Namespaces.html, "caption"),
-  const Pair(Namespaces.html, "center"),
-  const Pair(Namespaces.html, "col"),
-  const Pair(Namespaces.html, "colgroup"),
-  const Pair(Namespaces.html, "command"),
-  const Pair(Namespaces.html, "dd"),
-  const Pair(Namespaces.html, "details"),
-  const Pair(Namespaces.html, "dir"),
-  const Pair(Namespaces.html, "div"),
-  const Pair(Namespaces.html, "dl"),
-  const Pair(Namespaces.html, "dt"),
-  const Pair(Namespaces.html, "embed"),
-  const Pair(Namespaces.html, "fieldset"),
-  const Pair(Namespaces.html, "figure"),
-  const Pair(Namespaces.html, "footer"),
-  const Pair(Namespaces.html, "form"),
-  const Pair(Namespaces.html, "frame"),
-  const Pair(Namespaces.html, "frameset"),
-  const Pair(Namespaces.html, "h1"),
-  const Pair(Namespaces.html, "h2"),
-  const Pair(Namespaces.html, "h3"),
-  const Pair(Namespaces.html, "h4"),
-  const Pair(Namespaces.html, "h5"),
-  const Pair(Namespaces.html, "h6"),
-  const Pair(Namespaces.html, "head"),
-  const Pair(Namespaces.html, "header"),
-  const Pair(Namespaces.html, "hr"),
-  const Pair(Namespaces.html, "html"),
-  const Pair(Namespaces.html, "iframe"),
+const specialElements = [
+  Pair(Namespaces.html, "address"),
+  Pair(Namespaces.html, "applet"),
+  Pair(Namespaces.html, "area"),
+  Pair(Namespaces.html, "article"),
+  Pair(Namespaces.html, "aside"),
+  Pair(Namespaces.html, "base"),
+  Pair(Namespaces.html, "basefont"),
+  Pair(Namespaces.html, "bgsound"),
+  Pair(Namespaces.html, "blockquote"),
+  Pair(Namespaces.html, "body"),
+  Pair(Namespaces.html, "br"),
+  Pair(Namespaces.html, "button"),
+  Pair(Namespaces.html, "caption"),
+  Pair(Namespaces.html, "center"),
+  Pair(Namespaces.html, "col"),
+  Pair(Namespaces.html, "colgroup"),
+  Pair(Namespaces.html, "command"),
+  Pair(Namespaces.html, "dd"),
+  Pair(Namespaces.html, "details"),
+  Pair(Namespaces.html, "dir"),
+  Pair(Namespaces.html, "div"),
+  Pair(Namespaces.html, "dl"),
+  Pair(Namespaces.html, "dt"),
+  Pair(Namespaces.html, "embed"),
+  Pair(Namespaces.html, "fieldset"),
+  Pair(Namespaces.html, "figure"),
+  Pair(Namespaces.html, "footer"),
+  Pair(Namespaces.html, "form"),
+  Pair(Namespaces.html, "frame"),
+  Pair(Namespaces.html, "frameset"),
+  Pair(Namespaces.html, "h1"),
+  Pair(Namespaces.html, "h2"),
+  Pair(Namespaces.html, "h3"),
+  Pair(Namespaces.html, "h4"),
+  Pair(Namespaces.html, "h5"),
+  Pair(Namespaces.html, "h6"),
+  Pair(Namespaces.html, "head"),
+  Pair(Namespaces.html, "header"),
+  Pair(Namespaces.html, "hr"),
+  Pair(Namespaces.html, "html"),
+  Pair(Namespaces.html, "iframe"),
   // Note that image is commented out in the spec as "this isn't an
   // element that can end up on the stack, so it doesn't matter,"
-  const Pair(Namespaces.html, "image"),
-  const Pair(Namespaces.html, "img"),
-  const Pair(Namespaces.html, "input"),
-  const Pair(Namespaces.html, "isindex"),
-  const Pair(Namespaces.html, "li"),
-  const Pair(Namespaces.html, "link"),
-  const Pair(Namespaces.html, "listing"),
-  const Pair(Namespaces.html, "marquee"),
-  const Pair(Namespaces.html, "men"),
-  const Pair(Namespaces.html, "meta"),
-  const Pair(Namespaces.html, "nav"),
-  const Pair(Namespaces.html, "noembed"),
-  const Pair(Namespaces.html, "noframes"),
-  const Pair(Namespaces.html, "noscript"),
-  const Pair(Namespaces.html, "object"),
-  const Pair(Namespaces.html, "ol"),
-  const Pair(Namespaces.html, "p"),
-  const Pair(Namespaces.html, "param"),
-  const Pair(Namespaces.html, "plaintext"),
-  const Pair(Namespaces.html, "pre"),
-  const Pair(Namespaces.html, "script"),
-  const Pair(Namespaces.html, "section"),
-  const Pair(Namespaces.html, "select"),
-  const Pair(Namespaces.html, "style"),
-  const Pair(Namespaces.html, "table"),
-  const Pair(Namespaces.html, "tbody"),
-  const Pair(Namespaces.html, "td"),
-  const Pair(Namespaces.html, "textarea"),
-  const Pair(Namespaces.html, "tfoot"),
-  const Pair(Namespaces.html, "th"),
-  const Pair(Namespaces.html, "thead"),
-  const Pair(Namespaces.html, "title"),
-  const Pair(Namespaces.html, "tr"),
-  const Pair(Namespaces.html, "ul"),
-  const Pair(Namespaces.html, "wbr"),
-  const Pair(Namespaces.html, "xmp"),
-  const Pair(Namespaces.svg, "foreignObject")
+  Pair(Namespaces.html, "image"),
+  Pair(Namespaces.html, "img"),
+  Pair(Namespaces.html, "input"),
+  Pair(Namespaces.html, "isindex"),
+  Pair(Namespaces.html, "li"),
+  Pair(Namespaces.html, "link"),
+  Pair(Namespaces.html, "listing"),
+  Pair(Namespaces.html, "marquee"),
+  Pair(Namespaces.html, "men"),
+  Pair(Namespaces.html, "meta"),
+  Pair(Namespaces.html, "nav"),
+  Pair(Namespaces.html, "noembed"),
+  Pair(Namespaces.html, "noframes"),
+  Pair(Namespaces.html, "noscript"),
+  Pair(Namespaces.html, "object"),
+  Pair(Namespaces.html, "ol"),
+  Pair(Namespaces.html, "p"),
+  Pair(Namespaces.html, "param"),
+  Pair(Namespaces.html, "plaintext"),
+  Pair(Namespaces.html, "pre"),
+  Pair(Namespaces.html, "script"),
+  Pair(Namespaces.html, "section"),
+  Pair(Namespaces.html, "select"),
+  Pair(Namespaces.html, "style"),
+  Pair(Namespaces.html, "table"),
+  Pair(Namespaces.html, "tbody"),
+  Pair(Namespaces.html, "td"),
+  Pair(Namespaces.html, "textarea"),
+  Pair(Namespaces.html, "tfoot"),
+  Pair(Namespaces.html, "th"),
+  Pair(Namespaces.html, "thead"),
+  Pair(Namespaces.html, "title"),
+  Pair(Namespaces.html, "tr"),
+  Pair(Namespaces.html, "ul"),
+  Pair(Namespaces.html, "wbr"),
+  Pair(Namespaces.html, "xmp"),
+  Pair(Namespaces.svg, "foreignObject")
 ];
 
-const htmlIntegrationPointElements = const [
-  const Pair(Namespaces.mathml, "annotaion-xml"),
-  const Pair(Namespaces.svg, "foreignObject"),
-  const Pair(Namespaces.svg, "desc"),
-  const Pair(Namespaces.svg, "title")
+const htmlIntegrationPointElements = [
+  Pair(Namespaces.mathml, "annotaion-xml"),
+  Pair(Namespaces.svg, "foreignObject"),
+  Pair(Namespaces.svg, "desc"),
+  Pair(Namespaces.svg, "title")
 ];
 
-const mathmlTextIntegrationPointElements = const [
-  const Pair(Namespaces.mathml, "mi"),
-  const Pair(Namespaces.mathml, "mo"),
-  const Pair(Namespaces.mathml, "mn"),
-  const Pair(Namespaces.mathml, "ms"),
-  const Pair(Namespaces.mathml, "mtext")
+const mathmlTextIntegrationPointElements = [
+  Pair(Namespaces.mathml, "mi"),
+  Pair(Namespaces.mathml, "mo"),
+  Pair(Namespaces.mathml, "mn"),
+  Pair(Namespaces.mathml, "ms"),
+  Pair(Namespaces.mathml, "mtext")
 ];
 
 const spaceCharacters = " \n\r\t\u000C";
@@ -421,7 +421,7 @@ bool isWhitespaceCC(int charCode) {
   return false;
 }
 
-const List<String> tableInsertModeElements = const [
+const List<String> tableInsertModeElements = [
   "table",
   "tbody",
   "tfoot",
@@ -487,7 +487,7 @@ bool isHexDigit(String char) {
 // ASCII chars to.toLowerCase() case, unlike Dart's toLowerCase function.
 String asciiUpper2Lower(String text) {
   if (text == null) return null;
-  var result = new List<int>(text.length);
+  var result = List<int>(text.length);
   for (int i = 0; i < text.length; i++) {
     var c = text.codeUnitAt(i);
     if (c >= UPPER_A && c <= UPPER_Z) {
@@ -495,15 +495,15 @@ String asciiUpper2Lower(String text) {
     }
     result[i] = c;
   }
-  return new String.fromCharCodes(result);
+  return String.fromCharCodes(result);
 }
 
 // Heading elements need to be ordered
-const headingElements = const ["h1", "h2", "h3", "h4", "h5", "h6"];
+const headingElements = ["h1", "h2", "h3", "h4", "h5", "h6"];
 
-const cdataElements = const ['title', 'textarea'];
+const cdataElements = ['title', 'textarea'];
 
-const rcdataElements = const [
+const rcdataElements = [
   'style',
   'script',
   'xmp',
@@ -513,33 +513,33 @@ const rcdataElements = const [
   'noscript'
 ];
 
-const Map<String, List<String>> booleanAttributes = const {
-  "": const [
+const Map<String, List<String>> booleanAttributes = {
+  "": [
     "irrelevant",
   ],
-  "style": const [
+  "style": [
     "scoped",
   ],
-  "img": const [
+  "img": [
     "ismap",
   ],
-  "audio": const ["autoplay", "controls"],
-  "video": const ["autoplay", "controls"],
-  "script": const ["defer", "async"],
-  "details": const [
+  "audio": ["autoplay", "controls"],
+  "video": ["autoplay", "controls"],
+  "script": ["defer", "async"],
+  "details": [
     "open",
   ],
-  "datagrid": const ["multiple", "disabled"],
-  "command": const ["hidden", "disabled", "checked", "default"],
-  "hr": const ["noshade"],
-  "men": const [
+  "datagrid": ["multiple", "disabled"],
+  "command": ["hidden", "disabled", "checked", "default"],
+  "hr": ["noshade"],
+  "men": [
     "autosubmit",
   ],
-  "fieldset": const ["disabled", "readonly"],
-  "option": const ["disabled", "readonly", "selected"],
-  "optgroup": const ["disabled", "readonly"],
-  "button": const ["disabled", "autofocus"],
-  "input": const [
+  "fieldset": ["disabled", "readonly"],
+  "option": ["disabled", "readonly", "selected"],
+  "optgroup": ["disabled", "readonly"],
+  "button": ["disabled", "autofocus"],
+  "input": [
     "disabled",
     "readonly",
     "required",
@@ -547,13 +547,13 @@ const Map<String, List<String>> booleanAttributes = const {
     "checked",
     "ismap"
   ],
-  "select": const ["disabled", "readonly", "autofocus", "multiple"],
-  "output": const ["disabled", "readonly"],
+  "select": ["disabled", "readonly", "autofocus", "multiple"],
+  "output": ["disabled", "readonly"],
 };
 
 // entitiesWindows1252 has to be _ordered_ and needs to have an index. It
 // therefore can't be a frozenset.
-const List<int> entitiesWindows1252 = const [
+const List<int> entitiesWindows1252 = [
   8364, // 0x80  0x20AC  EURO SIGN
   65533, // 0x81          UNDEFINED
   8218, // 0x82  0x201A  SINGLE LOW-9 QUOTATION MARK
@@ -588,9 +588,9 @@ const List<int> entitiesWindows1252 = const [
   376 // 0x9F  0x0178  LATIN CAPITAL LETTER Y WITH DIAERESIS
 ];
 
-const xmlEntities = const ['lt;', 'gt;', 'amp;', 'apos;', 'quot;'];
+const xmlEntities = ['lt;', 'gt;', 'amp;', 'apos;', 'quot;'];
 
-const Map<String, String> entities = const {
+const Map<String, String> entities = {
   "AElig": "\xc6",
   "AElig;": "\xc6",
   "AMP": "&",
@@ -2824,7 +2824,7 @@ const Map<String, String> entities = const {
   "zwnj;": "\u200c",
 };
 
-const Map<int, String> replacementCharacters = const {
+const Map<int, String> replacementCharacters = {
   0x00: "\uFFFD",
   0x0d: "\u000D",
   0x80: "\u20AC",
@@ -2861,7 +2861,7 @@ const Map<int, String> replacementCharacters = const {
   0x9F: "\u0178"
 };
 
-const Map<String, String> encodings = const {
+const Map<String, String> encodings = {
   '437': 'cp437',
   '850': 'cp850',
   '852': 'cp852',

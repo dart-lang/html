@@ -12,6 +12,7 @@ class Pair<F, S> {
   const Pair(this.first, this.second);
 
   int get hashCode => 37 * first.hashCode + second.hashCode;
+
   bool operator ==(other) => other.first == first && other.second == second;
 }
 
@@ -62,7 +63,7 @@ bool allWhitespace(String str) {
 
 String padWithZeros(String str, int size) {
   if (str.length == size) return str;
-  var result = new StringBuffer();
+  var result = StringBuffer();
   size -= str.length;
   for (int i = 0; i < size; i++) result.write('0');
   result.write(str);
@@ -77,9 +78,11 @@ String padWithZeros(String str, int size) {
 String formatStr(String format, Map data) {
   if (data == null) return format;
   data.forEach((key, value) {
-    var result = new StringBuffer();
+    var result = StringBuffer();
     var search = '%($key)';
     int last = 0, match;
+    // This is a bug in the linter
+    // ignore: prefer_contains
     while ((match = format.indexOf(search, last)) >= 0) {
       result.write(format.substring(last, match));
       match += search.length;
@@ -107,8 +110,8 @@ String formatStr(String format, Map data) {
           result.write(padWithZeros(number, numberSize));
           break;
         default:
-          throw "not implemented: formatStr does not support format "
-              "character ${format[match]}";
+          throw UnsupportedError("formatStr does not support format "
+              "character ${format[match]}");
       }
 
       last = match + 1;

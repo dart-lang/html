@@ -8,8 +8,8 @@ import 'package:html/parser.dart';
 main() {
   group('Element', () {
     test('classes', () {
-      final barBaz = new Element.html('<div class=" bar baz"></div>');
-      final quxBaz = new Element.html('<div class="qux  baz "></div>');
+      final barBaz = Element.html('<div class=" bar baz"></div>');
+      final quxBaz = Element.html('<div class="qux  baz "></div>');
       expect(barBaz.className, ' bar baz');
       expect(quxBaz.className, 'qux  baz ');
       expect(barBaz.classes, ['bar', 'baz']);
@@ -25,11 +25,11 @@ main() {
 
     test('getElementById', () {
       var foo = doc.body.nodes[0];
-      var Foo = foo.nodes[2];
+      var fooVar = foo.nodes[2];
       expect((foo as Element).id, 'foo');
-      expect((Foo as Element).id, 'Foo');
+      expect((fooVar as Element).id, 'Foo');
       expect(doc.getElementById('foo'), foo);
-      expect(doc.getElementById('Foo'), Foo);
+      expect(doc.getElementById('Foo'), fooVar);
     });
 
     test('getElementsByClassName', () {
@@ -48,8 +48,8 @@ main() {
       var foo = doc.body.nodes[0];
       var barBaz = foo.nodes[0];
       var quxBaz = foo.nodes[1];
-      var Foo = foo.nodes[2];
-      expect(doc.getElementsByTagName('div'), [foo, barBaz, quxBaz, Foo]);
+      var fooVar = foo.nodes[2];
+      expect(doc.getElementsByTagName('div'), [foo, barBaz, quxBaz, fooVar]);
     });
   });
 

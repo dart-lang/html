@@ -24,17 +24,17 @@ main() {
   });
 
   test('namespace html elements on', () {
-    var doc = new HtmlParser('', tree: new TreeBuilder(true)).parse();
+    var doc = HtmlParser('', tree: TreeBuilder(true)).parse();
     expect((doc.nodes[0] as Element).namespaceUri, Namespaces.html);
   });
 
   test('namespace html elements off', () {
-    var doc = new HtmlParser('', tree: new TreeBuilder(false)).parse();
+    var doc = HtmlParser('', tree: TreeBuilder(false)).parse();
     expect((doc.nodes[0] as Element).namespaceUri, null);
   });
 
   test('parse error spans - full', () {
-    var parser = new HtmlParser('''
+    var parser = HtmlParser('''
 <!DOCTYPE html>
 <html>
   <body>
@@ -62,7 +62,7 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
   });
 
   test('parse error spans - minimal', () {
-    var parser = new HtmlParser('''
+    var parser = HtmlParser('''
 <!DOCTYPE html>
 <html>
   <body>
@@ -85,7 +85,7 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
     var html = '<body><div>$textContent</div>';
     var doc = parse(html, generateSpans: true);
     Text text = doc.body.nodes[0].nodes[0];
-    expect(text, new TypeMatcher<Text>());
+    expect(text, const TypeMatcher<Text>());
     expect(text.data, textContent);
     expect(text.sourceSpan.start.offset, html.indexOf(textContent));
     expect(text.sourceSpan.length, textContent.length);
@@ -229,7 +229,7 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
       ''');
       var n = doc.querySelector('desc');
       var keys = n.attributes.keys.toList();
-      expect(keys[0], new TypeMatcher<AttributeName>());
+      expect(keys[0], const TypeMatcher<AttributeName>());
       expect(keys[0].prefix, 'xlink');
       expect(keys[0].namespace, 'http://www.w3.org/1999/xlink');
       expect(keys[0].name, 'type');
@@ -242,7 +242,7 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
   });
 
   test('error printing without spans', () {
-    var parser = new HtmlParser('foo');
+    var parser = HtmlParser('foo');
     var doc = parser.parse();
     expect(doc.body.innerHtml, 'foo');
     expect(parser.errors.length, 1);
@@ -299,7 +299,7 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
   });
 
   test('foreignObject end tag', () {
-    var p = new HtmlParser('''
+    var p = HtmlParser('''
 <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"
      version="1.1">
     <foreignObject width="320px" height="200px">
@@ -313,7 +313,7 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
   });
 
   group('Encoding pre-parser', () {
-    getEncoding(String s) => new EncodingParser(s.codeUnits).getEncoding();
+    getEncoding(String s) => EncodingParser(s.codeUnits).getEncoding();
 
     test('gets encoding from meta charset', () {
       expect(getEncoding('<meta charset="utf-16">'), 'utf-16');

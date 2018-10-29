@@ -34,8 +34,8 @@ class StartTagToken extends TagToken {
 
   StartTagToken(String name,
       {this.data,
-      bool selfClosing: false,
-      this.selfClosingAcknowledged: false,
+      bool selfClosing = false,
+      this.selfClosingAcknowledged = false,
       this.namespace})
       : super(name, selfClosing);
 
@@ -43,7 +43,7 @@ class StartTagToken extends TagToken {
 }
 
 class EndTagToken extends TagToken {
-  EndTagToken(String name, {bool selfClosing: false})
+  EndTagToken(String name, {bool selfClosing = false})
       : super(name, selfClosing);
 
   int get kind => TokenKind.endTag;
@@ -63,7 +63,7 @@ abstract class StringToken extends Token {
 
   StringToken(string)
       : _string = string,
-        _buffer = string == null ? new StringBuffer() : null;
+        _buffer = string == null ? StringBuffer() : null;
 
   StringToken add(String data) {
     _buffer.write(data);
@@ -111,7 +111,7 @@ class DoctypeToken extends Token {
   String name = "";
   bool correct;
 
-  DoctypeToken({this.publicId, this.systemId, this.correct: false});
+  DoctypeToken({this.publicId, this.systemId, this.correct = false});
 
   int get kind => TokenKind.doctype;
 }

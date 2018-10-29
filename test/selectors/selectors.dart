@@ -3,16 +3,16 @@
 library html.test.selectors.selectors;
 
 // Bit-mapped flags to indicate which tests the selector is suitable for
-var TEST_QSA_BASELINE =
+final testQsaBaseline =
     0x01; // querySelector() and querySelectorAll() baseline tests
-var TEST_QSA_ADDITIONAL =
+final testQsaAdditional =
     0x02; // querySelector() and querySelectorAll() additional tests
-var TEST_FIND_BASELINE =
+final testFindBaseline =
     0x04; // find() and findAll() baseline tests, may be unsuitable for querySelector[All]
-var TEST_FIND_ADDITIONAL =
+final testFindAdditional =
     0x08; // find() and findAll() additional tests, may be unsuitable for querySelector[All]
-var TEST_MATCH_BASELINE = 0x10; // matches() baseline tests
-var TEST_MATCH_ADDITIONAL = 0x20; // matches() additional tests
+final testMatchBaseline = 0x10; // matches() baseline tests
+var testMatchAdditional = 0x20; // matches() additional tests
 
 /*
  * All of these invalid selectors should result in a SyntaxError being thrown by the APIs.
@@ -20,7 +20,7 @@ var TEST_MATCH_ADDITIONAL = 0x20; // matches() additional tests
  *   name:     A descriptive name of the selector being tested
  *   selector: The selector to test
  */
-var invalidSelectors = [
+final invalidSelectors = [
   {'name': "Empty String", 'selector': ""},
   {'name': "Invalid character", 'selector': "["},
   {'name': "Invalid character", 'selector': "]"},
@@ -82,7 +82,7 @@ var validSelectors = [
     'expect': ["html"],
     'exclude': ["element", "fragment", "detached"],
     'level': 1,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name': "Type selector, matching html element",
@@ -90,7 +90,7 @@ var validSelectors = [
     'expect': [] /*no matches*/,
     'exclude': ["document"],
     'level': 1,
-    'testType': TEST_QSA_BASELINE
+    'testType': testQsaBaseline
   },
   {
     'name': "Type selector, matching body element",
@@ -98,7 +98,7 @@ var validSelectors = [
     'expect': ["body"],
     'exclude': ["element", "fragment", "detached"],
     'level': 1,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name': "Type selector, matching body element",
@@ -106,7 +106,7 @@ var validSelectors = [
     'expect': [] /*no matches*/,
     'exclude': ["document"],
     'level': 1,
-    'testType': TEST_QSA_BASELINE
+    'testType': testQsaBaseline
   },
 
   // Universal Selector
@@ -123,7 +123,7 @@ var validSelectors = [
       "universal-address1"
     ],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -136,7 +136,7 @@ var validSelectors = [
       "universal-code2"
     ],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -144,7 +144,7 @@ var validSelectors = [
     'selector': "#empty>*",
     'expect': [] /*no matches*/,
     'level': 2,
-    'testType': TEST_QSA_BASELINE
+    'testType': testQsaBaseline
   },
   {
     'name':
@@ -163,7 +163,7 @@ var validSelectors = [
       "universal-a2"
     ],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
 
   // Attribute Selectors
@@ -173,7 +173,7 @@ var validSelectors = [
     'selector': ".attr-presence-div1[align]",
     'expect': ["attr-presence-div1"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -181,7 +181,7 @@ var validSelectors = [
     'selector': ".attr-presence-div2[align]",
     'expect': ["attr-presence-div2"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -190,7 +190,7 @@ var validSelectors = [
     'expect': ["attr-presence-a1", "attr-presence-span1"],
     'exclude': ["xhtml"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -199,14 +199,14 @@ var validSelectors = [
     'expect': [],
     'exclude': ["html"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name': "Attribute presence selector, matching custom data-* attribute",
     'selector': "[data-attr-presence]",
     'expect': ["attr-presence-pre1", "attr-presence-blockquote1"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -214,7 +214,7 @@ var validSelectors = [
     'selector': ".attr-presence-div3[align], .attr-presence-div4[align]",
     'expect': [] /*no matches*/,
     'level': 2,
-    'testType': TEST_QSA_BASELINE
+    'testType': testQsaBaseline
   },
   {
     'name':
@@ -222,7 +222,7 @@ var validSelectors = [
     'selector': "ul[data-中文]",
     'expect': ["attr-presence-ul1"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -230,7 +230,7 @@ var validSelectors = [
     'selector': "#attr-presence-select1 option[selected]",
     'expect': [] /* no matches */,
     'level': 2,
-    'testType': TEST_QSA_BASELINE
+    'testType': testQsaBaseline
   },
   {
     'name':
@@ -238,7 +238,7 @@ var validSelectors = [
     'selector': "#attr-presence-select2 option[selected]",
     'expect': ["attr-presence-select2-option4"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -249,7 +249,7 @@ var validSelectors = [
       "attr-presence-select3-option3"
     ],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
 
   // - value                     [att=val]
@@ -258,7 +258,7 @@ var validSelectors = [
     'selector': "#attr-value [align=\"center\"]",
     'expect': ["attr-value-div1"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -266,7 +266,7 @@ var validSelectors = [
     'selector': "#attr-value [align=\"\"]",
     'expect': ["attr-value-div2"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -274,7 +274,7 @@ var validSelectors = [
     'selector': "#attr-value [align=\"c\"]",
     'expect': [] /*no matches*/,
     'level': 2,
-    'testType': TEST_QSA_BASELINE
+    'testType': testQsaBaseline
   },
   {
     'name':
@@ -282,7 +282,7 @@ var validSelectors = [
     'selector': "#attr-value [align=\"centera\"]",
     'expect': [] /*no matches*/,
     'level': 2,
-    'testType': TEST_QSA_BASELINE
+    'testType': testQsaBaseline
   },
   {
     'name':
@@ -290,7 +290,7 @@ var validSelectors = [
     'selector': "[data-attr-value=\"\\e9\"]",
     'expect': ["attr-value-div3"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -298,7 +298,7 @@ var validSelectors = [
     'selector': "[data-attr-value\_foo=\"\\e9\"]",
     'expect': ["attr-value-div4"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -313,7 +313,7 @@ var validSelectors = [
       "attr-value-input9"
     ],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -328,7 +328,7 @@ var validSelectors = [
       "attr-value-input9"
     ],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -342,7 +342,7 @@ var validSelectors = [
       "attr-value-input9"
     ],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -350,7 +350,7 @@ var validSelectors = [
     'selector': "[data-attr-value=中文]",
     'expect': ["attr-value-div5"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
 
   // - whitespace-separated list [att~=val]
@@ -360,7 +360,7 @@ var validSelectors = [
     'selector': "#attr-whitespace [class~=\"div1\"]",
     'expect': ["attr-whitespace-div1"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -368,7 +368,7 @@ var validSelectors = [
     'selector': "#attr-whitespace [class~=\"\"]",
     'expect': [] /*no matches*/,
     'level': 2,
-    'testType': TEST_QSA_BASELINE
+    'testType': testQsaBaseline
   },
   {
     'name':
@@ -376,7 +376,7 @@ var validSelectors = [
     'selector': "[data-attr-whitespace~=\"div\"]",
     'expect': [] /*no matches*/,
     'level': 2,
-    'testType': TEST_QSA_BASELINE
+    'testType': testQsaBaseline
   },
   {
     'name':
@@ -384,7 +384,7 @@ var validSelectors = [
     'selector': "[data-attr-whitespace~=\"\\0000e9\"]",
     'expect': ["attr-whitespace-div4"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -392,7 +392,7 @@ var validSelectors = [
     'selector': "[data-attr-whitespace\_foo~=\"\\e9\"]",
     'expect': ["attr-whitespace-div5"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -407,7 +407,7 @@ var validSelectors = [
       "attr-whitespace-a7"
     ],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -422,7 +422,7 @@ var validSelectors = [
       "attr-whitespace-a7"
     ],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -437,7 +437,7 @@ var validSelectors = [
       "attr-whitespace-a7"
     ],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -445,7 +445,7 @@ var validSelectors = [
     'selector': "#attr-whitespace a[rel~=\"book mark\"]",
     'expect': [] /* no matches */,
     'level': 2,
-    'testType': TEST_QSA_BASELINE
+    'testType': testQsaBaseline
   },
   {
     'name':
@@ -453,7 +453,7 @@ var validSelectors = [
     'selector': "#attr-whitespace [title~=中文]",
     'expect': ["attr-whitespace-p1"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
 
   // - hyphen-separated list     [att|=val]
@@ -463,7 +463,7 @@ var validSelectors = [
     'selector': "#attr-hyphen-div1[lang|=\"en\"]",
     'expect': [] /*no matches*/,
     'level': 2,
-    'testType': TEST_QSA_BASELINE
+    'testType': testQsaBaseline
   },
   {
     'name':
@@ -471,7 +471,7 @@ var validSelectors = [
     'selector': "#attr-hyphen-div2[lang|=\"fr\"]",
     'expect': ["attr-hyphen-div2"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -479,7 +479,7 @@ var validSelectors = [
     'selector': "#attr-hyphen-div3[lang|=\"en\"]",
     'expect': ["attr-hyphen-div3"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -487,7 +487,7 @@ var validSelectors = [
     'selector': "#attr-hyphen-div4[lang|=\"es-AR\"]",
     'expect': [] /*no matches*/,
     'level': 2,
-    'testType': TEST_QSA_BASELINE
+    'testType': testQsaBaseline
   },
 
   // - substring begins-with     [att^=val] (Level 3)
@@ -497,7 +497,7 @@ var validSelectors = [
     'selector': "#attr-begins a[href^=\"http://www\"]",
     'expect': ["attr-begins-a1", "attr-begins-a3"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -505,7 +505,7 @@ var validSelectors = [
     'selector': "#attr-begins [lang^=\"en-\"]",
     'expect': ["attr-begins-div2", "attr-begins-div4"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -513,7 +513,7 @@ var validSelectors = [
     'selector': "#attr-begins [class^=apple]",
     'expect': [] /*no matches*/,
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL
+    'testType': testQsaAdditional
   },
   {
     'name':
@@ -521,7 +521,7 @@ var validSelectors = [
     'selector': "#attr-begins [class^=' apple']",
     'expect': ["attr-begins-p1"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -529,7 +529,7 @@ var validSelectors = [
     'selector': "#attr-begins [class^=\" apple\"]",
     'expect': ["attr-begins-p1"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -537,7 +537,7 @@ var validSelectors = [
     'selector': "#attr-begins [class^= apple]",
     'expect': [] /*no matches*/,
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL
+    'testType': testQsaAdditional
   },
 
   // - substring ends-with       [att\$=val] (Level 3)
@@ -547,7 +547,7 @@ var validSelectors = [
     'selector': "#attr-ends a[href\$=\".org\"]",
     'expect': ["attr-ends-a1", "attr-ends-a3"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -555,7 +555,7 @@ var validSelectors = [
     'selector': "#attr-ends [lang\$=\"-CH\"]",
     'expect': ["attr-ends-div2", "attr-ends-div4"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -563,7 +563,7 @@ var validSelectors = [
     'selector': "#attr-ends [class\$=apple]",
     'expect': [] /*no matches*/,
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL
+    'testType': testQsaAdditional
   },
   {
     'name':
@@ -571,7 +571,7 @@ var validSelectors = [
     'selector': "#attr-ends [class\$='apple ']",
     'expect': ["attr-ends-p1"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -579,7 +579,7 @@ var validSelectors = [
     'selector': "#attr-ends [class\$=\"apple \"]",
     'expect': ["attr-ends-p1"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -587,7 +587,7 @@ var validSelectors = [
     'selector': "#attr-ends [class\$=apple ]",
     'expect': [] /*no matches*/,
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL
+    'testType': testQsaAdditional
   },
 
   // - substring contains        [att*=val] (Level 3)
@@ -597,7 +597,7 @@ var validSelectors = [
     'selector': "#attr-contains a[href*=\"http://www\"]",
     'expect': ["attr-contains-a1", "attr-contains-a3"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -605,7 +605,7 @@ var validSelectors = [
     'selector': "#attr-contains a[href*=\".org\"]",
     'expect': ["attr-contains-a1", "attr-contains-a2"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -613,7 +613,7 @@ var validSelectors = [
     'selector': "#attr-contains a[href*=\".example.\"]",
     'expect': ["attr-contains-a1", "attr-contains-a3"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -621,7 +621,7 @@ var validSelectors = [
     'selector': "#attr-contains [lang*=\"en-\"]",
     'expect': ["attr-contains-div2", "attr-contains-div6"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -629,7 +629,7 @@ var validSelectors = [
     'selector': "#attr-contains [lang*=\"-CH\"]",
     'expect': ["attr-contains-div3", "attr-contains-div5"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -637,7 +637,7 @@ var validSelectors = [
     'selector': "#attr-contains [class*=' apple']",
     'expect': ["attr-contains-p1"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -645,7 +645,7 @@ var validSelectors = [
     'selector': "#attr-contains [class*='orange ']",
     'expect': ["attr-contains-p1"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -653,7 +653,7 @@ var validSelectors = [
     'selector': "#attr-contains [class*='ple banana ora']",
     'expect': ["attr-contains-p1"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -661,7 +661,7 @@ var validSelectors = [
     'selector': "#attr-contains [class*=\" apple\"]",
     'expect': ["attr-contains-p1"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -669,7 +669,7 @@ var validSelectors = [
     'selector': "#attr-contains [class*=\"orange \"]",
     'expect': ["attr-contains-p1"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -677,7 +677,7 @@ var validSelectors = [
     'selector': "#attr-contains [class*=\"ple banana ora\"]",
     'expect': ["attr-contains-p1"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -685,7 +685,7 @@ var validSelectors = [
     'selector': "#attr-contains [class*= apple]",
     'expect': ["attr-contains-p1"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -693,7 +693,7 @@ var validSelectors = [
     'selector': "#attr-contains [class*=orange ]",
     'expect': ["attr-contains-p1"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -701,7 +701,7 @@ var validSelectors = [
     'selector': "#attr-contains [class*= banana ]",
     'expect': ["attr-contains-p1"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
 
   // Pseudo-classes
@@ -712,7 +712,7 @@ var validSelectors = [
     'expect': ["html"],
     'exclude': ["element", "fragment", "detached"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name': ":root pseudo-class selector, not matching document root element",
@@ -720,7 +720,7 @@ var validSelectors = [
     'expect': [] /*no matches*/,
     'exclude': ["document"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL
+    'testType': testQsaAdditional
   },
 
   // - :nth-child(n)         (Level 3)
@@ -734,7 +734,7 @@ var validSelectors = [
       "pseudo-nth-td15"
     ],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name': ":nth-child selector, matching every third child element",
@@ -746,7 +746,7 @@ var validSelectors = [
       "pseudo-nth-li12"
     ],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -760,7 +760,7 @@ var validSelectors = [
       "pseudo-nth-li12"
     ],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -768,7 +768,7 @@ var validSelectors = [
     'selector': "#pseudo-nth-p1 :nth-child(4n-1)",
     'expect': ["pseudo-nth-em2", "pseudo-nth-span3"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
 
   // - :nth-last-child       (Level 3)
@@ -782,7 +782,7 @@ var validSelectors = [
       "pseudo-nth-td16"
     ],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -795,7 +795,7 @@ var validSelectors = [
       "pseudo-nth-li10"
     ],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -809,7 +809,7 @@ var validSelectors = [
       "pseudo-nth-li9"
     ],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -817,7 +817,7 @@ var validSelectors = [
     'selector': "#pseudo-nth-p1 :nth-last-child(4n-1)",
     'expect': ["pseudo-nth-span2", "pseudo-nth-span4"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
 
   // - :nth-of-type(n)       (Level 3)
@@ -826,7 +826,7 @@ var validSelectors = [
     'selector': "#pseudo-nth-p1 em:nth-of-type(3)",
     'expect': ["pseudo-nth-em3"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -840,7 +840,7 @@ var validSelectors = [
       "pseudo-nth-em4"
     ],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -848,7 +848,7 @@ var validSelectors = [
     'selector': "#pseudo-nth-p1 span:nth-of-type(2n-1)",
     'expect': ["pseudo-nth-span1", "pseudo-nth-span3"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
 
   // - :nth-last-of-type(n)  (Level 3)
@@ -857,7 +857,7 @@ var validSelectors = [
     'selector': "#pseudo-nth-p1 em:nth-last-of-type(3)",
     'expect': ["pseudo-nth-em2"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -871,7 +871,7 @@ var validSelectors = [
       "pseudo-nth-span3"
     ],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -879,7 +879,7 @@ var validSelectors = [
     'selector': "#pseudo-nth-p1 span:nth-last-of-type(2n-1)",
     'expect': ["pseudo-nth-span2", "pseudo-nth-span4"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
 
   // - :first-of-type        (Level 3)
@@ -888,7 +888,7 @@ var validSelectors = [
     'selector': "#pseudo-nth-p1 em:first-of-type",
     'expect': ["pseudo-nth-em1"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -896,7 +896,7 @@ var validSelectors = [
     'selector': "#pseudo-nth-p1 :first-of-type",
     'expect': ["pseudo-nth-span1", "pseudo-nth-em1", "pseudo-nth-strong1"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -904,7 +904,7 @@ var validSelectors = [
     'selector': "#pseudo-nth-table1 tr :first-of-type",
     'expect': ["pseudo-nth-td1", "pseudo-nth-td7", "pseudo-nth-td13"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
 
   // - :last-of-type         (Level 3)
@@ -913,7 +913,7 @@ var validSelectors = [
     'selector': "#pseudo-nth-p1 em:last-of-type",
     'expect': ["pseudo-nth-em4"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -921,7 +921,7 @@ var validSelectors = [
     'selector': "#pseudo-nth-p1 :last-of-type",
     'expect': ["pseudo-nth-span4", "pseudo-nth-strong2", "pseudo-nth-em4"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -929,7 +929,7 @@ var validSelectors = [
     'selector': "#pseudo-nth-table1 tr :last-of-type",
     'expect': ["pseudo-nth-td6", "pseudo-nth-td12", "pseudo-nth-td18"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
 
   // - :first-child
@@ -939,7 +939,7 @@ var validSelectors = [
     'selector': "#pseudo-first-child div:first-child",
     'expect': ["pseudo-first-child-div1"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -948,7 +948,7 @@ var validSelectors = [
         ".pseudo-first-child-div2:first-child, .pseudo-first-child-div3:first-child",
     'expect': [] /*no matches*/,
     'level': 2,
-    'testType': TEST_QSA_BASELINE
+    'testType': testQsaBaseline
   },
   {
     'name':
@@ -960,7 +960,7 @@ var validSelectors = [
       "pseudo-first-child-span5"
     ],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
 
   // - :last-child           (Level 3)
@@ -970,7 +970,7 @@ var validSelectors = [
     'selector': "#pseudo-last-child div:last-child",
     'expect': ["pseudo-last-child-div3"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -979,7 +979,7 @@ var validSelectors = [
         ".pseudo-last-child-div1:last-child, .pseudo-last-child-div2:first-child",
     'expect': [] /*no matches*/,
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL
+    'testType': testQsaAdditional
   },
   {
     'name':
@@ -991,7 +991,7 @@ var validSelectors = [
       "pseudo-last-child-span6"
     ],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
 
   // - :only-child           (Level 3)
@@ -1001,7 +1001,7 @@ var validSelectors = [
     'selector': "#pseudo-only :only-child",
     'expect': ["pseudo-only-span1"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -1009,7 +1009,7 @@ var validSelectors = [
     'selector': "#pseudo-only em:only-child",
     'expect': [] /*no matches*/,
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL
+    'testType': testQsaAdditional
   },
 
   // - :only-of-type         (Level 3)
@@ -1019,7 +1019,7 @@ var validSelectors = [
     'selector': "#pseudo-only :only-of-type",
     'expect': ["pseudo-only-span1", "pseudo-only-em1"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -1027,7 +1027,7 @@ var validSelectors = [
     'selector': "#pseudo-only em:only-of-type",
     'expect': ["pseudo-only-em1"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
 
   // - :empty                (Level 3)
@@ -1036,14 +1036,14 @@ var validSelectors = [
     'selector': "#pseudo-empty p:empty",
     'expect': ["pseudo-empty-p1", "pseudo-empty-p2"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name': ":empty pseudo-class selector, matching all empty elements",
     'selector': "#pseudo-empty :empty",
     'expect': ["pseudo-empty-p1", "pseudo-empty-p2", "pseudo-empty-span1"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
 
   // - :link and :visited
@@ -1055,7 +1055,7 @@ var validSelectors = [
     'selector': "#pseudo-link :link, #pseudo-link :visited",
     'expect': ["pseudo-link-a1", "pseudo-link-a2", "pseudo-link-area1"],
     'level': 1,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -1064,7 +1064,7 @@ var validSelectors = [
     'expect': ["pseudo-link-link1", "pseudo-link-link2"],
     'exclude': ["element", "fragment", "detached"],
     'level': 1,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -1073,7 +1073,7 @@ var validSelectors = [
     'expect': [] /*no matches*/,
     'exclude': ["document"],
     'level': 1,
-    'testType': TEST_QSA_BASELINE
+    'testType': testQsaBaseline
   },
   {
     'name':
@@ -1082,7 +1082,7 @@ var validSelectors = [
     'expect': [] /*no matches*/,
     'exclude': ["document"],
     'level': 1,
-    'testType': TEST_QSA_BASELINE
+    'testType': testQsaBaseline
   },
 
   // - :target               (Level 3)
@@ -1093,7 +1093,7 @@ var validSelectors = [
     'expect': [] /*no matches*/,
     'exclude': ["document", "element"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL
+    'testType': testQsaAdditional
   },
   {
     'name':
@@ -1102,7 +1102,7 @@ var validSelectors = [
     'expect': ["target"],
     'exclude': ["fragment", "detached"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
 
   // - :lang()
@@ -1112,7 +1112,7 @@ var validSelectors = [
     'expect': ["pseudo-lang-div1"],
     'exclude': ["detached", "fragment"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -1121,7 +1121,7 @@ var validSelectors = [
     'expect': [] /*no matches*/,
     'exclude': ["document", "element"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE
+    'testType': testQsaBaseline
   },
   {
     'name':
@@ -1129,7 +1129,7 @@ var validSelectors = [
     'selector': "#pseudo-lang-div2:lang(fr)",
     'expect': ["pseudo-lang-div2"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -1137,14 +1137,14 @@ var validSelectors = [
     'selector': "#pseudo-lang-div3:lang(en)",
     'expect': ["pseudo-lang-div3"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name': ":lang pseudo-class selector, not matching incorrect language",
     'selector': "#pseudo-lang-div4:lang(es-AR)",
     'expect': [] /*no matches*/,
     'level': 2,
-    'testType': TEST_QSA_BASELINE
+    'testType': testQsaBaseline
   },
 
   // - :enabled              (Level 3)
@@ -1166,7 +1166,7 @@ var validSelectors = [
       "pseudo-ui-button1"
     ],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
 
   // - :disabled             (Level 3)
@@ -1188,7 +1188,7 @@ var validSelectors = [
       "pseudo-ui-button2"
     ],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
 
   // - :checked              (Level 3)
@@ -1203,7 +1203,7 @@ var validSelectors = [
       "pseudo-ui-input15"
     ],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
 
   // - :not(s)               (Level 3)
@@ -1212,28 +1212,28 @@ var validSelectors = [
     'selector': "#not>:not(div)",
     'expect': ["not-p1", "not-p2", "not-p3"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name': ":not pseudo-class selector, matching ",
     'selector': "#not * :not(:first-child)",
     'expect': ["not-em1", "not-em2", "not-em3"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name': ":not pseudo-class selector, matching nothing",
     'selector': ":not(*)",
     'expect': [] /* no matches */,
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL
+    'testType': testQsaAdditional
   },
   {
     'name': ":not pseudo-class selector, matching nothing",
     'selector': ":not(*|*)",
     'expect': [] /* no matches */,
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL
+    'testType': testQsaAdditional
   },
 
   // Pseudo-elements
@@ -1244,7 +1244,7 @@ var validSelectors = [
     'selector': "#pseudo-element:first-line",
     'expect': [] /*no matches*/,
     'level': 2,
-    'testType': TEST_QSA_BASELINE
+    'testType': testQsaBaseline
   },
   {
     'name':
@@ -1252,7 +1252,7 @@ var validSelectors = [
     'selector': "#pseudo-element::first-line",
     'expect': [] /*no matches*/,
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL
+    'testType': testQsaAdditional
   },
 
   // - ::first-letter
@@ -1262,7 +1262,7 @@ var validSelectors = [
     'selector': "#pseudo-element:first-letter",
     'expect': [] /*no matches*/,
     'level': 2,
-    'testType': TEST_QSA_BASELINE
+    'testType': testQsaBaseline
   },
   {
     'name':
@@ -1270,7 +1270,7 @@ var validSelectors = [
     'selector': "#pseudo-element::first-letter",
     'expect': [] /*no matches*/,
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL
+    'testType': testQsaAdditional
   },
 
   // - ::before
@@ -1280,7 +1280,7 @@ var validSelectors = [
     'selector': "#pseudo-element:before",
     'expect': [] /*no matches*/,
     'level': 2,
-    'testType': TEST_QSA_BASELINE
+    'testType': testQsaBaseline
   },
   {
     'name':
@@ -1288,7 +1288,7 @@ var validSelectors = [
     'selector': "#pseudo-element::before",
     'expect': [] /*no matches*/,
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL
+    'testType': testQsaAdditional
   },
 
   // - ::after
@@ -1298,7 +1298,7 @@ var validSelectors = [
     'selector': "#pseudo-element:after",
     'expect': [] /*no matches*/,
     'level': 2,
-    'testType': TEST_QSA_BASELINE
+    'testType': testQsaBaseline
   },
   {
     'name':
@@ -1306,7 +1306,7 @@ var validSelectors = [
     'selector': "#pseudo-element::after",
     'expect': [] /*no matches*/,
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL
+    'testType': testQsaAdditional
   },
 
   // Class Selectors
@@ -1315,7 +1315,7 @@ var validSelectors = [
     'selector': ".class-p",
     'expect': ["class-p1", "class-p2", "class-p3"],
     'level': 1,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -1330,14 +1330,14 @@ var validSelectors = [
       "class-div4"
     ],
     'level': 1,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name': "Class Selector, chained, with type selector",
     'selector': "div.apple.banana.orange",
     'expect': ["class-div1", "class-div2", "class-div3", "class-div4"],
     'level': 1,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   // Caution: If copying and pasting the folowing non-ASCII classes, ensure unicode normalisation is not performed in the process.
   {
@@ -1346,7 +1346,7 @@ var validSelectors = [
     'selector': ".台北Táiběi",
     'expect': ["class-span1"],
     'level': 1,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -1354,7 +1354,7 @@ var validSelectors = [
     'selector': ".台北",
     'expect': ["class-span1", "class-span2"],
     'level': 1,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -1362,7 +1362,7 @@ var validSelectors = [
     'selector': ".台北Táiběi.台北",
     'expect': ["class-span1"],
     'level': 1,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -1370,7 +1370,7 @@ var validSelectors = [
     'selector': ".foo\\:bar",
     'expect': ["class-span3"],
     'level': 1,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -1378,7 +1378,7 @@ var validSelectors = [
     'selector': ".test\\.foo\\[5\\]bar",
     'expect': ["class-span4"],
     'level': 1,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
 
   // ID Selectors
@@ -1387,42 +1387,42 @@ var validSelectors = [
     'selector': "#id #id-div1",
     'expect': ["id-div1"],
     'level': 1,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name': "ID selector, chained, matching element with specified id",
     'selector': "#id-div1, #id-div1",
     'expect': ["id-div1"],
     'level': 1,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name': "ID selector, chained, matching element with specified id",
     'selector': "#id-div1, #id-div2",
     'expect': ["id-div1", "id-div2"],
     'level': 1,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name': "ID Selector, chained, with type selector",
     'selector': "div#id-div1, div#id-div2",
     'expect': ["id-div1", "id-div2"],
     'level': 1,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name': "ID selector, not matching non-existent descendant",
     'selector': "#id #none",
     'expect': [] /*no matches*/,
     'level': 1,
-    'testType': TEST_QSA_BASELINE
+    'testType': testQsaBaseline
   },
   {
     'name': "ID selector, not matching non-existent ancestor",
     'selector': "#none #id-div1",
     'expect': [] /*no matches*/,
     'level': 1,
-    'testType': TEST_QSA_BASELINE
+    'testType': testQsaBaseline
   },
   {
     'name': "ID selector, matching multiple elements with duplicate id",
@@ -1434,7 +1434,7 @@ var validSelectors = [
       "id-li-duplicate"
     ],
     'level': 1,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
 
   // Caution: If copying and pasting the folowing non-ASCII IDs, ensure unicode normalisation is not performed in the process.
@@ -1443,21 +1443,21 @@ var validSelectors = [
     'selector': "#台北Táiběi",
     'expect': ["台北Táiběi"],
     'level': 1,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name': "ID selector, matching id value using non-ASCII characters",
     'selector': "#台北",
     'expect': ["台北"],
     'level': 1,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name': "ID selector, matching id values using non-ASCII characters",
     'selector': "#台北Táiběi, #台北",
     'expect': ["台北Táiběi", "台北"],
     'level': 1,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
 
   // XXX runMatchesTest() in level2-lib.js can't handle this because obtaining the expected nodes requires escaping characters when generating the selector from 'expect' values
@@ -1466,14 +1466,14 @@ var validSelectors = [
     'selector': "#\\#foo\\:bar",
     'expect': ["#foo:bar"],
     'level': 1,
-    'testType': TEST_QSA_BASELINE
+    'testType': testQsaBaseline
   },
   {
     'name': "ID selector, matching element with id with escaped character",
     'selector': "#test\\.foo\\[5\\]bar",
     'expect': ["test.foo[5]bar"],
     'level': 1,
-    'testType': TEST_QSA_BASELINE
+    'testType': testQsaBaseline
   },
 
   // Namespaces
@@ -1488,21 +1488,21 @@ var validSelectors = [
       "any-namespace-div4"
     ],
     'level': 3,
-    'testType': TEST_QSA_BASELINE
+    'testType': testQsaBaseline
   },
   {
     'name': "Namespace selector, matching div elements in no namespace only",
     'selector': "#no-namespace |div",
     'expect': ["no-namespace-div3"],
     'level': 3,
-    'testType': TEST_QSA_BASELINE
+    'testType': testQsaBaseline
   },
   {
     'name': "Namespace selector, matching any elements in no namespace only",
     'selector': "#no-namespace |*",
     'expect': ["no-namespace-div3"],
     'level': 3,
-    'testType': TEST_QSA_BASELINE
+    'testType': testQsaBaseline
   },
 
   // Combinators
@@ -1518,7 +1518,7 @@ var validSelectors = [
       "descendant-div4"
     ],
     'level': 1,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -1527,7 +1527,7 @@ var validSelectors = [
     'expect': ["descendant-div1"],
     'exclude': ["detached", "fragment"],
     'level': 1,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -1535,7 +1535,7 @@ var validSelectors = [
     'selector': "div #descendant-div1",
     'expect': ["descendant-div1"],
     'level': 1,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -1543,7 +1543,7 @@ var validSelectors = [
     'selector': "#descendant #descendant-div2",
     'expect': ["descendant-div2"],
     'level': 1,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -1551,7 +1551,7 @@ var validSelectors = [
     'selector': "#descendant .descendant-div2",
     'expect': ["descendant-div2"],
     'level': 1,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -1559,7 +1559,7 @@ var validSelectors = [
     'selector': ".descendant-div1 .descendant-div3",
     'expect': ["descendant-div3"],
     'level': 1,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -1567,14 +1567,14 @@ var validSelectors = [
     'selector': "#descendant-div1 #descendant-div4",
     'expect': [] /*no matches*/,
     'level': 1,
-    'testType': TEST_QSA_BASELINE
+    'testType': testQsaBaseline
   },
   {
     'name': "Descendant combinator, whitespace characters",
     'selector': "#descendant\t\r\n#descendant-div2",
     'expect': ["descendant-div2"],
     'level': 1,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
 
   // - Child combinator '>'
@@ -1584,7 +1584,7 @@ var validSelectors = [
     'selector': "#child>div",
     'expect': ["child-div1", "child-div4"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -1592,7 +1592,7 @@ var validSelectors = [
     'selector': "div>#child-div1",
     'expect': ["child-div1"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -1600,7 +1600,7 @@ var validSelectors = [
     'selector': "#child>#child-div1",
     'expect': ["child-div1"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -1608,7 +1608,7 @@ var validSelectors = [
     'selector': "#child-div1>.child-div2",
     'expect': ["child-div2"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -1616,7 +1616,7 @@ var validSelectors = [
     'selector': ".child-div1>.child-div2",
     'expect': ["child-div2"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -1624,7 +1624,7 @@ var validSelectors = [
     'selector': "#child>#child-div3",
     'expect': [] /*no matches*/,
     'level': 2,
-    'testType': TEST_QSA_BASELINE
+    'testType': testQsaBaseline
   },
   {
     'name':
@@ -1632,7 +1632,7 @@ var validSelectors = [
     'selector': "#child-div1>.child-div3",
     'expect': [] /*no matches*/,
     'level': 2,
-    'testType': TEST_QSA_BASELINE
+    'testType': testQsaBaseline
   },
   {
     'name':
@@ -1640,35 +1640,35 @@ var validSelectors = [
     'selector': ".child-div1>.child-div3",
     'expect': [] /*no matches*/,
     'level': 2,
-    'testType': TEST_QSA_BASELINE
+    'testType': testQsaBaseline
   },
   {
     'name': "Child combinator, surrounded by whitespace",
     'selector': "#child-div1\t\r\n>\t\r\n#child-div2",
     'expect': ["child-div2"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name': "Child combinator, whitespace after",
     'selector': "#child-div1>\t\r\n#child-div2",
     'expect': ["child-div2"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name': "Child combinator, whitespace before",
     'selector': "#child-div1\t\r\n>#child-div2",
     'expect': ["child-div2"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name': "Child combinator, no whitespace",
     'selector': "#child-div1>#child-div2",
     'expect': ["child-div2"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
 
   // - Adjacent sibling combinator '+'
@@ -1678,7 +1678,7 @@ var validSelectors = [
     'selector': "#adjacent-div2+div",
     'expect': ["adjacent-div4"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -1686,7 +1686,7 @@ var validSelectors = [
     'selector': "div+#adjacent-div4",
     'expect': ["adjacent-div4"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -1694,7 +1694,7 @@ var validSelectors = [
     'selector': "#adjacent-div2+#adjacent-div4",
     'expect': ["adjacent-div4"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -1702,7 +1702,7 @@ var validSelectors = [
     'selector': "#adjacent-div2+.adjacent-div4",
     'expect': ["adjacent-div4"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -1710,7 +1710,7 @@ var validSelectors = [
     'selector': ".adjacent-div2+.adjacent-div4",
     'expect': ["adjacent-div4"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -1718,7 +1718,7 @@ var validSelectors = [
     'selector': "#adjacent div+p",
     'expect': ["adjacent-p2"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name':
@@ -1726,35 +1726,35 @@ var validSelectors = [
     'selector': "#adjacent-div2+#adjacent-p2, #adjacent-div2+#adjacent-div1",
     'expect': [] /*no matches*/,
     'level': 2,
-    'testType': TEST_QSA_BASELINE
+    'testType': testQsaBaseline
   },
   {
     'name': "Adjacent sibling combinator, surrounded by whitespace",
     'selector': "#adjacent-p2\t\r\n+\t\r\n#adjacent-p3",
     'expect': ["adjacent-p3"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name': "Adjacent sibling combinator, whitespace after",
     'selector': "#adjacent-p2+\t\r\n#adjacent-p3",
     'expect': ["adjacent-p3"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name': "Adjacent sibling combinator, whitespace before",
     'selector': "#adjacent-p2\t\r\n+#adjacent-p3",
     'expect': ["adjacent-p3"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name': "Adjacent sibling combinator, no whitespace",
     'selector': "#adjacent-p2+#adjacent-p3",
     'expect': ["adjacent-p3"],
     'level': 2,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
 
   // - General sibling combinator ~ (Level 3)
@@ -1764,7 +1764,7 @@ var validSelectors = [
     'selector': "#sibling-div2~div",
     'expect': ["sibling-div4", "sibling-div6"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -1772,7 +1772,7 @@ var validSelectors = [
     'selector': "div~#sibling-div4",
     'expect': ["sibling-div4"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -1780,7 +1780,7 @@ var validSelectors = [
     'selector': "#sibling-div2~#sibling-div4",
     'expect': ["sibling-div4"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -1788,7 +1788,7 @@ var validSelectors = [
     'selector': "#sibling-div2~.sibling-div",
     'expect': ["sibling-div4", "sibling-div6"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -1796,7 +1796,7 @@ var validSelectors = [
     'selector': "#sibling div~p",
     'expect': ["sibling-p2", "sibling-p3"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name':
@@ -1804,7 +1804,7 @@ var validSelectors = [
     'selector': "#sibling>p~div",
     'expect': [] /*no matches*/,
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL
+    'testType': testQsaAdditional
   },
   {
     'name':
@@ -1812,35 +1812,35 @@ var validSelectors = [
     'selector': "#sibling-div2~#sibling-div3, #sibling-div2~#sibling-div1",
     'expect': [] /*no matches*/,
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL
+    'testType': testQsaAdditional
   },
   {
     'name': "General sibling combinator, surrounded by whitespace",
     'selector': "#sibling-p2\t\r\n~\t\r\n#sibling-p3",
     'expect': ["sibling-p3"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name': "General sibling combinator, whitespace after",
     'selector': "#sibling-p2~\t\r\n#sibling-p3",
     'expect': ["sibling-p3"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name': "General sibling combinator, whitespace before",
     'selector': "#sibling-p2\t\r\n~#sibling-p3",
     'expect': ["sibling-p3"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
   {
     'name': "General sibling combinator, no whitespace",
     'selector': "#sibling-p2~#sibling-p3",
     'expect': ["sibling-p3"],
     'level': 3,
-    'testType': TEST_QSA_ADDITIONAL | TEST_MATCH_BASELINE
+    'testType': testQsaAdditional | testMatchBaseline
   },
 
   // Group of selectors (comma)
@@ -1849,27 +1849,27 @@ var validSelectors = [
     'selector': "#group em\t\r \n,\t\r \n#group strong",
     'expect': ["group-em1", "group-strong1"],
     'level': 1,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name': "Syntax, group of selectors separator, whitespace after",
     'selector': "#group em,\t\r\n#group strong",
     'expect': ["group-em1", "group-strong1"],
     'level': 1,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name': "Syntax, group of selectors separator, whitespace before",
     'selector': "#group em\t\r\n,#group strong",
     'expect': ["group-em1", "group-strong1"],
     'level': 1,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
   {
     'name': "Syntax, group of selectors separator, no whitespace",
     'selector': "#group em,#group strong",
     'expect': ["group-em1", "group-strong1"],
     'level': 1,
-    'testType': TEST_QSA_BASELINE | TEST_MATCH_BASELINE
+    'testType': testQsaBaseline | testMatchBaseline
   },
 ];

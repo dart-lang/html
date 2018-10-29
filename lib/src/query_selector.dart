@@ -2,21 +2,20 @@
 library html.src.query;
 
 import 'package:csslib/parser.dart' as css;
-import 'package:csslib/parser.dart' show TokenKind;
-import 'package:csslib/src/messages.dart' show Message;
+import 'package:csslib/parser.dart' show TokenKind, Message;
 import 'package:csslib/visitor.dart'; // the CSSOM
 import 'package:html/dom.dart';
 import 'package:html/src/constants.dart' show isWhitespaceCC;
 
 bool matches(Node node, String selector) =>
-    new SelectorEvaluator().matches(node, _parseSelectorList(selector));
+    SelectorEvaluator().matches(node, _parseSelectorList(selector));
 
 Element querySelector(Node node, String selector) =>
-    new SelectorEvaluator().querySelector(node, _parseSelectorList(selector));
+    SelectorEvaluator().querySelector(node, _parseSelectorList(selector));
 
 List<Element> querySelectorAll(Node node, String selector) {
   var results = <Element>[];
-  new SelectorEvaluator()
+  SelectorEvaluator()
       .querySelectorAll(node, _parseSelectorList(selector), results);
   return results;
 }
@@ -26,7 +25,7 @@ SelectorGroup _parseSelectorList(String selector) {
   var errors = <Message>[];
   var group = css.parseSelectorGroup(selector, errors: errors);
   if (group == null || errors.isNotEmpty) {
-    throw new FormatException("'$selector' is not a valid selector: $errors");
+    throw FormatException("'$selector' is not a valid selector: $errors");
   }
   return group;
 }
@@ -125,11 +124,11 @@ class SelectorEvaluator extends Visitor {
   }
 
   _unimplemented(SimpleSelector selector) =>
-      new UnimplementedError("'$selector' selector of type "
+      UnimplementedError("'$selector' selector of type "
           "${selector.runtimeType} is not implemented");
 
   _unsupported(selector) =>
-      new FormatException("'$selector' is not a valid selector");
+      FormatException("'$selector' is not a valid selector");
 
   bool visitPseudoClassSelector(PseudoClassSelector selector) {
     switch (selector.name) {

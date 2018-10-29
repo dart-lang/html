@@ -145,11 +145,11 @@ abstract class Node {
   ///
   /// Note that attribute order needs to be stable for serialization, so we use
   /// a LinkedHashMap. Each key is a [String] or [AttributeName].
-  LinkedHashMap<dynamic, String> attributes = new LinkedHashMap();
+  LinkedHashMap<dynamic, String> attributes = LinkedHashMap();
 
   /// A list of child nodes of the current node. This must
   /// include all elements but not necessarily other node types.
-  final NodeList nodes = new NodeList._();
+  final NodeList nodes = NodeList._();
 
   List<Element> _elements;
 
@@ -186,7 +186,7 @@ abstract class Node {
 
   List<Element> get children {
     if (_elements == null) {
-      _elements = new FilteredElementList(this);
+      _elements = FilteredElementList(this);
     }
     return _elements;
   }
@@ -201,13 +201,13 @@ abstract class Node {
 
   // http://domparsing.spec.whatwg.org/#extensions-to-the-element-interface
   String get _outerHtml {
-    var str = new StringBuffer();
+    var str = StringBuffer();
     _addOuterHtml(str);
     return str.toString();
   }
 
   String get _innerHtml {
-    var str = new StringBuffer();
+    var str = StringBuffer();
     _addInnerHtml(str);
     return str.toString();
   }
@@ -249,7 +249,7 @@ abstract class Node {
   /// Replaces this node with another node.
   Node replaceWith(Node otherNode) {
     if (parentNode == null) {
-      throw new UnsupportedError('Node must have a parent to replace it.');
+      throw UnsupportedError('Node must have a parent to replace it.');
     }
     parentNode.nodes[parentNode.nodes.indexOf(this)] = otherNode;
     return this;
@@ -275,12 +275,12 @@ abstract class Node {
   void _ensureAttributeSpans() {
     if (_attributeSpans != null) return;
 
-    _attributeSpans = new LinkedHashMap<dynamic, FileSpan>();
-    _attributeValueSpans = new LinkedHashMap<dynamic, FileSpan>();
+    _attributeSpans = LinkedHashMap<dynamic, FileSpan>();
+    _attributeValueSpans = LinkedHashMap<dynamic, FileSpan>();
 
     if (sourceSpan == null) return;
 
-    var tokenizer = new HtmlTokenizer(sourceSpan.text,
+    var tokenizer = HtmlTokenizer(sourceSpan.text,
         generateSpans: true, attributeSpans: true);
 
     tokenizer.moveNext();
@@ -333,18 +333,18 @@ class Document extends Node
 
   void _addOuterHtml(StringBuffer str) => _addInnerHtml(str);
 
-  Document clone(bool deep) => _clone(new Document(), deep);
+  Document clone(bool deep) => _clone(Document(), deep);
 
-  Element createElement(String tag) => new Element.tag(tag);
+  Element createElement(String tag) => Element.tag(tag);
 
   // TODO(jmesserly): this is only a partial implementation of:
   // http://dom.spec.whatwg.org/#dom-document-createelementns
   Element createElementNS(String namespaceUri, String tag) {
     if (namespaceUri == '') namespaceUri = null;
-    return new Element._(tag, namespaceUri);
+    return Element._(tag, namespaceUri);
   }
 
-  DocumentFragment createDocumentFragment() => new DocumentFragment();
+  DocumentFragment createDocumentFragment() => DocumentFragment();
 }
 
 class DocumentFragment extends Node with _ParentNode, _NonElementParentNode {
@@ -363,7 +363,7 @@ class DocumentFragment extends Node with _ParentNode, _NonElementParentNode {
 
   String toString() => "#document-fragment";
 
-  DocumentFragment clone(bool deep) => _clone(new DocumentFragment(), deep);
+  DocumentFragment clone(bool deep) => _clone(DocumentFragment(), deep);
 
   void _addOuterHtml(StringBuffer str) => _addInnerHtml(str);
 
@@ -376,10 +376,7 @@ class DocumentType extends Node {
   final String publicId;
   final String systemId;
 
-  DocumentType(String name, this.publicId, this.systemId)
-      // Note: once Node.tagName is removed, don't pass "name" to super
-      : name = name,
-        super._();
+  DocumentType(this.name, this.publicId, this.systemId) : super._();
 
   int get nodeType => Node.DOCUMENT_TYPE_NODE;
 
@@ -399,7 +396,7 @@ class DocumentType extends Node {
     str.write(toString());
   }
 
-  DocumentType clone(bool deep) => new DocumentType(name, publicId, systemId);
+  DocumentType clone(bool deep) => DocumentType(name, publicId, systemId);
 }
 
 class Text extends Node {
@@ -423,10 +420,10 @@ class Text extends Node {
 
   void _addOuterHtml(StringBuffer str) => writeTextNodeAsHtml(str, this);
 
-  Text clone(bool deep) => new Text(data);
+  Text clone(bool deep) => Text(data);
 
   void appendData(String data) {
-    if (_data is! StringBuffer) _data = new StringBuffer(_data);
+    if (_data is! StringBuffer) _data = StringBuffer(_data);
     StringBuffer sb = _data;
     sb.write(data);
   }
@@ -457,9 +454,9 @@ class Element extends Node with _ParentNode, _ElementAndDocument {
       : namespaceUri = Namespaces.html,
         super._();
 
-  static final _START_TAG_REGEXP = new RegExp('<(\\w+)');
+  static final _startTagRegexp = RegExp('<(\\w+)');
 
-  static final _CUSTOM_PARENT_TAG_MAP = const {
+  static final _customParentTagMap = const {
     'body': 'html',
     'head': 'html',
     'caption': 'table',
@@ -487,11 +484,11 @@ class Element extends Node with _ParentNode, _ElementAndDocument {
     // 4) Detatch the created element from its dummy parent.
     String parentTag = 'div';
     String tag;
-    final match = _START_TAG_REGEXP.firstMatch(html);
+    final match = _startTagRegexp.firstMatch(html);
     if (match != null) {
       tag = match.group(1).toLowerCase();
-      if (_CUSTOM_PARENT_TAG_MAP.containsKey(tag)) {
-        parentTag = _CUSTOM_PARENT_TAG_MAP[tag];
+      if (_customParentTagMap.containsKey(tag)) {
+        parentTag = _customParentTagMap[tag];
       }
     }
 
@@ -503,7 +500,7 @@ class Element extends Node with _ParentNode, _ElementAndDocument {
       // You'll always get a head and a body when starting from html.
       element = fragment.children[tag == 'head' ? 0 : 1];
     } else {
-      throw new ArgumentError('HTML had ${fragment.children.length} '
+      throw ArgumentError('HTML had ${fragment.children.length} '
           'top level elements but 1 expected');
     }
     element.remove();
@@ -613,8 +610,8 @@ class Element extends Node with _ParentNode, _ElementAndDocument {
   }
 
   Element clone(bool deep) {
-    var result = new Element._(localName, namespaceUri)
-      ..attributes = new LinkedHashMap.from(attributes);
+    var result = Element._(localName, namespaceUri)
+      ..attributes = LinkedHashMap.from(attributes);
     return _clone(result, deep);
   }
 
@@ -638,17 +635,15 @@ class Element extends Node with _ParentNode, _ElementAndDocument {
     attributes['class'] = '$value';
   }
 
-  /**
-   * The set of CSS classes applied to this element.
-   *
-   * This set makes it easy to add, remove or toggle the classes applied to
-   * this element.
-   *
-   *     element.classes.add('selected');
-   *     element.classes.toggle('isOnline');
-   *     element.classes.remove('selected');
-   */
-  CssClassSet get classes => new ElementCssClassSet(this);
+  /// The set of CSS classes applied to this element.
+  ///
+  /// This set makes it easy to add, remove or toggle the classes applied to
+  /// this element.
+  ///
+  ///     element.classes.add('selected');
+  ///     element.classes.toggle('isOnline');
+  ///     element.classes.remove('selected');
+  CssClassSet get classes => ElementCssClassSet(this);
 }
 
 class Comment extends Node {
@@ -664,11 +659,11 @@ class Comment extends Node {
     str.write("<!--$data-->");
   }
 
-  Comment clone(bool deep) => new Comment(data);
+  Comment clone(bool deep) => Comment(data);
 
   String get text => data;
   set text(String value) {
-    this.data = value;
+    data = value;
   }
 }
 
@@ -744,15 +739,15 @@ class NodeList extends ListProxy<Node> {
   // http://code.google.com/p/dart/issues/detail?id=5371
   void setRange(int start, int rangeLength, Iterable<Node> from,
       [int startFrom = 0]) {
-    List<Node> from_ = from as List<Node>;
-    if (from_ is NodeList) {
+    List<Node> fromVar = from as List<Node>;
+    if (fromVar is NodeList) {
       // Note: this is presumed to make a copy
-      from_ = from_.sublist(startFrom, startFrom + rangeLength);
+      fromVar = fromVar.sublist(startFrom, startFrom + rangeLength);
     }
     // Note: see comment in [addAll]. We need to be careful about the order of
     // operations if [from] is also a NodeList.
     for (int i = rangeLength - 1; i >= 0; i--) {
-      this[start + i] = from_[startFrom + i];
+      this[start + i] = fromVar[startFrom + i];
     }
   }
 
@@ -826,7 +821,7 @@ class FilteredElementList extends IterableBase<Element>
   // TODO(nweiz): we don't always need to create a new list. For example
   // forEach, every, any, ... could directly work on the _childNodes.
   List<Element> get _filtered =>
-      new List<Element>.from(_childNodes.where((n) => n is Element));
+      List<Element>.from(_childNodes.where((n) => n is Element));
 
   void forEach(void f(Element element)) {
     _filtered.forEach(f);
@@ -837,11 +832,11 @@ class FilteredElementList extends IterableBase<Element>
   }
 
   set length(int newLength) {
-    final len = this.length;
+    final len = length;
     if (newLength >= len) {
       return;
     } else if (newLength < 0) {
-      throw new ArgumentError("Invalid list length");
+      throw ArgumentError("Invalid list length");
     }
 
     removeRange(newLength, len);
@@ -866,20 +861,20 @@ class FilteredElementList extends IterableBase<Element>
   Iterable<Element> get reversed => _filtered.reversed;
 
   void sort([int compare(Element a, Element b)]) {
-    throw new UnsupportedError('TODO(jacobr): should we impl?');
+    throw UnsupportedError('TODO(jacobr): should we impl?');
   }
 
   void setRange(int start, int end, Iterable<Element> iterable,
       [int skipCount = 0]) {
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   void fillRange(int start, int end, [Element fillValue]) {
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   void replaceRange(int start, int end, Iterable<Element> iterable) {
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   void removeRange(int start, int end) {
@@ -893,7 +888,7 @@ class FilteredElementList extends IterableBase<Element>
   }
 
   Element removeLast() {
-    final result = this.last;
+    final result = last;
     if (result != null) {
       result.remove();
     }
@@ -940,9 +935,9 @@ class FilteredElementList extends IterableBase<Element>
 
   bool every(bool f(Element element)) => _filtered.every(f);
   bool any(bool f(Element element)) => _filtered.any(f);
-  List<Element> toList({bool growable: true}) =>
-      new List<Element>.from(this, growable: growable);
-  Set<Element> toSet() => new Set<Element>.from(this);
+  List<Element> toList({bool growable = true}) =>
+      List<Element>.from(this, growable: growable);
+  Set<Element> toSet() => Set<Element>.from(this);
   Element firstWhere(bool test(Element value), {Element orElse()}) {
     return _filtered.firstWhere(test, orElse: orElse);
   }
@@ -952,7 +947,7 @@ class FilteredElementList extends IterableBase<Element>
   }
 
   Element singleWhere(bool test(Element value), {Element orElse()}) {
-    if (orElse != null) throw new UnimplementedError('orElse');
+    if (orElse != null) throw UnimplementedError('orElse');
     return _filtered.singleWhere(test);
   }
 
@@ -988,16 +983,15 @@ class FilteredElementList extends IterableBase<Element>
 
 // http://dom.spec.whatwg.org/#dom-node-textcontent
 // For Element and DocumentFragment
-String _getText(Node node) =>
-    (new _ConcatTextVisitor()..visit(node)).toString();
+String _getText(Node node) => (_ConcatTextVisitor()..visit(node)).toString();
 
 void _setText(Node node, String value) {
   node.nodes.clear();
-  node.append(new Text(value));
+  node.append(Text(value));
 }
 
 class _ConcatTextVisitor extends TreeVisitor {
-  final _str = new StringBuffer();
+  final _str = StringBuffer();
 
   String toString() => _str.toString();
 
