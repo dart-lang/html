@@ -19,9 +19,9 @@ class EncodingBytes {
   String next() {
     var p = _position = _position + 1;
     if (p >= length) {
-      throw new StateError("No more elements");
+      throw StateError("No more elements");
     } else if (p < 0) {
-      throw new RangeError(p);
+      throw RangeError(p);
     }
     return _bytes[p];
   }
@@ -29,9 +29,9 @@ class EncodingBytes {
   String previous() {
     var p = _position;
     if (p >= length) {
-      throw new StateError("No more elements");
+      throw StateError("No more elements");
     } else if (p < 0) {
-      throw new RangeError(p);
+      throw RangeError(p);
     }
     _position = p = p - 1;
     return _bytes[p];
@@ -39,14 +39,14 @@ class EncodingBytes {
 
   set position(int value) {
     if (_position >= length) {
-      throw new StateError("No more elements");
+      throw StateError("No more elements");
     }
     _position = value;
   }
 
   int get position {
     if (_position >= length) {
-      throw new StateError("No more elements");
+      throw StateError("No more elements");
     }
     if (_position >= 0) {
       return _position;
@@ -110,7 +110,7 @@ class EncodingBytes {
       _position = newPosition + bytes.length - 1;
       return true;
     } else {
-      throw new StateError("No more elements");
+      throw StateError("No more elements");
     }
   }
 
@@ -137,16 +137,16 @@ class EncodingParser {
   /// [bytes] - the data to work on for encoding detection.
   EncodingParser(List<int> bytes)
       // Note: this is intentionally interpreting bytes as codepoints.
-      : data = new EncodingBytes(new String.fromCharCodes(bytes).toLowerCase());
+      : data = EncodingBytes(String.fromCharCodes(bytes).toLowerCase());
 
   String getEncoding() {
     final methodDispatch = [
-      new _DispatchEntry("<!--", handleComment),
-      new _DispatchEntry("<meta", handleMeta),
-      new _DispatchEntry("</", handlePossibleEndTag),
-      new _DispatchEntry("<!", handleOther),
-      new _DispatchEntry("<?", handleOther),
-      new _DispatchEntry("<", handlePossibleStartTag),
+      _DispatchEntry("<!--", handleComment),
+      _DispatchEntry("<meta", handleMeta),
+      _DispatchEntry("</", handlePossibleEndTag),
+      _DispatchEntry("<!", handleOther),
+      _DispatchEntry("<?", handleOther),
+      _DispatchEntry("<", handlePossibleStartTag),
     ];
 
     try {
@@ -191,7 +191,7 @@ class EncodingParser {
           return false;
         }
       } else if (attr[0] == "content") {
-        var contentParser = new ContentAttrParser(new EncodingBytes(attr[1]));
+        var contentParser = ContentAttrParser(EncodingBytes(attr[1]));
         var tentativeEncoding = contentParser.parse();
         var codec = codecName(tentativeEncoding);
         if (codec != null) {

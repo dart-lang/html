@@ -19,10 +19,10 @@ import 'selectors.dart';
 
 Document getTestContentDocument() {
   var testPath = p.join(testDir, 'selectors', 'level1-content.html');
-  return parse(new File(testPath).readAsStringSync());
+  return parse(File(testPath).readAsStringSync());
 }
 
-var testType = TEST_QSA_BASELINE; // Only run baseline tests.
+var testType = testQsaBaseline; // Only run baseline tests.
 var docType = "html"; // Only run tests suitable for HTML
 
 main() {

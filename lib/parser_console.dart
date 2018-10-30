@@ -11,7 +11,7 @@ import 'src/inputstream.dart' as inputstream;
 /// this means it will be able to handle `dart:io` and [RandomAccessFile]s as
 /// input to the various [parse] methods.
 void useConsole() {
-  inputstream.consoleSupport = new _ConsoleSupport();
+  inputstream.consoleSupport = _ConsoleSupport();
 }
 
 class _ConsoleSupport extends inputstream.ConsoleSupport {
@@ -25,7 +25,7 @@ class _ConsoleSupport extends inputstream.ConsoleSupport {
 /// Synchronously reads all bytes from the [file].
 List<int> readAllBytesFromFile(RandomAccessFile file) {
   int length = file.lengthSync();
-  var bytes = new List<int>(length);
+  var bytes = List<int>(length);
 
   int bytesRead = 0;
   while (bytesRead < length) {

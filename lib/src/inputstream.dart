@@ -14,7 +14,7 @@ class ConsoleSupport {
 }
 
 // TODO(jmesserly): use lazy init here when supported.
-ConsoleSupport consoleSupport = new ConsoleSupport();
+ConsoleSupport consoleSupport = ConsoleSupport();
 
 /// Provides a unicode stream of characters to the HtmlTokenizer.
 ///
@@ -88,7 +88,7 @@ class HtmlInputStream {
       if (_rawBytes == null) {
         // TODO(jmesserly): we should accept some kind of stream API too.
         // Unfortunately dart:io InputStream is async only, which won't work.
-        throw new ArgumentError("'source' must be a String or "
+        throw ArgumentError("'source' must be a String or "
             "List<int> (of bytes). You can also pass a RandomAccessFile if you"
             "`import 'package:html/parser_console.dart'` and call "
             "`useConsole()`.");
@@ -104,7 +104,7 @@ class HtmlInputStream {
   }
 
   void reset() {
-    errors = new Queue<String>();
+    errors = Queue<String>();
 
     _offset = 0;
     _lineStarts = <int>[0];
@@ -139,7 +139,7 @@ class HtmlInputStream {
 
     // TODO(sigmund): Don't parse the file at all if spans aren't being
     // generated.
-    fileInfo = new SourceFile.decoded(_chars, url: sourceUrl);
+    fileInfo = SourceFile.decoded(_chars, url: sourceUrl);
   }
 
   void detectEncoding([bool parseMeta = true]) {
@@ -170,7 +170,7 @@ class HtmlInputStream {
     if (_rawBytes == null) {
       // We should never get here -- if encoding is certain we won't try to
       // change it.
-      throw new StateError('cannot change encoding when parsing a String.');
+      throw StateError('cannot change encoding when parsing a String.');
     }
 
     newEncoding = codecName(newEncoding);
@@ -186,7 +186,7 @@ class HtmlInputStream {
       charEncodingCertain = true;
       _rawChars = null;
       reset();
-      throw new ReparseException(
+      throw ReparseException(
           'Encoding changed from $charEncodingName to $newEncoding');
     }
   }
@@ -212,7 +212,7 @@ class HtmlInputStream {
 
   /// Report the encoding declared by the meta element.
   String detectEncodingMeta() {
-    var parser = new EncodingParser(slice(_rawBytes, 0, numBytesMeta));
+    var parser = EncodingParser(slice(_rawBytes, 0, numBytesMeta));
     var encoding = parser.getEncoding();
 
     if (const ['utf-16', 'utf-16-be', 'utf-16-le'].contains(encoding)) {
@@ -229,13 +229,13 @@ class HtmlInputStream {
   /// Read one character from the stream or queue if available. Return
   /// EOF when EOF is reached.
   String char() {
-    if (_offset >= _chars.length) return EOF;
-    return new String.fromCharCodes([_chars[_offset++]]);
+    if (_offset >= _chars.length) return eof;
+    return String.fromCharCodes([_chars[_offset++]]);
   }
 
   String peekChar() {
-    if (_offset >= _chars.length) return EOF;
-    return new String.fromCharCodes([_chars[_offset]]);
+    if (_offset >= _chars.length) return eof;
+    return String.fromCharCodes([_chars[_offset]]);
   }
 
   /// Returns a string of characters from the stream up to but not
@@ -247,7 +247,7 @@ class HtmlInputStream {
       _offset++;
     }
 
-    return new String.fromCharCodes(_chars.sublist(start, _offset));
+    return String.fromCharCodes(_chars.sublist(start, _offset));
   }
 
   void unget(String ch) {
@@ -312,7 +312,7 @@ bool invalidUnicode(int c) {
 /// Return the python codec name corresponding to an encoding or null if the
 /// string doesn't correspond to a valid encoding.
 String codecName(String encoding) {
-  final asciiPunctuation = new RegExp(
+  final asciiPunctuation = RegExp(
       "[\u0009-\u000D\u0020-\u002F\u003A-\u0040\u005B-\u0060\u007B-\u007E]");
 
   if (encoding == null) return null;

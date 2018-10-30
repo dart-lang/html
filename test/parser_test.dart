@@ -20,7 +20,7 @@ String namespaceHtml(String expected) {
   // We can't do regex replace directly =\
   // final namespaceExpected = new RegExp(@"^(\s*)<(\S+)>", multiLine: true);
   // return expected.replaceAll(namespaceExpected, @"$1<html $2>");
-  final namespaceExpected = new RegExp(r"^(\|\s*)<(\S+)>");
+  final namespaceExpected = RegExp(r"^(\|\s*)<(\S+)>");
   var lines = expected.split("\n");
   for (int i = 0; i < lines.length; i++) {
     var match = namespaceExpected.firstMatch(lines[i]);
@@ -42,7 +42,7 @@ void runParserTest(
   // XXX - move this out into the setup function
   // concatenate all consecutive character tokens into a single token
   var builder = treeCtor(namespaceHTMLElements);
-  var parser = new HtmlParser(input, tree: builder);
+  var parser = HtmlParser(input, tree: builder);
 
   Node document;
   if (innerHTML != null) {
@@ -74,9 +74,9 @@ void main() {
   test('dart:io', () {
     // ensure IO support is unregistered
     expect(inputstream.consoleSupport,
-        new TypeMatcher<inputstream.ConsoleSupport>());
-    var file = new File('$testDataDir/parser_feature/raw_file.html').openSync();
-    expect(() => parse(file), throwsA(new TypeMatcher<ArgumentError>()));
+        const TypeMatcher<inputstream.ConsoleSupport>());
+    var file = File('$testDataDir/parser_feature/raw_file.html').openSync();
+    expect(() => parse(file), throwsA(const TypeMatcher<ArgumentError>()));
     parser_console.useConsole();
     expect(parse(file).body.innerHtml.trim(), 'Hello world!');
   });
@@ -84,7 +84,7 @@ void main() {
   for (var path in getDataFiles('tree-construction')) {
     if (!path.endsWith('.dat')) continue;
 
-    var tests = new TestData(path, "data");
+    var tests = TestData(path, "data");
     var testName = pathos.basenameWithoutExtension(path);
 
     group(testName, () {
@@ -114,9 +114,9 @@ void main() {
 _nameFor(String input) {
   // Using jsonDecode to unescape other unicode characters
   var escapeQuote = input
-      .replaceAll(new RegExp('\\\\.'), '_')
-      .replaceAll(new RegExp('\u0000'), '_')
+      .replaceAll(RegExp('\\\\.'), '_')
+      .replaceAll(RegExp('\u0000'), '_')
       .replaceAll('"', '\\"')
-      .replaceAll(new RegExp('[\n\r\t]'), '_');
+      .replaceAll(RegExp('[\n\r\t]'), '_');
   return jsonDecode('"$escapeQuote"');
 }

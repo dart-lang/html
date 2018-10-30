@@ -15,7 +15,7 @@ Map<String, TreeBuilderFactory> _treeTypes;
 Map<String, TreeBuilderFactory> get treeTypes {
   if (_treeTypes == null) {
     // TODO(jmesserly): add DOM here once it's implemented
-    _treeTypes = {"simpletree": (useNs) => new TreeBuilder(useNs)};
+    _treeTypes = {"simpletree": (useNs) => TreeBuilder(useNs)};
   }
   return _treeTypes;
 }
@@ -25,7 +25,7 @@ final testDir = p.join(p.dirname(p.fromUri(Platform.packageConfig)), 'test');
 final testDataDir = p.join(testDir, 'data');
 
 Iterable<String> getDataFiles(String subdirectory) {
-  var dir = new Directory(p.join(testDataDir, subdirectory));
+  var dir = Directory(p.join(testDataDir, subdirectory));
   return dir.listSync().where((f) => f is File).map((f) => f.path);
 }
 
@@ -37,7 +37,7 @@ class TestData extends IterableBase<Map> {
 
   TestData(String filename, [this.newTestHeading = "data"])
       // Note: can't use readAsLinesSync here because it splits on \r
-      : _text = new File(filename).readAsStringSync();
+      : _text = File(filename).readAsStringSync();
 
   // Note: in Python this was a generator, but since we can't do that in Dart,
   // it's easier to convert it into an upfront computation.
@@ -93,7 +93,7 @@ class TestData extends IterableBase<Map> {
 
 /// Serialize the [document] into the html5 test data format.
 testSerializer(document) {
-  return (new TestSerializer()..visit(document)).toString();
+  return (TestSerializer()..visit(document)).toString();
 }
 
 /// Serializes the DOM into test format. See [testSerializer].
@@ -102,7 +102,7 @@ class TestSerializer extends TreeVisitor {
   int _indent = 0;
   String _spaces = '';
 
-  TestSerializer() : _str = new StringBuffer();
+  TestSerializer() : _str = StringBuffer();
 
   String toString() => _str.toString();
 
@@ -111,11 +111,11 @@ class TestSerializer extends TreeVisitor {
   set indent(int value) {
     if (_indent == value) return;
 
-    var arr = new List<int>(value);
+    var arr = List<int>(value);
     for (int i = 0; i < value; i++) {
       arr[i] = 32;
     }
-    _spaces = new String.fromCharCodes(arr);
+    _spaces = String.fromCharCodes(arr);
     _indent = value;
   }
 
@@ -152,7 +152,7 @@ class TestSerializer extends TreeVisitor {
     _str.write(node);
     if (node.attributes.isNotEmpty) {
       indent += 2;
-      var keys = new List.from(node.attributes.keys);
+      var keys = List.from(node.attributes.keys);
       keys.sort((x, y) => x.compareTo(y));
       for (var key in keys) {
         var v = node.attributes[key];

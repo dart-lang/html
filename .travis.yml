@@ -4,7 +4,7 @@ dart:
 dart_task:
   - test: -p vm
   - test: -p chrome,firefox
-  - dartanalyzer
+  - dartanalyzer: --fatal-warnings --fatal-infos .
 
 matrix:
   include:
