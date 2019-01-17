@@ -57,8 +57,10 @@ main() {
 
     expect(error.toString(), '''
 On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
-  <!DOCTYPE html>
-  ^^^^^^^^^^^^^^^''');
+  ╷
+4 │   <!DOCTYPE html>
+  │   ^^^^^^^^^^^^^^^
+  ╵''');
   });
 
   test('parse error spans - minimal', () {
@@ -253,8 +255,10 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
         parser.errors[0].toString(),
         'ParserError on line 1, column 4: Unexpected non-space characters. '
         'Expected DOCTYPE.\n'
-        'foo\n'
-        '   ^');
+        '  ╷\n'
+        '1 │ foo\n'
+        '  │    ^\n'
+        '  ╵');
   });
 
   test('Element.text', () {
