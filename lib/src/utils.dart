@@ -3,7 +3,7 @@ library utils;
 
 import 'constants.dart';
 
-typedef bool Predicate();
+typedef Predicate = bool Function();
 
 class Pair<F, S> {
   final F first;

@@ -9,7 +9,7 @@ import 'package:html/src/treebuilder.dart';
 import 'package:html/dom.dart';
 import 'package:html/dom_parsing.dart';
 
-typedef TreeBuilder TreeBuilderFactory(bool namespaceHTMLElements);
+typedef TreeBuilderFactory = TreeBuilder Function(bool namespaceHTMLElements);
 
 Map<String, TreeBuilderFactory> _treeTypes;
 Map<String, TreeBuilderFactory> get treeTypes {

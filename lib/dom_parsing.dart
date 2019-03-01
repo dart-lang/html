@@ -104,7 +104,7 @@ class CodeMarkupVisitor extends TreeVisitor {
 
   visitComment(Comment node) {
     var data = htmlSerializeEscape(node.data);
-    _str.write('<code class="markup comment">&lt;!--${data}--></code>');
+    _str.write('<code class="markup comment">&lt;!--$data--></code>');
   }
 }
 

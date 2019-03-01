@@ -9,6 +9,7 @@ linter:
   rules:
     #- annotate_overrides
     #- avoid_function_literals_in_foreach_calls
+    - avoid_empty_else
     - avoid_init_to_null
     - avoid_null_checks_in_equality_operators
     - avoid_relative_lib_imports
@@ -44,18 +45,20 @@ linter:
     #- prefer_collection_literals
     #- prefer_conditional_assignment
     - prefer_const_constructors
+    - prefer_equal_for_default_values
     - prefer_final_fields
     - prefer_initializing_formals
     #- prefer_interpolation_to_compose_strings
     #- prefer_single_quotes
     #- prefer_typing_uninitialized_variables
+    - prefer_generic_function_type_aliases
+    - prefer_is_not_empty
     - slash_for_doc_comments
-    - test_types_in_equals
-    - super_goes_last
     - test_types_in_equals
     - throw_in_finally
     - type_init_formals
     #- unnecessary_brace_in_string_interps
+    - unnecessary_brace_in_string_interps
     - unnecessary_const
     - unnecessary_getters_setters
     - unnecessary_lambdas
@@ -63,3 +66,5 @@ linter:
     - unnecessary_null_aware_assignments
     - unnecessary_statements
     - unnecessary_this
+    - unrelated_type_equality_checks
+    - valid_regexps

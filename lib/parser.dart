@@ -1190,7 +1190,7 @@ class AfterHeadPhase extends Phase {
   }
 }
 
-typedef Token TokenProccessor(Token token);
+typedef TokenProccessor = Token Function(Token token);
 
 class InBodyPhase extends Phase {
   bool dropNewline = false;
