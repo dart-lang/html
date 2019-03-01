@@ -121,7 +121,7 @@ class EncodingBytes {
   }
 }
 
-typedef bool _MethodHandler();
+typedef _MethodHandler = bool Function();
 
 class _DispatchEntry {
   final String pattern;
@@ -373,4 +373,4 @@ bool isSpaceOrAngleBracket(String char) {
   return char == ">" || char == "<" || isWhitespace(char);
 }
 
-typedef bool CharPreciate(String char);
+typedef CharPreciate = bool Function(String char);

@@ -337,7 +337,7 @@ class HtmlTokenizer implements Iterator<Token> {
         } else {
           output = entities[entityName];
           stream.unget(charStack.removeLast());
-          output = '${output}${slice(charStack, entityLen).join()}';
+          output = '$output${slice(charStack, entityLen).join()}';
         }
       } else {
         _addToken(ParseErrorToken("expected-named-entity"));
@@ -417,13 +417,13 @@ class HtmlTokenizer implements Iterator<Token> {
       // state". At that point spaceCharacters are important so they are
       // emitted separately.
       _addToken(SpaceCharactersToken(
-          '${data}${stream.charsUntil(spaceCharacters, true)}'));
+          '$data${stream.charsUntil(spaceCharacters, true)}'));
       // No need to update lastFourChars here, since the first space will
       // have already been appended to lastFourChars and will have broken
       // any <!-- or --> sequences
     } else {
       var chars = stream.charsUntil("&<\u0000");
-      _addToken(CharactersToken('${data}${chars}'));
+      _addToken(CharactersToken('$data$chars'));
     }
     return true;
   }
@@ -451,10 +451,10 @@ class HtmlTokenizer implements Iterator<Token> {
       // state". At that point spaceCharacters are important so they are
       // emitted separately.
       _addToken(SpaceCharactersToken(
-          '${data}${stream.charsUntil(spaceCharacters, true)}'));
+          '$data${stream.charsUntil(spaceCharacters, true)}'));
     } else {
       var chars = stream.charsUntil("&<");
-      _addToken(CharactersToken('${data}${chars}'));
+      _addToken(CharactersToken('$data$chars'));
     }
     return true;
   }
@@ -477,7 +477,7 @@ class HtmlTokenizer implements Iterator<Token> {
       return false;
     } else {
       var chars = stream.charsUntil("<\u0000");
-      _addToken(CharactersToken("${data}${chars}"));
+      _addToken(CharactersToken("$data$chars"));
     }
     return true;
   }
@@ -494,7 +494,7 @@ class HtmlTokenizer implements Iterator<Token> {
       return false;
     } else {
       var chars = stream.charsUntil("<\u0000");
-      _addToken(CharactersToken("${data}${chars}"));
+      _addToken(CharactersToken("$data$chars"));
     }
     return true;
   }
@@ -508,7 +508,7 @@ class HtmlTokenizer implements Iterator<Token> {
       _addToken(ParseErrorToken("invalid-codepoint"));
       _addToken(CharactersToken("\uFFFD"));
     } else {
-      _addToken(CharactersToken('${data}${stream.charsUntil("\u0000")}'));
+      _addToken(CharactersToken('$data${stream.charsUntil("\u0000")}'));
     }
     return true;
   }
@@ -782,7 +782,7 @@ class HtmlTokenizer implements Iterator<Token> {
       state = dataState;
     } else {
       var chars = stream.charsUntil("<-\u0000");
-      _addToken(CharactersToken("${data}${chars}"));
+      _addToken(CharactersToken("$data$chars"));
     }
     return true;
   }
