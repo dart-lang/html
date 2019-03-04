@@ -1,3 +1,7 @@
+## 0.13.4+1
+
+* Fixes to readme and pubspec.
+
 ## 0.13.4
 
 * Require Dart 2.0 stable.
