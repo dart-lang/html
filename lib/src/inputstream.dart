@@ -7,14 +7,6 @@ import 'constants.dart';
 import 'encoding_parser.dart';
 import 'utils.dart';
 
-/// Hooks to call into dart:io without directly referencing it.
-class ConsoleSupport {
-  List<int> bytesFromFile(source) => null;
-}
-
-// TODO(jmesserly): use lazy init here when supported.
-ConsoleSupport consoleSupport = ConsoleSupport();
-
 /// Provides a unicode stream of characters to the HtmlTokenizer.
 ///
 /// This class takes care of character encoding and removing or replacing
@@ -80,18 +72,8 @@ class HtmlInputStream {
     } else if (source is List<int>) {
       _rawBytes = source;
     } else {
-      // TODO(jmesserly): it's unfortunate we need to read all bytes in advance,
-      // but it's necessary because of how the UTF decoders work.
-      _rawBytes = consoleSupport.bytesFromFile(source);
-
-      if (_rawBytes == null) {
-        // TODO(jmesserly): we should accept some kind of stream API too.
-        // Unfortunately dart:io InputStream is async only, which won't work.
-        throw ArgumentError("'source' must be a String or "
-            "List<int> (of bytes). You can also pass a RandomAccessFile if you"
-            "`import 'package:html/parser_console.dart'` and call "
-            "`useConsole()`.");
-      }
+      throw ArgumentError.value(
+          source, 'source', 'Must be a String or List<int>.');
     }
 
     // Detect encoding iff no explicit "transport level" encoding is supplied

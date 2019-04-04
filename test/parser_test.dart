@@ -2,13 +2,12 @@
 library parser_test;
 
 import 'dart:convert';
-import 'dart:io';
-import 'package:path/path.dart' as pathos;
-import 'package:test/test.dart';
+
 import 'package:html/dom.dart';
 import 'package:html/parser.dart';
-import 'package:html/parser_console.dart' as parser_console;
-import 'package:html/src/inputstream.dart' as inputstream;
+import 'package:path/path.dart' as pathos;
+import 'package:test/test.dart';
+
 import 'support.dart';
 
 // Run the parse error checks
@@ -71,16 +70,6 @@ void runParserTest(
 }
 
 void main() {
-  test('dart:io', () {
-    // ensure IO support is unregistered
-    expect(inputstream.consoleSupport,
-        const TypeMatcher<inputstream.ConsoleSupport>());
-    var file = File('$testDataDir/parser_feature/raw_file.html').openSync();
-    expect(() => parse(file), throwsA(const TypeMatcher<ArgumentError>()));
-    parser_console.useConsole();
-    expect(parse(file).body.innerHtml.trim(), 'Hello world!');
-  });
-
   for (var path in getDataFiles('tree-construction')) {
     if (!path.endsWith('.dat')) continue;
 
