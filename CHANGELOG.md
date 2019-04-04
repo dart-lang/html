@@ -1,3 +1,7 @@
+## 0.14.0
+
+- Drop support for encodings other than UTF-8 and ASCII.
+
 ## 0.13.4+1
 
 * Fixes to readme and pubspec.

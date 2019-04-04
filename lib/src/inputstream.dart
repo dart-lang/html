@@ -1,8 +1,7 @@
-library inputstream;
-
 import 'dart:collection';
-import 'package:utf/utf.dart';
+
 import 'package:source_span/source_span.dart';
+
 import 'char_encodings.dart';
 import 'constants.dart';
 import 'encoding_parser.dart';
@@ -26,7 +25,7 @@ class HtmlInputStream {
   static const int numBytesMeta = 512;
 
   /// Encoding to use if no other information can be found.
-  static const String defaultEncoding = 'windows-1252';
+  static const String defaultEncoding = 'utf-8';
 
   /// The name of the character encoding.
   String charEncodingName;
@@ -198,14 +197,6 @@ class HtmlInputStream {
     // Try detecting the BOM using bytes from the string
     if (hasUtf8Bom(_rawBytes)) {
       return 'utf-8';
-    }
-    // Note: we don't need to remember whether it was big or little endian
-    // because the decoder will do that later. It will also eat the BOM for us.
-    if (hasUtf16Bom(_rawBytes)) {
-      return 'utf-16';
-    }
-    if (hasUtf32Bom(_rawBytes)) {
-      return 'utf-32';
     }
     return null;
   }
