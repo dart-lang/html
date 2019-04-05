@@ -1,5 +1,3 @@
-library encoding_parser;
-
 import 'constants.dart';
 import 'inputstream.dart';
 
@@ -16,7 +14,7 @@ class EncodingBytes {
 
   int get length => _bytes.length;
 
-  String next() {
+  String _next() {
     var p = _position = _position + 1;
     if (p >= length) {
       throw StateError("No more elements");
@@ -126,68 +124,69 @@ typedef _MethodHandler = bool Function();
 class _DispatchEntry {
   final String pattern;
   final _MethodHandler handler;
+
   _DispatchEntry(this.pattern, this.handler);
 }
 
 /// Mini parser for detecting character encoding from meta elements.
 class EncodingParser {
-  final EncodingBytes data;
-  String encoding;
+  final EncodingBytes _data;
+  String _encoding;
 
   /// [bytes] - the data to work on for encoding detection.
   EncodingParser(List<int> bytes)
       // Note: this is intentionally interpreting bytes as codepoints.
-      : data = EncodingBytes(String.fromCharCodes(bytes).toLowerCase());
+      : _data = EncodingBytes(String.fromCharCodes(bytes).toLowerCase());
 
   String getEncoding() {
     final methodDispatch = [
-      _DispatchEntry("<!--", handleComment),
-      _DispatchEntry("<meta", handleMeta),
-      _DispatchEntry("</", handlePossibleEndTag),
-      _DispatchEntry("<!", handleOther),
-      _DispatchEntry("<?", handleOther),
-      _DispatchEntry("<", handlePossibleStartTag),
+      _DispatchEntry("<!--", _handleComment),
+      _DispatchEntry("<meta", _handleMeta),
+      _DispatchEntry("</", _handlePossibleEndTag),
+      _DispatchEntry("<!", _handleOther),
+      _DispatchEntry("<?", _handleOther),
+      _DispatchEntry("<", _handlePossibleStartTag),
     ];
 
     try {
       for (;;) {
         for (var dispatch in methodDispatch) {
-          if (data.matchBytes(dispatch.pattern)) {
+          if (_data.matchBytes(dispatch.pattern)) {
             var keepParsing = dispatch.handler();
             if (keepParsing) break;
 
             // We found an encoding. Stop.
-            return encoding;
+            return _encoding;
           }
         }
-        data.position += 1;
+        _data.position += 1;
       }
     } on StateError catch (_) {
       // Catch this here to match behavior of Python's StopIteration
       // TODO(jmesserly): refactor to not use exceptions
     }
-    return encoding;
+    return _encoding;
   }
 
   /// Skip over comments.
-  bool handleComment() => data.jumpTo("-->");
+  bool _handleComment() => _data.jumpTo("-->");
 
-  bool handleMeta() {
-    if (!isWhitespace(data.currentByte)) {
+  bool _handleMeta() {
+    if (!isWhitespace(_data.currentByte)) {
       // if we have <meta not followed by a space so just keep going
       return true;
     }
     // We have a valid meta element we want to search for attributes
     while (true) {
       // Try to find the next attribute after the current position
-      var attr = getAttribute();
+      var attr = _getAttribute();
       if (attr == null) return true;
 
       if (attr[0] == "charset") {
         var tentativeEncoding = attr[1];
         var codec = codecName(tentativeEncoding);
         if (codec != null) {
-          encoding = codec;
+          _encoding = codec;
           return false;
         }
       } else if (attr[0] == "content") {
@@ -195,54 +194,54 @@ class EncodingParser {
         var tentativeEncoding = contentParser.parse();
         var codec = codecName(tentativeEncoding);
         if (codec != null) {
-          encoding = codec;
+          _encoding = codec;
           return false;
         }
       }
     }
   }
 
-  bool handlePossibleStartTag() => handlePossibleTag(false);
+  bool _handlePossibleStartTag() => _handlePossibleTag(false);
 
-  bool handlePossibleEndTag() {
-    data.next();
-    return handlePossibleTag(true);
+  bool _handlePossibleEndTag() {
+    _data._next();
+    return _handlePossibleTag(true);
   }
 
-  bool handlePossibleTag(bool endTag) {
-    if (!isLetter(data.currentByte)) {
+  bool _handlePossibleTag(bool endTag) {
+    if (!isLetter(_data.currentByte)) {
       //If the next byte is not an ascii letter either ignore this
       //fragment (possible start tag case) or treat it according to
       //handleOther
       if (endTag) {
-        data.previous();
-        handleOther();
+        _data.previous();
+        _handleOther();
       }
       return true;
     }
 
-    var c = data.skipUntil(isSpaceOrAngleBracket);
+    var c = _data.skipUntil(isSpaceOrAngleBracket);
     if (c == "<") {
       // return to the first step in the overall "two step" algorithm
       // reprocessing the < byte
-      data.previous();
+      _data.previous();
     } else {
       //Read all attributes
-      var attr = getAttribute();
+      var attr = _getAttribute();
       while (attr != null) {
-        attr = getAttribute();
+        attr = _getAttribute();
       }
     }
     return true;
   }
 
-  bool handleOther() => data.jumpTo(">");
+  bool _handleOther() => _data.jumpTo(">");
 
   /// Return a name,value pair for the next attribute in the stream,
   /// if one is found, or null
-  List<String> getAttribute() {
+  List<String> _getAttribute() {
     // Step 1 (skip chars)
-    var c = data.skipChars((x) => x == "/" || isWhitespace(x));
+    var c = _data.skipChars((x) => x == "/" || isWhitespace(x));
     // Step 2
     if (c == ">" || c == null) {
       return null;
@@ -258,8 +257,8 @@ class EncodingParser {
         break;
       } else if (isWhitespace(c)) {
         // Step 6!
-        c = data.skipChars();
-        c = data.next();
+        c = _data.skipChars();
+        c = _data._next();
         break;
       } else if (c == "/" || c == ">") {
         return [attrName.join(), ""];
@@ -269,27 +268,27 @@ class EncodingParser {
         attrName.add(c);
       }
       // Step 5
-      c = data.next();
+      c = _data._next();
     }
     // Step 7
     if (c != "=") {
-      data.previous();
+      _data.previous();
       return [attrName.join(), ""];
     }
     // Step 8
-    data.next();
+    _data._next();
     // Step 9
-    c = data.skipChars();
+    c = _data.skipChars();
     // Step 10
     if (c == "'" || c == '"') {
       // 10.1
       var quoteChar = c;
       while (true) {
         // 10.2
-        c = data.next();
+        c = _data._next();
         if (c == quoteChar) {
           // 10.3
-          data.next();
+          _data._next();
           return [attrName.join(), attrValue.join()];
         } else if (isLetter(c)) {
           // 10.4
@@ -310,7 +309,7 @@ class EncodingParser {
     }
     // Step 11
     while (true) {
-      c = data.next();
+      c = _data._next();
       if (isSpaceOrAngleBracket(c)) {
         return [attrName.join(), attrValue.join()];
       } else if (c == null) {
