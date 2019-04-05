@@ -102,7 +102,7 @@ class HtmlInputStream {
         if (c == NEWLINE) continue;
       }
 
-      if (invalidUnicode(c)) errors.add('invalid-codepoint');
+      if (_invalidUnicode(c)) errors.add('invalid-codepoint');
 
       if (0xD800 <= c && c <= 0xDFFF) {
         c = 0xFFFD;
@@ -235,7 +235,7 @@ class HtmlInputStream {
 
 // TODO(jmesserly): the Python code used a regex to check for this. But
 // Dart doesn't let you create a regexp with invalid characters.
-bool invalidUnicode(int c) {
+bool _invalidUnicode(int c) {
   if (0x0001 <= c && c <= 0x0008) return true;
   if (0x000E <= c && c <= 0x001F) return true;
   if (0x007F <= c && c <= 0x009F) return true;
