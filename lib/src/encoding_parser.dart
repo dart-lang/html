@@ -1,5 +1,5 @@
 import 'constants.dart';
-import 'inputstream.dart';
+import 'html_input_stream.dart';
 
 // TODO(jmesserly): I converted StopIteration to StateError("No more elements").
 // Seems strange to throw this from outside of an iterator though.
