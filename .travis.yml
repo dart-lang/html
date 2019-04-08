@@ -1,9 +1,12 @@
 language: dart
+
 dart:
   - dev
+  - 2.0.0
+
 dart_task:
   - test: -p vm
-  - test: -p chrome,firefox
+  - test: -p chrome
   - dartanalyzer: --fatal-warnings --fatal-infos .
 
 matrix:

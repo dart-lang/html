@@ -2,7 +2,7 @@
 
 import "dart:collection";
 
-const int unicodeReplacementCharacterCodepoint = 0xfffd;
+const int _replacementCodepoint = 0xfffd;
 
 const int _UNICODE_VALID_RANGE_MAX = 0x10ffff;
 const int _UNICODE_UTF16_RESERVED_LO = 0xd800;
@@ -25,12 +25,8 @@ const int _UTF8_FIRST_BYTE_BOUND_EXCL = 0xfe;
 /// Decodes the UTF-8 bytes as an iterable. Thus, the consumer can only convert
 /// as much of the input as needed. Set the replacementCharacter to null to
 /// throw an ArgumentError rather than replace the bad value.
-_IterableUtf8Decoder decodeUtf8AsIterable(List<int> bytes,
-    [int offset = 0,
-    int length,
-    int replacementCodepoint = unicodeReplacementCharacterCodepoint]) {
-  return _IterableUtf8Decoder(bytes, offset, length, replacementCodepoint);
-}
+Iterable<int> decodeUtf8AsIterable(List<int> bytes, int offset, int length) =>
+    _IterableUtf8Decoder(bytes, offset, length);
 
 /// Return type of [decodeUtf8AsIterable] and variants. The Iterable type
 /// provides an iterator on demand and the iterator will only translate bytes
@@ -41,15 +37,10 @@ class _IterableUtf8Decoder extends IterableBase<int> {
   final List<int> bytes;
   final int offset;
   final int length;
-  final int replacementCodepoint;
 
-  _IterableUtf8Decoder(this.bytes,
-      [this.offset = 0,
-      this.length,
-      this.replacementCodepoint = unicodeReplacementCharacterCodepoint]);
+  _IterableUtf8Decoder(this.bytes, this.offset, this.length);
 
-  _Utf8Decoder get iterator =>
-      _Utf8Decoder(bytes, offset, length, replacementCodepoint);
+  _Utf8Decoder get iterator => _Utf8Decoder(bytes, offset, length);
 }
 
 /// Provides an iterator of Unicode codepoints from UTF-8 encoded bytes. The
@@ -59,20 +50,14 @@ class _IterableUtf8Decoder extends IterableBase<int> {
 /// ArgumentError rather than replace the bad value. The return value
 /// from this method can be used as an Iterable (e.g. in a for-loop).
 class _Utf8Decoder implements Iterator<int> {
-  // TODO(kevmoo): should this field be private?
   final _ListRangeIterator utf8EncodedBytesIterator;
-  final int replacementCodepoint;
   int _current;
 
-  _Utf8Decoder(List<int> utf8EncodedBytes,
-      [int offset = 0,
-      int length,
-      this.replacementCodepoint = unicodeReplacementCharacterCodepoint])
+  _Utf8Decoder(List<int> utf8EncodedBytes, int offset, int length)
       : utf8EncodedBytesIterator =
             (_ListRange(utf8EncodedBytes, offset, length)).iterator;
 
-  _Utf8Decoder._fromListRangeIterator(_ListRange source,
-      [this.replacementCodepoint = unicodeReplacementCharacterCodepoint])
+  _Utf8Decoder._fromListRangeIterator(_ListRange source)
       : utf8EncodedBytesIterator = source.iterator;
 
   /// Decode the remaininder of the characters in this decoder
@@ -103,8 +88,8 @@ class _Utf8Decoder implements Iterator<int> {
     int additionalBytes = 0;
 
     if (value < 0) {
-      if (replacementCodepoint != null) {
-        _current = replacementCodepoint;
+      if (_replacementCodepoint != null) {
+        _current = _replacementCodepoint;
         return true;
       } else {
         throw ArgumentError(
@@ -114,8 +99,8 @@ class _Utf8Decoder implements Iterator<int> {
       _current = value;
       return true;
     } else if (value < _UTF8_FIRST_BYTE_OF_TWO_BASE) {
-      if (replacementCodepoint != null) {
-        _current = replacementCodepoint;
+      if (_replacementCodepoint != null) {
+        _current = _replacementCodepoint;
         return true;
       } else {
         throw ArgumentError(
@@ -136,8 +121,8 @@ class _Utf8Decoder implements Iterator<int> {
     } else if (value < _UTF8_FIRST_BYTE_BOUND_EXCL) {
       value -= _UTF8_FIRST_BYTE_OF_SIX_BASE;
       additionalBytes = 5;
-    } else if (replacementCodepoint != null) {
-      _current = replacementCodepoint;
+    } else if (_replacementCodepoint != null) {
+      _current = _replacementCodepoint;
       return true;
     } else {
       throw ArgumentError(
@@ -168,8 +153,8 @@ class _Utf8Decoder implements Iterator<int> {
     if (validSequence && nonOverlong && inRange) {
       _current = value;
       return true;
-    } else if (replacementCodepoint != null) {
-      _current = replacementCodepoint;
+    } else if (_replacementCodepoint != null) {
+      _current = _replacementCodepoint;
       return true;
     } else {
       throw ArgumentError(

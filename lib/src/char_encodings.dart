@@ -17,15 +17,9 @@ bool hasUtf8Bom(List<int> bytes, [int offset = 0, int length]) {
 /// Decodes the [bytes] with the provided [encoding] and returns an iterable for
 /// the codepoints. Supports the major unicode encodings as well as ascii and
 /// and windows-1252 encodings.
-Iterable<int> decodeBytes(String encoding, List<int> bytes,
-    [int offset = 0,
-    int length,
-    int replacementCodepoint = unicodeReplacementCharacterCodepoint]) {
-  if (length == null) length = bytes.length;
-  final replace = replacementCodepoint;
+Iterable<int> decodeBytes(String encoding, List<int> bytes) {
   switch (encoding) {
     case 'ascii':
-      bytes = bytes.sublist(offset, offset + length);
       // TODO(jmesserly): this was taken from runtime/bin/string_stream.dart
       for (int byte in bytes) {
         if (byte > 127) {
@@ -40,11 +34,15 @@ Iterable<int> decodeBytes(String encoding, List<int> bytes,
     case 'utf-8':
       // NOTE: to match the behavior of the other decode functions, we eat the
       // utf-8 BOM here.
-      if (hasUtf8Bom(bytes, offset, length)) {
+
+      var offset = 0;
+      var length = bytes.length;
+
+      if (hasUtf8Bom(bytes)) {
         offset += 3;
         length -= 3;
       }
-      return decodeUtf8AsIterable(bytes, offset, length, replace);
+      return decodeUtf8AsIterable(bytes, offset, length);
 
     default:
       throw ArgumentError('Encoding $encoding not supported');
