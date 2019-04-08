@@ -29,10 +29,10 @@ const Map<String, String> errorMessages = {
       "Entity used with illegal number (windows-1252 reference).",
   "cant-convert-numeric-entity":
       "Numeric entity couldn't be converted to character "
-      "(codepoint U+%(charAsInt)08x).",
+          "(codepoint U+%(charAsInt)08x).",
   "illegal-codepoint-for-numeric-entity":
       "Numeric entity represents an illegal codepoint: "
-      "U+%(charAsInt)08x.",
+          "U+%(charAsInt)08x.",
   "numeric-entity-without-semicolon": "Numeric entity didn't end with ';'.",
   "expected-numeric-entity-but-got-eof":
       "Numeric entity expected. Got end of file instead.",
@@ -46,7 +46,7 @@ const Map<String, String> errorMessages = {
       "Expected tag name. Got '>' instead.",
   "expected-tag-name-but-got-question-mark":
       "Expected tag name. Got '?' instead. (HTML doesn't "
-      "support processing instructions.)",
+          "support processing instructions.)",
   "expected-tag-name": "Expected tag name. Got something else instead",
   "expected-closing-tag-but-got-right-bracket":
       "Expected closing tag. Got '>' instead. Ignoring '</>'.",
@@ -133,7 +133,7 @@ const Map<String, String> errorMessages = {
   "missing-end-tags": "Missing end tags (%(name)s).",
   "unexpected-start-tag-implies-end-tag":
       "Unexpected start tag (%(startName)s) "
-      "implies end tag (%(endName)s).",
+          "implies end tag (%(endName)s).",
   "unexpected-start-tag-treated-as":
       "Unexpected start tag (%(originalName)s). Treated as %(newName)s.",
   "deprecated-tag": "Unexpected start tag %(name)s. Don't use it!",
@@ -165,7 +165,7 @@ const Map<String, String> errorMessages = {
   "unexpected-form-in-table": "Unexpected form in table context.",
   "unexpected-start-tag-implies-table-voodoo":
       "Unexpected start tag (%(name)s) in "
-      "table context caused voodoo mode.",
+          "table context caused voodoo mode.",
   "unexpected-end-tag-implies-table-voodoo": "Unexpected end tag (%(name)s) in "
       "table context caused voodoo mode.",
   "unexpected-cell-in-table-body": "Unexpected table cell start tag (%(name)s) "
@@ -180,12 +180,12 @@ const Map<String, String> errorMessages = {
       "Unexpected end tag (%(name)s) in the table row phase. Ignored.",
   "unexpected-select-in-select":
       "Unexpected select start tag in the select phase "
-      "treated as select end tag.",
+          "treated as select end tag.",
   "unexpected-input-in-select":
       "Unexpected input start tag in the select phase.",
   "unexpected-start-tag-in-select":
       "Unexpected start tag token (%(name)s in the select phase. "
-      "Ignored.",
+          "Ignored.",
   "unexpected-end-tag-in-select":
       "Unexpected end tag (%(name)s) in the select phase. Ignored.",
   "unexpected-table-element-start-tag-in-select-in-table":
@@ -204,7 +204,7 @@ const Map<String, String> errorMessages = {
       " in the frameset phase. Ignored.",
   "unexpected-frameset-in-frameset-innerhtml":
       "Unexpected end tag token (frameset) "
-      "in the frameset phase (innerHTML).",
+          "in the frameset phase (innerHTML).",
   "unexpected-end-tag-in-frameset": "Unexpected end tag token (%(name)s)"
       " in the frameset phase. Ignored.",
   "unexpected-char-after-frameset": "Unexpected non-space characters in the "

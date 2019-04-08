@@ -1,20 +1,11 @@
-library inputstream;
-
 import 'dart:collection';
-import 'package:utf/utf.dart';
+
 import 'package:source_span/source_span.dart';
+
 import 'char_encodings.dart';
 import 'constants.dart';
 import 'encoding_parser.dart';
 import 'utils.dart';
-
-/// Hooks to call into dart:io without directly referencing it.
-class ConsoleSupport {
-  List<int> bytesFromFile(source) => null;
-}
-
-// TODO(jmesserly): use lazy init here when supported.
-ConsoleSupport consoleSupport = ConsoleSupport();
 
 /// Provides a unicode stream of characters to the HtmlTokenizer.
 ///
@@ -26,7 +17,7 @@ class HtmlInputStream {
   static const int numBytesMeta = 512;
 
   /// Encoding to use if no other information can be found.
-  static const String defaultEncoding = 'windows-1252';
+  static const String defaultEncoding = 'utf-8';
 
   /// The name of the character encoding.
   String charEncodingName;
@@ -81,18 +72,8 @@ class HtmlInputStream {
     } else if (source is List<int>) {
       _rawBytes = source;
     } else {
-      // TODO(jmesserly): it's unfortunate we need to read all bytes in advance,
-      // but it's necessary because of how the UTF decoders work.
-      _rawBytes = consoleSupport.bytesFromFile(source);
-
-      if (_rawBytes == null) {
-        // TODO(jmesserly): we should accept some kind of stream API too.
-        // Unfortunately dart:io InputStream is async only, which won't work.
-        throw ArgumentError("'source' must be a String or "
-            "List<int> (of bytes). You can also pass a RandomAccessFile if you"
-            "`import 'package:html/parser_console.dart'` and call "
-            "`useConsole()`.");
-      }
+      throw ArgumentError.value(
+          source, 'source', 'Must be a String or List<int>.');
     }
 
     // Detect encoding iff no explicit "transport level" encoding is supplied
@@ -121,7 +102,7 @@ class HtmlInputStream {
         if (c == NEWLINE) continue;
       }
 
-      if (invalidUnicode(c)) errors.add('invalid-codepoint');
+      if (_invalidUnicode(c)) errors.add('invalid-codepoint');
 
       if (0xD800 <= c && c <= 0xDFFF) {
         c = 0xFFFD;
@@ -199,14 +180,6 @@ class HtmlInputStream {
     if (hasUtf8Bom(_rawBytes)) {
       return 'utf-8';
     }
-    // Note: we don't need to remember whether it was big or little endian
-    // because the decoder will do that later. It will also eat the BOM for us.
-    if (hasUtf16Bom(_rawBytes)) {
-      return 'utf-16';
-    }
-    if (hasUtf32Bom(_rawBytes)) {
-      return 'utf-32';
-    }
     return null;
   }
 
@@ -262,7 +235,7 @@ class HtmlInputStream {
 
 // TODO(jmesserly): the Python code used a regex to check for this. But
 // Dart doesn't let you create a regexp with invalid characters.
-bool invalidUnicode(int c) {
+bool _invalidUnicode(int c) {
   if (0x0001 <= c && c <= 0x0008) return true;
   if (0x000E <= c && c <= 0x001F) return true;
   if (0x007F <= c && c <= 0x009F) return true;

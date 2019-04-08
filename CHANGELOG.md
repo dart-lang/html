@@ -1,3 +1,10 @@
+## 0.14.0
+
+*BREAKING CHANGES*
+
+- Drop support for encodings other than UTF-8 and ASCII.
+- Removed `parser_console.dart` library.
+
 ## 0.13.4+1
 
 * Fixes to readme and pubspec.

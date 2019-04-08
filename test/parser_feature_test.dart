@@ -1,13 +1,13 @@
 /// Additional feature tests that aren't based on test data.
 library parser_feature_test;
 
-import 'package:test/test.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart';
 import 'package:html/src/constants.dart';
 import 'package:html/src/encoding_parser.dart';
 import 'package:html/src/treebuilder.dart';
 import 'package:source_span/source_span.dart';
+import 'package:test/test.dart';
 
 main() {
   _testElementSpans();
