@@ -1,4 +1,4 @@
-import 'utf.dart';
+import 'dart:convert' show ascii, utf8;
 
 // TODO(jmesserly): this function is conspicuously absent from dart:utf.
 /// Returns true if the [bytes] starts with a UTF-8 byte order mark.
@@ -20,29 +20,12 @@ bool hasUtf8Bom(List<int> bytes, [int offset = 0, int length]) {
 Iterable<int> decodeBytes(String encoding, List<int> bytes) {
   switch (encoding) {
     case 'ascii':
-      // TODO(jmesserly): this was taken from runtime/bin/string_stream.dart
-      for (int byte in bytes) {
-        if (byte > 127) {
-          // TODO(jmesserly): ideally this would be DecoderException, like the
-          // one thrown in runtime/bin/string_stream.dart, but we don't want to
-          // depend on dart:io.
-          throw FormatException("Illegal ASCII character $byte");
-        }
-      }
-      return bytes;
+      return ascii.decode(bytes).runes;
 
     case 'utf-8':
-      // NOTE: to match the behavior of the other decode functions, we eat the
-      // utf-8 BOM here.
-
-      var offset = 0;
-      var length = bytes.length;
-
-      if (hasUtf8Bom(bytes)) {
-        offset += 3;
-        length -= 3;
-      }
-      return decodeUtf8AsIterable(bytes, offset, length);
+      // NOTE: To match the behavior of the other decode functions, we eat the
+      // UTF-8 BOM here. This is the default behavior of `utf8.decode`.
+      return utf8.decode(bytes).runes;
 
     default:
       throw ArgumentError('Encoding $encoding not supported');
@@ -53,20 +36,5 @@ Iterable<int> decodeBytes(String encoding, List<int> bytes) {
 /// Returns the code points for the [input]. This works like [String.charCodes]
 /// but it decodes UTF-16 surrogate pairs.
 List<int> toCodepoints(String input) {
-  var newCodes = <int>[];
-  for (int i = 0; i < input.length; i++) {
-    var c = input.codeUnitAt(i);
-    if (0xD800 <= c && c <= 0xDBFF) {
-      int next = i + 1;
-      if (next < input.length) {
-        var d = input.codeUnitAt(next);
-        if (0xDC00 <= d && d <= 0xDFFF) {
-          c = 0x10000 + ((c - 0xD800) << 10) + (d - 0xDC00);
-          i = next;
-        }
-      }
-    }
-    newCodes.add(c);
-  }
-  return newCodes;
+  return input.runes.toList();
 }
