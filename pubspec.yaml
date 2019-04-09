@@ -1,5 +1,5 @@
 name: html
-version: 0.14.0-dev
+version: 0.14.0
 
 description: APIs for parsing and manipulating HTML content outside the browser.
 author: Dart Team <misc@dartlang.org>
