@@ -7,10 +7,8 @@ import 'dart:io';
 import 'dart:mirrors';
 import 'package:path/path.dart' as pathos;
 import 'package:test/test.dart';
-import 'package:html/src/char_encodings.dart';
 import 'package:html/src/token.dart';
 import 'package:html/src/tokenizer.dart';
-import 'package:utf/utf.dart';
 import 'support.dart';
 
 class TokenizerTestParser {
@@ -24,7 +22,7 @@ class TokenizerTestParser {
 
   List parse(String str) {
     // Note: we need to pass bytes to the tokenizer if we want it to handle BOM.
-    var bytes = codepointsToUtf8(toCodepoints(str));
+    var bytes = utf8.encode(str);
     var tokenizer = HtmlTokenizer(bytes, encoding: 'utf-8');
     outputTokens = [];
 
