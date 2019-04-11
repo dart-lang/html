@@ -293,6 +293,9 @@ String codecName(String encoding) {
   return encodings[canonicalName];
 }
 
+/// Returns true if the [bytes] starts with a UTF-8 byte order mark.
+/// Since UTF-8 doesn't have byte order, it's somewhat of a misnomer, but it is
+/// used in HTML to detect the UTF-
 bool _hasUtf8Bom(List<int> bytes, [int offset = 0, int length]) {
   int end = length != null ? offset + length : bytes.length;
   return (offset + 3) <= end &&
@@ -301,6 +304,9 @@ bool _hasUtf8Bom(List<int> bytes, [int offset = 0, int length]) {
       bytes[offset + 2] == 0xBF;
 }
 
+/// Decodes the [bytes] with the provided [encoding] and returns an iterable for
+/// the codepoints. Supports the major unicode encodings as well as ascii and
+/// and windows-1252 encodings.
 Iterable<int> _decodeBytes(String encoding, List<int> bytes) {
   switch (encoding) {
     case 'ascii':
