@@ -1,3 +1,7 @@
+## 0.14.0+1
+
+- Support `package:css` `>=0.13.2 <0.16.0`.
+
 ## 0.14.0
 
 *BREAKING CHANGES*
