@@ -1,6 +1,8 @@
 language: dart
 dart:
+  - 2.0.0
   - dev
+
 dart_task:
   - test: -p vm
   - test: -p chrome,firefox
@@ -13,7 +15,7 @@ matrix:
 
 # Only building master means that we don't run two builds for each pull request.
 branches:
-  only: [master]
+  only: [master, v0_13]
 
 cache:
  directories:
