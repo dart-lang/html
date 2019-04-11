@@ -1,5 +1,5 @@
 name: html
-version: 0.13.4+1
+version: 0.13.4+2
 
 description: APIs for parsing and manipulating HTML content outside the browser.
 author: Dart Team <misc@dartlang.org>
@@ -9,7 +9,7 @@ environment:
   sdk: '>=2.0.0 <3.0.0'
 
 dependencies:
-  csslib: '>=0.13.2 <0.15.0'
+  csslib: '>=0.13.2 <0.16.0'
   source_span: '>=1.0.0 <2.0.0'
   utf: '>=0.9.0 <0.10.0'
 

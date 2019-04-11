@@ -1,3 +1,7 @@
+## 0.13.4+2
+
+- Support `package:css` `>=0.13.2 <0.16.0`.
+
 ## 0.13.4+1
 
 * Fixes to readme and pubspec.
