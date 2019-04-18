@@ -214,7 +214,7 @@ class SelectorEvaluator extends Visitor {
           var parent = _element.parentNode;
           return parent != null &&
               literal.value > 0 &&
-              parent.nodes.indexOf(_element) == literal.value;
+              parent.nodes.indexOf(_element) == literal.value - 1;
         }
         break;
 
