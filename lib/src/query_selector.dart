@@ -138,7 +138,8 @@ class SelectorEvaluator extends Visitor {
       case 'root':
         // TODO(jmesserly): fix when we have a .ownerDocument pointer
         // return _element == _element.ownerDocument.rootElement;
-        return _element.localName == 'html' && (_element.parentNode == null || _element.parentNode is Document);
+        return _element.localName == 'html' &&
+            (_element.parentNode == null || _element.parentNode is Document);
 
       // http://dev.w3.org/csswg/selectors-4/#the-empty-pseudo
       case 'empty':
@@ -165,8 +166,8 @@ class SelectorEvaluator extends Visitor {
       case 'last-of-type':
       case 'only-of-type':
         var parent = _element.parentNode;
-        if(parent != null){
-          var children = parent.children.where((Element el){
+        if (parent != null) {
+          var children = parent.children.where((Element el) {
             return el.localName == _element.localName;
           }).toList();
 
@@ -174,15 +175,15 @@ class SelectorEvaluator extends Visitor {
           var isFirst = index == 0;
           var isLast = index == children.length - 1;
 
-          if(isFirst && selector.name == 'first-of-type'){
+          if (isFirst && selector.name == 'first-of-type') {
             return true;
           }
 
-          if(isLast && selector.name == 'last-of-type'){
+          if (isLast && selector.name == 'last-of-type') {
             return true;
           }
 
-          if(isFirst && isLast && selector.name == 'only-of-type'){
+          if (isFirst && isLast && selector.name == 'only-of-type') {
             return true;
           }
 
@@ -200,17 +201,25 @@ class SelectorEvaluator extends Visitor {
       case 'link':
         return _element.attributes['href'] != null;
 
-    //https://drafts.csswg.org/selectors-4/#checked-pseudo
-    //https://drafts.csswg.org/selectors-4/#enabled-pseudo
-    //https://drafts.csswg.org/selectors-4/#disabled-pseudo
+      //https://drafts.csswg.org/selectors-4/#checked-pseudo
+      //https://drafts.csswg.org/selectors-4/#enabled-pseudo
+      //https://drafts.csswg.org/selectors-4/#disabled-pseudo
       case 'enabled':
       case 'disabled':
         var isDisabled = selector.name == 'disabled';
-        var interactableTypes = ['button', 'input', 'select', 'textarea', 'optgroup', 'option', 'fieldset'];
-        if(interactableTypes.contains(_element.localName)){
+        var interactableTypes = [
+          'button',
+          'input',
+          'select',
+          'textarea',
+          'optgroup',
+          'option',
+          'fieldset'
+        ];
+        if (interactableTypes.contains(_element.localName)) {
           var disabled = _element.attributes['disabled'];
 
-          if(disabled != null){
+          if (disabled != null) {
             return isDisabled;
           }
         }
@@ -219,10 +228,12 @@ class SelectorEvaluator extends Visitor {
 
       //https://drafts.csswg.org/selectors-4/#checked-pseudo
       case 'checked':
-        var isCheckable = _element.localName == 'option' || (_element.localName == 'input' &&
-          (_element.attributes['type'] == 'checkbox' || _element.attributes['type'] == 'radio'));
+        var isCheckable = _element.localName == 'option' ||
+            (_element.localName == 'input' &&
+                (_element.attributes['type'] == 'checkbox' ||
+                    _element.attributes['type'] == 'radio'));
 
-        if(isCheckable){
+        if (isCheckable) {
           return _element.attributes['checked'] != null;
         }
         return false;
@@ -263,78 +274,73 @@ class SelectorEvaluator extends Visitor {
   bool visitPseudoElementFunctionSelector(PseudoElementFunctionSelector s) =>
       throw _unimplemented(s);
 
-
-
-  num _countExpressionList(List<Expression> list){
+  num _countExpressionList(List<Expression> list) {
     Expression first = list[0];
     num sum = 0;
     num modulus = 1;
-    if(first is OperatorMinus) {
+    if (first is OperatorMinus) {
       modulus = -1;
       list = list.sublist(1);
     }
-    list.forEach((Expression item){
+    list.forEach((Expression item) {
       sum += (item as NumberTerm).value;
     });
     return sum * modulus;
   }
 
-  Map<String,num> _parseNthExpressions (List<Expression> exprs){
+  Map<String, num> _parseNthExpressions(List<Expression> exprs) {
     num A;
     num B = 0;
 
-    if(exprs.isNotEmpty){
-      if(exprs.length == 1 && (exprs[0] is LiteralTerm)){
+    if (exprs.isNotEmpty) {
+      if (exprs.length == 1 && (exprs[0] is LiteralTerm)) {
         LiteralTerm literal = exprs[0];
-        if(literal is NumberTerm){
+        if (literal is NumberTerm) {
           B = literal.value;
-        }else {
+        } else {
           String value = literal.value.toString();
-          if(value == 'even'){
+          if (value == 'even') {
             A = 2;
             B = 1;
-          }else if(value == 'odd'){
+          } else if (value == 'odd') {
             A = 2;
             B = 0;
-          }else if(value == 'n'){
+          } else if (value == 'n') {
             A = 1;
             B = 0;
-          }else {
+          } else {
             return null;
           }
         }
       }
 
-      List<Expression> bTerms = [] ;
-      List<Expression> aTerms = [] ;
-      var nIndex = exprs.indexWhere((expr){
+      List<Expression> bTerms = [];
+      List<Expression> aTerms = [];
+      var nIndex = exprs.indexWhere((expr) {
         return (expr is LiteralTerm) && expr.value.toString() == 'n';
       });
 
-      if(nIndex > -1){
+      if (nIndex > -1) {
         bTerms.addAll(exprs.sublist(nIndex + 1));
-        aTerms.addAll(exprs.sublist(0,nIndex));
-      }else{
+        aTerms.addAll(exprs.sublist(0, nIndex));
+      } else {
         bTerms.addAll(exprs);
       }
 
-      if(bTerms.isNotEmpty){
+      if (bTerms.isNotEmpty) {
         B = _countExpressionList(bTerms);
       }
 
-      if(aTerms.isNotEmpty){
-        if(aTerms.length == 1 && aTerms[0] is OperatorMinus){
+      if (aTerms.isNotEmpty) {
+        if (aTerms.length == 1 && aTerms[0] is OperatorMinus) {
           A = -1;
-        }else{
+        } else {
           A = _countExpressionList(aTerms);
         }
-
       }
     }
 
-    return {
-      'A':A,'B':B
-    };
+    return {'A': A, 'B': B};
   }
 
   bool visitPseudoClassFunctionSelector(PseudoClassFunctionSelector selector) {
@@ -348,7 +354,7 @@ class SelectorEvaluator extends Visitor {
       case 'nth-last-of-type':
         //  i = An + B
         var nthData = _parseNthExpressions(selector.expression.expressions);
-        if(nthData == null){
+        if (nthData == null) {
           break;
         }
 
@@ -356,31 +362,32 @@ class SelectorEvaluator extends Visitor {
         var B = nthData['B'];
 
         var parent = _element.parentNode;
-        if(parent != null){
+        if (parent != null) {
           var elIndex;
           var children = parent.children;
 
-          if(selector.name == 'nth-of-type' || selector.name == 'nth-last-of-type'){
-            children = children.where((Element el){
+          if (selector.name == 'nth-of-type' ||
+              selector.name == 'nth-last-of-type') {
+            children = children.where((Element el) {
               return el.localName == _element.localName;
             }).toList();
           }
 
-          if(selector.name =='nth-last-child' || selector.name == 'nth-last-of-type' ){
-
-            elIndex = children.length - children.indexOf(_element) ;
-          }else{
+          if (selector.name == 'nth-last-child' ||
+              selector.name == 'nth-last-of-type') {
+            elIndex = children.length - children.indexOf(_element);
+          } else {
             elIndex = children.indexOf(_element) + 1;
           }
 
-          if(A == null){
+          if (A == null) {
             return B > 0 && elIndex == B;
-          }else{
+          } else {
             var divideResult = (elIndex - B) / A;
 
-            if(divideResult >= 1 ){
+            if (divideResult >= 1) {
               return divideResult % divideResult.ceil() == 0;
-            }else{
+            } else {
               return divideResult == 0;
             }
           }
