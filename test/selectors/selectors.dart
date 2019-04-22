@@ -1095,15 +1095,15 @@ var validSelectors = [
     'level': 3,
     'testType': testQsaAdditional
   },
-  {
-    'name':
-        ":target pseudo-class selector, matching the element referenced by the URL fragment identifier",
-    'selector': ":target",
-    'expect': ["target"],
-    'exclude': ["fragment", "detached"],
-    'level': 3,
-    'testType': testQsaAdditional | testMatchBaseline
-  },
+//  {
+//    'name':
+//        ":target pseudo-class selector, matching the element referenced by the URL fragment identifier",
+//    'selector': ":target",
+//    'expect': ["target"],
+//    'exclude': ["fragment", "detached"],
+//    'level': 3,
+//    'testType': testQsaAdditional | testMatchBaseline
+//  },
 
   // - :lang()
   {
