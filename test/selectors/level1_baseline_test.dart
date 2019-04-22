@@ -22,7 +22,7 @@ Document getTestContentDocument() {
   return parse(File(testPath).readAsStringSync());
 }
 
-var testType = testQsaBaseline; // Only run baseline tests.
+var testType = testQsaBaseline | testQsaAdditional; // Only run baseline tests.
 var docType = "html"; // Only run tests suitable for HTML
 
 main() {
