@@ -65,7 +65,9 @@ String padWithZeros(String str, int size) {
   if (str.length == size) return str;
   var result = StringBuffer();
   size -= str.length;
-  for (int i = 0; i < size; i++) result.write('0');
+  for (int i = 0; i < size; i++) {
+    result.write('0');
+  }
   result.write(str);
   return result.toString();
 }

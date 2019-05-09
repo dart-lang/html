@@ -223,7 +223,9 @@ abstract class Node {
   void _addOuterHtml(StringBuffer str);
 
   void _addInnerHtml(StringBuffer str) {
-    for (Node child in nodes) child._addOuterHtml(str);
+    for (Node child in nodes) {
+      child._addOuterHtml(str);
+    }
   }
 
   Node remove() {
@@ -704,7 +706,9 @@ class NodeList extends ListProxy<Node> {
     //      are removed from the original NodeList (if any) from the end, which
     //      is faster.
     var list = _flattenDocFragments(collection);
-    for (var node in list.reversed) _setParent(node);
+    for (var node in list.reversed) {
+      _setParent(node);
+    }
     super.addAll(list);
   }
 
@@ -721,7 +725,9 @@ class NodeList extends ListProxy<Node> {
   Node removeAt(int i) => super.removeAt(i)..parentNode = null;
 
   void clear() {
-    for (var node in this) node.parentNode = null;
+    for (var node in this) {
+      node.parentNode = null;
+    }
     super.clear();
   }
 
@@ -757,7 +763,9 @@ class NodeList extends ListProxy<Node> {
   }
 
   void removeRange(int start, int rangeLength) {
-    for (int i = start; i < rangeLength; i++) this[i].parentNode = null;
+    for (int i = start; i < rangeLength; i++) {
+      this[i].parentNode = null;
+    }
     super.removeRange(start, rangeLength);
   }
 
@@ -778,7 +786,9 @@ class NodeList extends ListProxy<Node> {
   void insertAll(int index, Iterable<Node> collection) {
     // Note: we need to be careful how we copy nodes. See note in addAll.
     var list = _flattenDocFragments(collection);
-    for (var node in list.reversed) _setParent(node);
+    for (var node in list.reversed) {
+      _setParent(node);
+    }
     super.insertAll(index, list);
   }
 
