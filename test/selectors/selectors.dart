@@ -764,6 +764,31 @@ var validSelectors = [
   },
   {
     'name':
+        ":nth-child selector, matching every child element, starting from the seven",
+    'selector': "#pseudo-nth li:nth-child(n+7)",
+    'expect': [
+      "pseudo-nth-li7",
+      "pseudo-nth-li8",
+      "pseudo-nth-li9",
+      "pseudo-nth-li10",
+      "pseudo-nth-li11",
+      "pseudo-nth-li12"
+    ],
+    'level': 3,
+    'testType': testQsaAdditional | testMatchBaseline
+  },
+  {
+    'name': ":nth-child selector, matching every third em element from the end",
+    'selector': "#pseudo-nth-p1 em:nth-child(3n)",
+    'expect': [
+      "pseudo-nth-em2",
+      "pseudo-nth-em3",
+    ],
+    'level': 3,
+    'testType': testQsaAdditional | testMatchBaseline
+  },
+  {
+    'name':
         ":nth-child selector, matching every fourth child element, starting from the third",
     'selector': "#pseudo-nth-p1 :nth-child(4n-1)",
     'expect': ["pseudo-nth-em2", "pseudo-nth-span3"],

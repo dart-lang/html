@@ -108,6 +108,7 @@ class SelectorEvaluator extends Visitor {
           combinator = s.combinator;
           break;
         case TokenKind.COMBINATOR_NONE:
+          combinator = null;
           break;
         default:
           throw _unsupported(selector);
@@ -337,6 +338,10 @@ class SelectorEvaluator extends Visitor {
         } else {
           A = _countExpressionList(aTerms);
         }
+      } else {
+        if (nIndex == 0) {
+          A = 1;
+        }
       }
     }
 
@@ -362,6 +367,7 @@ class SelectorEvaluator extends Visitor {
         var B = nthData['B'];
 
         var parent = _element.parentNode;
+
         if (parent != null) {
           var elIndex;
           var children = parent.children;
@@ -391,6 +397,8 @@ class SelectorEvaluator extends Visitor {
               return divideResult == 0;
             }
           }
+        } else {
+          return false;
         }
 
         break;
