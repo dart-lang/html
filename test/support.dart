@@ -26,7 +26,7 @@ final testDataDir = p.join(testDir, 'data');
 
 Iterable<String> getDataFiles(String subdirectory) {
   var dir = Directory(p.join(testDataDir, subdirectory));
-  return dir.listSync().where((f) => f is File).map((f) => f.path);
+  return dir.listSync().whereType<File>().map((f) => f.path);
 }
 
 // TODO(jmesserly): make this class simpler. We could probably split on
