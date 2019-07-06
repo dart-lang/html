@@ -830,8 +830,7 @@ class FilteredElementList extends IterableBase<Element>
   //
   // TODO(nweiz): we don't always need to create a new list. For example
   // forEach, every, any, ... could directly work on the _childNodes.
-  List<Element> get _filtered =>
-      List<Element>.from(_childNodes.where((n) => n is Element));
+  List<Element> get _filtered => _childNodes.whereType<Element>().toList();
 
   void forEach(void f(Element element)) {
     _filtered.forEach(f);
