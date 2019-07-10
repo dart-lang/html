@@ -5,15 +5,17 @@ library tokenizer_test;
 import 'dart:convert';
 import 'dart:io';
 import 'dart:mirrors';
-import 'package:path/path.dart' as pathos;
-import 'package:test/test.dart';
+
 import 'package:html/src/token.dart';
 import 'package:html/src/tokenizer.dart';
+import 'package:path/path.dart' as pathos;
+import 'package:test/test.dart';
+
 import 'support.dart';
 
 class TokenizerTestParser {
-  String _state;
-  String _lastStartTag;
+  final String _state;
+  final String _lastStartTag;
   List outputTokens;
 
   TokenizerTestParser(String initialState, [String lastStartTag])
