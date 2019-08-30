@@ -33,7 +33,7 @@ class HtmlInputStream {
   List<int> _rawBytes;
 
   /// Raw UTF-16 codes, used if a Dart String is passed in.
-  Iterable<int> _rawChars;
+  List<int> _rawChars;
 
   Queue<String> errors;
 
@@ -66,7 +66,7 @@ class HtmlInputStream {
       this.sourceUrl])
       : charEncodingName = codecName(encoding) {
     if (source is String) {
-      _rawChars = source.runes.toList();
+      _rawChars = source.codeUnits;
       charEncodingName = 'utf-8';
       charEncodingCertain = true;
     } else if (source is List<int>) {
@@ -96,17 +96,27 @@ class HtmlInputStream {
     }
 
     bool skipNewline = false;
-    for (var c in _rawChars) {
+    bool wasSurrogatePair = false;
+    for (int i = 0; i < _rawChars.length; i++) {
+      int c = _rawChars[i];
       if (skipNewline) {
         skipNewline = false;
         if (c == NEWLINE) continue;
       }
 
-      if (_invalidUnicode(c)) errors.add('invalid-codepoint');
+      final isSurrogatePair = _isSurrogatePair(_rawChars, i);
+      if (!isSurrogatePair && !wasSurrogatePair) {
+        if (_invalidUnicode(c)) {
+          errors.add('invalid-codepoint');
 
-      if (0xD800 <= c && c <= 0xDFFF) {
-        c = 0xFFFD;
-      } else if (c == RETURN) {
+          if (0xD800 <= c && c <= 0xDFFF) {
+            c = 0xFFFD;
+          }
+        }
+      }
+      wasSurrogatePair = isSurrogatePair;
+
+      if (c == RETURN) {
         skipNewline = true;
         c = NEWLINE;
       }
@@ -203,13 +213,30 @@ class HtmlInputStream {
   /// EOF when EOF is reached.
   String char() {
     if (_offset >= _chars.length) return eof;
-    return String.fromCharCodes([_chars[_offset++]]);
+    return _isSurrogatePair(_chars, _offset)
+        ? String.fromCharCodes([_chars[_offset++], _chars[_offset++]])
+        : String.fromCharCodes([_chars[_offset++]]);
   }
 
   String peekChar() {
     if (_offset >= _chars.length) return eof;
-    return String.fromCharCodes([_chars[_offset]]);
+    return _isSurrogatePair(_chars, _offset)
+        ? String.fromCharCodes([_chars[_offset], _chars[_offset + 1]])
+        : String.fromCharCodes([_chars[_offset]]);
   }
+
+  // Whether the current and next chars indicate a surrogate pair.
+  bool _isSurrogatePair(List<int> chars, int i) {
+    return i + 1 < chars.length &&
+        _isLeadSurrogate(chars[i]) &&
+        _isTrailSurrogate(chars[i + 1]);
+  }
+
+  // Is then code (a 16-bit unsigned integer) a UTF-16 lead surrogate.
+  bool _isLeadSurrogate(int code) => (code & 0xFC00) == 0xD800;
+
+  // Is then code (a 16-bit unsigned integer) a UTF-16 trail surrogate.
+  bool _isTrailSurrogate(int code) => (code & 0xFC00) == 0xDC00;
 
   /// Returns a string of characters from the stream up to but not
   /// including any character in 'characters' or EOF.
@@ -217,7 +244,7 @@ class HtmlInputStream {
     int start = _offset;
     String c;
     while ((c = peekChar()) != null && characters.contains(c) == opposite) {
-      _offset++;
+      _offset += c.codeUnits.length;
     }
 
     return String.fromCharCodes(_chars.sublist(start, _offset));
@@ -227,7 +254,7 @@ class HtmlInputStream {
     // Only one character is allowed to be ungotten at once - it must
     // be consumed again before any further call to unget
     if (ch != null) {
-      _offset--;
+      _offset -= ch.codeUnits.length;
       assert(peekChar() == ch);
     }
   }
@@ -307,15 +334,15 @@ bool _hasUtf8Bom(List<int> bytes, [int offset = 0, int length]) {
 /// Decodes the [bytes] with the provided [encoding] and returns an iterable for
 /// the codepoints. Supports the major unicode encodings as well as ascii and
 /// and windows-1252 encodings.
-Iterable<int> _decodeBytes(String encoding, List<int> bytes) {
+List<int> _decodeBytes(String encoding, List<int> bytes) {
   switch (encoding) {
     case 'ascii':
-      return ascii.decode(bytes).runes;
+      return ascii.decode(bytes).codeUnits;
 
     case 'utf-8':
       // NOTE: To match the behavior of the other decode functions, we eat the
       // UTF-8 BOM here. This is the default behavior of `utf8.decode`.
-      return utf8.decode(bytes).runes;
+      return utf8.decode(bytes).codeUnits;
 
     default:
       throw ArgumentError('Encoding $encoding not supported');

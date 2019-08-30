@@ -16,16 +16,20 @@ import 'support.dart';
 class TokenizerTestParser {
   final String _state;
   final String _lastStartTag;
+  final bool _generateSpans;
   List outputTokens;
 
-  TokenizerTestParser(String initialState, [String lastStartTag])
+  TokenizerTestParser(String initialState,
+      [String lastStartTag, bool generateSpans = false])
       : _state = initialState,
-        _lastStartTag = lastStartTag;
+        _lastStartTag = lastStartTag,
+        _generateSpans = generateSpans;
 
   List parse(String str) {
     // Note: we need to pass bytes to the tokenizer if we want it to handle BOM.
     var bytes = utf8.encode(str);
-    var tokenizer = HtmlTokenizer(bytes, encoding: 'utf-8');
+    var tokenizer =
+        HtmlTokenizer(bytes, encoding: 'utf-8', generateSpans: _generateSpans);
     outputTokens = [];
 
     // Note: we can't get a closure of the state method. However, we can
@@ -68,20 +72,21 @@ class TokenizerTestParser {
   }
 
   void processDoctype(DoctypeToken token) {
-    outputTokens.add(
+    addOutputToken(token,
         ["DOCTYPE", token.name, token.publicId, token.systemId, token.correct]);
   }
 
   void processStartTag(StartTagToken token) {
-    outputTokens.add(["StartTag", token.name, token.data, token.selfClosing]);
+    addOutputToken(
+        token, ["StartTag", token.name, token.data, token.selfClosing]);
   }
 
   void processEndTag(EndTagToken token) {
-    outputTokens.add(["EndTag", token.name, token.selfClosing]);
+    addOutputToken(token, ["EndTag", token.name, token.selfClosing]);
   }
 
   void processComment(StringToken token) {
-    outputTokens.add(["Comment", token.data]);
+    addOutputToken(token, ["Comment", token.data]);
   }
 
   void processSpaceCharacters(StringToken token) {
@@ -89,7 +94,7 @@ class TokenizerTestParser {
   }
 
   void processCharacters(StringToken token) {
-    outputTokens.add(["Character", token.data]);
+    addOutputToken(token, ["Character", token.data]);
   }
 
   void processEOF(token) {}
@@ -98,7 +103,15 @@ class TokenizerTestParser {
     // TODO(jmesserly): when debugging test failures it can be useful to add
     // logging here like `print('ParseError $token');`. It would be nice to
     // use the actual logging library.
-    outputTokens.add(["ParseError", token.data]);
+    addOutputToken(token, ["ParseError", token.data]);
+  }
+
+  void addOutputToken(Token token, List array) {
+    outputTokens.add([
+      ...array,
+      if (token.span != null && _generateSpans) token.span.start.offset,
+      if (token.span != null && _generateSpans) token.span.end.offset,
+    ]);
   }
 }
 
@@ -138,16 +151,18 @@ List normalizeTokens(List tokens) {
 void expectTokensMatch(
     List expectedTokens, List receivedTokens, bool ignoreErrorOrder,
     [bool ignoreErrors = false, String message]) {
-  var checkSelfClosing = false;
+  // If the 'selfClosing' attribute is not included in the expected test tokens,
+  // remove it from the received token.
+  var removeSelfClosing = false;
   for (var token in expectedTokens) {
-    if (token[0] == "StartTag" && token.length == 4 ||
-        token[0] == "EndTag" && token.length == 3) {
-      checkSelfClosing = true;
+    if (token[0] == "StartTag" && token.length == 3 ||
+        token[0] == "EndTag" && token.length == 2) {
+      removeSelfClosing = true;
       break;
     }
   }
 
-  if (!checkSelfClosing) {
+  if (removeSelfClosing) {
     for (var token in receivedTokens) {
       if (token[0] == "StartTag" || token[0] == "EndTag") {
         token.removeLast();
@@ -182,8 +197,8 @@ void runTokenizerTest(Map testInfo) {
   if (!testInfo.containsKey('lastStartTag')) {
     testInfo['lastStartTag'] = null;
   }
-  var parser =
-      TokenizerTestParser(testInfo['initialState'], testInfo['lastStartTag']);
+  var parser = TokenizerTestParser(testInfo['initialState'],
+      testInfo['lastStartTag'], testInfo['generateSpans'] ?? false);
   var tokens = parser.parse(testInfo['input']);
   tokens = concatenateCharacterTokens(tokens);
   var received = normalizeTokens(tokens);
@@ -239,7 +254,10 @@ String camelCase(String s) {
   return result.toString();
 }
 
-void main() {
+void main() async {
+  // google3 local change: enable test dirs in runfiles.
+  await fetchTestDir;
+  // END google3 local change.
   for (var path in getDataFiles('tokenizer')) {
     if (!path.endsWith('.test')) continue;
 
