@@ -331,7 +331,7 @@ bool _hasUtf8Bom(List<int> bytes, [int offset = 0, int length]) {
       bytes[offset + 2] == 0xBF;
 }
 
-/// Decodes the [bytes] with the provided [encoding] and returns an iterable for
+/// Decodes the [bytes] with the provided [encoding] and returns a list for
 /// the codepoints. Supports the major unicode encodings as well as ascii and
 /// and windows-1252 encodings.
 List<int> _decodeBytes(String encoding, List<int> bytes) {

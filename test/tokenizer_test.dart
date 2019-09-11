@@ -254,10 +254,7 @@ String camelCase(String s) {
   return result.toString();
 }
 
-void main() async {
-  // google3 local change: enable test dirs in runfiles.
-  await fetchTestDir;
-  // END google3 local change.
+void main() {
   for (var path in getDataFiles('tokenizer')) {
     if (!path.endsWith('.test')) continue;
 
