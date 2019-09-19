@@ -1,3 +1,7 @@
+## 0.14.0+3
+
+- Fix spans generated for HTML with higher-plane unicode characters (eg. emojis)
+
 ## 0.14.0+2
 
 - Support `package:css` `>=0.13.2 <0.17.0`.
