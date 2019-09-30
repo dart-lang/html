@@ -1,6 +1,7 @@
 ## 0.14.0+3
 
-- Fix spans generated for HTML with higher-plane unicode characters (eg. emojis)
+- Fix spans generated for HTML with higher-plane unicode characters
+  (eg. emojis).
 
 ## 0.14.0+2
 
@@ -73,7 +74,7 @@
 
 #### Pub version 0.12.2+2
   * Support `csslib` versions `0.13.x`.
-  
+
 #### Pub version 0.12.2+1
   * Exclude `.packages` file from the published package.
 
