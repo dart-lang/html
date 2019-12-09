@@ -58,9 +58,11 @@ class SelectorEvaluator extends Visitor {
     }
   }
 
+  @override
   bool visitSelectorGroup(SelectorGroup group) =>
       group.selectors.any(visitSelector);
 
+  @override
   bool visitSelector(Selector selector) {
     var old = _element;
     var result = true;
@@ -123,13 +125,14 @@ class SelectorEvaluator extends Visitor {
     return result;
   }
 
-  _unimplemented(SimpleSelector selector) =>
+  UnimplementedError _unimplemented(SimpleSelector selector) =>
       UnimplementedError("'$selector' selector of type "
-          "${selector.runtimeType} is not implemented");
+          '${selector.runtimeType} is not implemented');
 
-  _unsupported(selector) =>
+  FormatException _unsupported(selector) =>
       FormatException("'$selector' is not a valid selector");
 
+  @override
   bool visitPseudoClassSelector(PseudoClassSelector selector) {
     switch (selector.name) {
       // http://dev.w3.org/csswg/selectors-4/#structural-pseudos
@@ -179,6 +182,7 @@ class SelectorEvaluator extends Visitor {
     throw _unimplemented(selector);
   }
 
+  @override
   bool visitPseudoElementSelector(PseudoElementSelector selector) {
     // :before, :after, :first-letter/line can't match DOM elements.
     if (_isLegacyPsuedoClass(selector.name)) return false;
@@ -198,9 +202,11 @@ class SelectorEvaluator extends Visitor {
     }
   }
 
+  @override
   bool visitPseudoElementFunctionSelector(PseudoElementFunctionSelector s) =>
       throw _unimplemented(s);
 
+  @override
   bool visitPseudoClassFunctionSelector(PseudoClassFunctionSelector selector) {
     switch (selector.name) {
       // http://dev.w3.org/csswg/selectors-4/#child-index
@@ -239,6 +245,7 @@ class SelectorEvaluator extends Visitor {
     return null;
   }
 
+  @override
   bool visitNamespaceSelector(NamespaceSelector selector) {
     // Match element tag name
     if (!selector.nameAsSimpleSelector.visit(this)) return false;
@@ -250,20 +257,25 @@ class SelectorEvaluator extends Visitor {
     throw _unimplemented(selector);
   }
 
+  @override
   bool visitElementSelector(ElementSelector selector) =>
       selector.isWildcard || _element.localName == selector.name.toLowerCase();
 
+  @override
   bool visitIdSelector(IdSelector selector) => _element.id == selector.name;
 
+  @override
   bool visitClassSelector(ClassSelector selector) =>
       _element.classes.contains(selector.name);
 
   // TODO(jmesserly): negation should support any selectors in level 4,
   // not just simple selectors.
   // http://dev.w3.org/csswg/selectors-4/#negation
+  @override
   bool visitNegationSelector(NegationSelector selector) =>
       !selector.negationArg.visit(this);
 
+  @override
   bool visitAttributeSelector(AttributeSelector selector) {
     // Match name first
     var value = _element.attributes[selector.name.toLowerCase()];

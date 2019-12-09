@@ -39,6 +39,7 @@ class StartTagToken extends TagToken {
       this.namespace})
       : super(name, selfClosing);
 
+  @override
   int get kind => TokenKind.startTag;
 }
 
@@ -46,6 +47,7 @@ class EndTagToken extends TagToken {
   EndTagToken(String name, {bool selfClosing = false})
       : super(name, selfClosing);
 
+  @override
   int get kind => TokenKind.endTag;
 }
 
@@ -77,12 +79,14 @@ class ParseErrorToken extends StringToken {
 
   ParseErrorToken(String data, {this.messageParams}) : super(data);
 
+  @override
   int get kind => TokenKind.parseError;
 }
 
 class CharactersToken extends StringToken {
   CharactersToken([String data]) : super(data);
 
+  @override
   int get kind => TokenKind.characters;
 
   /// Replaces the token's [data]. This should only be used to wholly replace
@@ -96,23 +100,26 @@ class CharactersToken extends StringToken {
 class SpaceCharactersToken extends StringToken {
   SpaceCharactersToken([String data]) : super(data);
 
+  @override
   int get kind => TokenKind.spaceCharacters;
 }
 
 class CommentToken extends StringToken {
   CommentToken([String data]) : super(data);
 
+  @override
   int get kind => TokenKind.comment;
 }
 
 class DoctypeToken extends Token {
   String publicId;
   String systemId;
-  String name = "";
+  String name = '';
   bool correct;
 
   DoctypeToken({this.publicId, this.systemId, this.correct = false});
 
+  @override
   int get kind => TokenKind.doctype;
 }
 

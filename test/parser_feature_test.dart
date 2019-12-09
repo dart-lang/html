@@ -9,7 +9,7 @@ import 'package:html/src/treebuilder.dart';
 import 'package:source_span/source_span.dart';
 import 'package:test/test.dart';
 
-main() {
+void main() {
   _testElementSpans();
   test('doctype is cloneable', () {
     var doc = parse('<!doctype HTML>');
@@ -19,8 +19,8 @@ main() {
 
   test('line counter', () {
     // http://groups.google.com/group/html5lib-discuss/browse_frm/thread/f4f00e4a2f26d5c0
-    var doc = parse("<pre>\nx\n&gt;\n</pre>");
-    expect(doc.body.innerHtml, "<pre>x\n&gt;\n</pre>");
+    var doc = parse('<pre>\nx\n&gt;\n</pre>');
+    expect(doc.body.innerHtml, '<pre>x\n&gt;\n</pre>');
   });
 
   test('namespace html elements on', () {
@@ -45,7 +45,7 @@ main() {
     var doc = parser.parse();
     expect(doc.body.outerHtml, '<body>\n  \n  \n\n</body>');
     expect(parser.errors.length, 1);
-    ParseError error = parser.errors[0];
+    var error = parser.errors[0];
     expect(error.errorCode, 'unexpected-doctype');
 
     // Note: these values are 0-based, but the printed format is 1-based.
@@ -75,7 +75,7 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
     var doc = parser.parse();
     expect(doc.body.outerHtml, '<body>\n  \n  \n\n</body>');
     expect(parser.errors.length, 1);
-    ParseError error = parser.errors[0];
+    var error = parser.errors[0];
     expect(error.errorCode, 'unexpected-doctype');
     expect(error.span.start.line, 3);
     // Note: error position is at the end, not the beginning
@@ -317,7 +317,7 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
   });
 
   group('Encoding pre-parser', () {
-    getEncoding(String s) => EncodingParser(s.codeUnits).getEncoding();
+    String getEncoding(String s) => EncodingParser(s.codeUnits).getEncoding();
 
     test('gets encoding from meta charset', () {
       expect(getEncoding('<meta charset="utf-16">'), 'utf-16');
@@ -349,8 +349,8 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
   });
 }
 
-_testElementSpans() {
-  assertSpan(SourceSpan span, int offset, int end, String text) {
+void _testElementSpans() {
+  void assertSpan(SourceSpan span, int offset, int end, String text) {
     expect(span, isNotNull);
     expect(span.start.offset, offset);
     expect(span.end.offset, end);

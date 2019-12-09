@@ -13,10 +13,8 @@ typedef TreeBuilderFactory = TreeBuilder Function(bool namespaceHTMLElements);
 
 Map<String, TreeBuilderFactory> _treeTypes;
 Map<String, TreeBuilderFactory> get treeTypes {
-  if (_treeTypes == null) {
-    // TODO(jmesserly): add DOM here once it's implemented
-    _treeTypes = {"simpletree": (useNs) => TreeBuilder(useNs)};
-  }
+  // TODO(jmesserly): add DOM here once it's implemented
+  _treeTypes ??= {'simpletree': (useNs) => TreeBuilder(useNs)};
   return _treeTypes;
 }
 
@@ -35,12 +33,13 @@ class TestData extends IterableBase<Map> {
   final String _text;
   final String newTestHeading;
 
-  TestData(String filename, [this.newTestHeading = "data"])
+  TestData(String filename, [this.newTestHeading = 'data'])
       // Note: can't use readAsLinesSync here because it splits on \r
       : _text = File(filename).readAsStringSync();
 
   // Note: in Python this was a generator, but since we can't do that in Dart,
   // it's easier to convert it into an upfront computation.
+  @override
   Iterator<Map> get iterator => _getData().iterator;
 
   List<Map> _getData() {
@@ -62,7 +61,7 @@ class TestData extends IterableBase<Map> {
           data = <String, String>{};
         }
         key = heading;
-        data[key] = "";
+        data[key] = '';
       } else if (key != null) {
         data[key] = '${data[key]}$line\n';
       }
@@ -77,13 +76,13 @@ class TestData extends IterableBase<Map> {
   /// If the current heading is a test section heading return the heading,
   /// otherwise return null.
   static String sectionHeading(String line) {
-    return line.startsWith("#") ? line.substring(1).trim() : null;
+    return line.startsWith('#') ? line.substring(1).trim() : null;
   }
 
   static Map normaliseOutput(Map data) {
     // Remove trailing newlines
     data.forEach((key, value) {
-      if (value.endsWith("\n")) {
+      if (value.endsWith('\n')) {
         data[key] = value.substring(0, value.length - 1);
       }
     });
@@ -92,7 +91,7 @@ class TestData extends IterableBase<Map> {
 }
 
 /// Serialize the [document] into the html5 test data format.
-testSerializer(document) {
+String testSerializer(document) {
   return (TestSerializer()..visit(document)).toString();
 }
 
@@ -104,6 +103,7 @@ class TestSerializer extends TreeVisitor {
 
   TestSerializer() : _str = StringBuffer();
 
+  @override
   String toString() => _str.toString();
 
   int get indent => _indent;
@@ -112,7 +112,7 @@ class TestSerializer extends TreeVisitor {
     if (_indent == value) return;
 
     var arr = List<int>(value);
-    for (int i = 0; i < value; i++) {
+    for (var i = 0; i < value; i++) {
       arr[i] = 32;
     }
     _spaces = String.fromCharCodes(arr);
@@ -124,13 +124,15 @@ class TestSerializer extends TreeVisitor {
     _str.write('|$_spaces');
   }
 
-  visitNodeFallback(Node node) {
+  @override
+  void visitNodeFallback(Node node) {
     _newline();
     _str.write(node);
     visitChildren(node);
   }
 
-  visitChildren(Node node) {
+  @override
+  void visitChildren(Node node) {
     indent += 2;
     for (var child in node.nodes) {
       visit(child);
@@ -138,9 +140,10 @@ class TestSerializer extends TreeVisitor {
     indent -= 2;
   }
 
-  visitDocument(node) => _visitDocumentOrFragment(node);
+  @override
+  void visitDocument(node) => _visitDocumentOrFragment(node);
 
-  _visitDocumentOrFragment(node) {
+  void _visitDocumentOrFragment(node) {
     indent += 1;
     for (var child in node.nodes) {
       visit(child);
@@ -148,10 +151,12 @@ class TestSerializer extends TreeVisitor {
     indent -= 1;
   }
 
-  visitDocumentFragment(DocumentFragment node) =>
+  @override
+  void visitDocumentFragment(DocumentFragment node) =>
       _visitDocumentOrFragment(node);
 
-  visitElement(Element node) {
+  @override
+  void visitElement(Element node) {
     _newline();
     _str.write(node);
     if (node.attributes.isNotEmpty) {
@@ -162,7 +167,7 @@ class TestSerializer extends TreeVisitor {
         var v = node.attributes[key];
         if (key is AttributeName) {
           AttributeName attr = key;
-          key = "${attr.prefix} ${attr.name}";
+          key = '${attr.prefix} ${attr.name}';
         }
         _newline();
         _str.write('$key="$v"');

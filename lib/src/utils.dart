@@ -11,14 +11,16 @@ class Pair<F, S> {
 
   const Pair(this.first, this.second);
 
+  @override
   int get hashCode => 37 * first.hashCode + second.hashCode;
 
+  @override
   bool operator ==(other) => other.first == first && other.second == second;
 }
 
 int parseIntRadix(String str, [int radix = 10]) {
-  int val = 0;
-  for (int i = 0; i < str.length; i++) {
+  var val = 0;
+  for (var i = 0; i < str.length; i++) {
     var digit = str.codeUnitAt(i);
     if (digit >= LOWER_A) {
       digit += 10 - LOWER_A;
@@ -45,7 +47,7 @@ bool startsWithAny(String str, List<String> prefixes) {
 
 // Like the python [:] operator.
 List<T> slice<T>(List<T> list, int start, [int end]) {
-  if (end == null) end = list.length;
+  end ??= list.length;
   if (end < 0) end += list.length;
 
   // Ensure the indexes are in bounds.
@@ -55,7 +57,7 @@ List<T> slice<T>(List<T> list, int start, [int end]) {
 }
 
 bool allWhitespace(String str) {
-  for (int i = 0; i < str.length; i++) {
+  for (var i = 0; i < str.length; i++) {
     if (!isWhitespaceCC(str.codeUnitAt(i))) return false;
   }
   return true;
@@ -65,7 +67,7 @@ String padWithZeros(String str, int size) {
   if (str.length == size) return str;
   var result = StringBuffer();
   size -= str.length;
-  for (int i = 0; i < size; i++) {
+  for (var i = 0; i < size; i++) {
     result.write('0');
   }
   result.write(str);
@@ -89,7 +91,7 @@ String formatStr(String format, Map data) {
       result.write(format.substring(last, match));
       match += search.length;
 
-      int digits = match;
+      var digits = match;
       while (isDigit(format[digits])) {
         digits++;
       }
@@ -112,8 +114,8 @@ String formatStr(String format, Map data) {
           result.write(padWithZeros(number, numberSize));
           break;
         default:
-          throw UnsupportedError("formatStr does not support format "
-              "character ${format[match]}");
+          throw UnsupportedError('formatStr does not support format '
+              'character ${format[match]}');
       }
 
       last = match + 1;

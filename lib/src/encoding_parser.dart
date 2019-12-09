@@ -17,7 +17,7 @@ class EncodingBytes {
   String _next() {
     var p = __position = __position + 1;
     if (p >= _length) {
-      throw StateError("No more elements");
+      throw StateError('No more elements');
     } else if (p < 0) {
       throw RangeError(p);
     }
@@ -27,7 +27,7 @@ class EncodingBytes {
   String _previous() {
     var p = __position;
     if (p >= _length) {
-      throw StateError("No more elements");
+      throw StateError('No more elements');
     } else if (p < 0) {
       throw RangeError(p);
     }
@@ -37,14 +37,14 @@ class EncodingBytes {
 
   set _position(int value) {
     if (__position >= _length) {
-      throw StateError("No more elements");
+      throw StateError('No more elements');
     }
     __position = value;
   }
 
   int get _position {
     if (__position >= _length) {
-      throw StateError("No more elements");
+      throw StateError('No more elements');
     }
     if (__position >= 0) {
       return __position;
@@ -57,7 +57,7 @@ class EncodingBytes {
 
   /// Skip past a list of characters. Defaults to skipping [isWhitespace].
   String _skipChars([_CharPredicate skipChars]) {
-    if (skipChars == null) skipChars = isWhitespace;
+    skipChars ??= isWhitespace;
     var p = _position; // use property for the error-checking
     while (p < _length) {
       var c = _bytes[p];
@@ -108,12 +108,12 @@ class EncodingBytes {
       __position = newPosition + bytes.length - 1;
       return true;
     } else {
-      throw StateError("No more elements");
+      throw StateError('No more elements');
     }
   }
 
   String _slice(int start, [int end]) {
-    if (end == null) end = _length;
+    end ??= _length;
     if (end < 0) end += _length;
     return _bytes.substring(start, end);
   }
@@ -140,12 +140,12 @@ class EncodingParser {
 
   String getEncoding() {
     final methodDispatch = [
-      _DispatchEntry("<!--", _handleComment),
-      _DispatchEntry("<meta", _handleMeta),
-      _DispatchEntry("</", _handlePossibleEndTag),
-      _DispatchEntry("<!", _handleOther),
-      _DispatchEntry("<?", _handleOther),
-      _DispatchEntry("<", _handlePossibleStartTag),
+      _DispatchEntry('<!--', _handleComment),
+      _DispatchEntry('<meta', _handleMeta),
+      _DispatchEntry('</', _handlePossibleEndTag),
+      _DispatchEntry('<!', _handleOther),
+      _DispatchEntry('<?', _handleOther),
+      _DispatchEntry('<', _handlePossibleStartTag),
     ];
 
     try {
@@ -169,7 +169,7 @@ class EncodingParser {
   }
 
   /// Skip over comments.
-  bool _handleComment() => _data._jumpTo("-->");
+  bool _handleComment() => _data._jumpTo('-->');
 
   bool _handleMeta() {
     if (!isWhitespace(_data._currentByte)) {
@@ -182,14 +182,14 @@ class EncodingParser {
       var attr = _getAttribute();
       if (attr == null) return true;
 
-      if (attr[0] == "charset") {
+      if (attr[0] == 'charset') {
         var tentativeEncoding = attr[1];
         var codec = codecName(tentativeEncoding);
         if (codec != null) {
           _encoding = codec;
           return false;
         }
-      } else if (attr[0] == "content") {
+      } else if (attr[0] == 'content') {
         var contentParser = ContentAttrParser(EncodingBytes(attr[1]));
         var tentativeEncoding = contentParser.parse();
         var codec = codecName(tentativeEncoding);
@@ -221,7 +221,7 @@ class EncodingParser {
     }
 
     var c = _data._skipUntil(_isSpaceOrAngleBracket);
-    if (c == "<") {
+    if (c == '<') {
       // return to the first step in the overall "two step" algorithm
       // reprocessing the < byte
       _data._previous();
@@ -235,15 +235,15 @@ class EncodingParser {
     return true;
   }
 
-  bool _handleOther() => _data._jumpTo(">");
+  bool _handleOther() => _data._jumpTo('>');
 
   /// Return a name,value pair for the next attribute in the stream,
   /// if one is found, or null
   List<String> _getAttribute() {
     // Step 1 (skip chars)
-    var c = _data._skipChars((x) => x == "/" || isWhitespace(x));
+    var c = _data._skipChars((x) => x == '/' || isWhitespace(x));
     // Step 2
-    if (c == ">" || c == null) {
+    if (c == '>' || c == null) {
       return null;
     }
     // Step 3
@@ -253,15 +253,15 @@ class EncodingParser {
     while (true) {
       if (c == null) {
         return null;
-      } else if (c == "=" && attrName.isNotEmpty) {
+      } else if (c == '=' && attrName.isNotEmpty) {
         break;
       } else if (isWhitespace(c)) {
         // Step 6!
         c = _data._skipChars();
         c = _data._next();
         break;
-      } else if (c == "/" || c == ">") {
-        return [attrName.join(), ""];
+      } else if (c == '/' || c == '>') {
+        return [attrName.join(), ''];
       } else if (isLetter(c)) {
         attrName.add(c.toLowerCase());
       } else {
@@ -271,9 +271,9 @@ class EncodingParser {
       c = _data._next();
     }
     // Step 7
-    if (c != "=") {
+    if (c != '=') {
       _data._previous();
-      return [attrName.join(), ""];
+      return [attrName.join(), ''];
     }
     // Step 8
     _data._next();
@@ -298,8 +298,8 @@ class EncodingParser {
           attrValue.add(c);
         }
       }
-    } else if (c == ">") {
-      return [attrName.join(), ""];
+    } else if (c == '>') {
+      return [attrName.join(), ''];
     } else if (c == null) {
       return null;
     } else if (isLetter(c)) {
@@ -332,10 +332,10 @@ class ContentAttrParser {
     try {
       // Check if the attr name is charset
       // otherwise return
-      data._jumpTo("charset");
+      data._jumpTo('charset');
       data._position += 1;
       data._skipChars();
-      if (data._currentByte != "=") {
+      if (data._currentByte != '=') {
         // If there is no = sign keep looking for attrs
         return null;
       }
@@ -369,7 +369,7 @@ class ContentAttrParser {
 }
 
 bool _isSpaceOrAngleBracket(String char) {
-  return char == ">" || char == "<" || isWhitespace(char);
+  return char == '>' || char == '<' || isWhitespace(char);
 }
 
 typedef _CharPredicate = bool Function(String char);

@@ -5,7 +5,7 @@ import 'package:test/test.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart';
 
-main() {
+void main() {
   group('Element', () {
     test('classes', () {
       final barBaz = Element.html('<div class=" bar baz"></div>');

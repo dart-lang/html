@@ -19,15 +19,15 @@ String namespaceHtml(String expected) {
   // We can't do regex replace directly =\
   // final namespaceExpected = new RegExp(@"^(\s*)<(\S+)>", multiLine: true);
   // return expected.replaceAll(namespaceExpected, @"$1<html $2>");
-  final namespaceExpected = RegExp(r"^(\|\s*)<(\S+)>");
-  var lines = expected.split("\n");
-  for (int i = 0; i < lines.length; i++) {
+  final namespaceExpected = RegExp(r'^(\|\s*)<(\S+)>');
+  var lines = expected.split('\n');
+  for (var i = 0; i < lines.length; i++) {
     var match = namespaceExpected.firstMatch(lines[i]);
     if (match != null) {
-      lines[i] = "${match[1]}<html ${match[2]}>";
+      lines[i] = '${match[1]}<html ${match[2]}>';
     }
   }
-  return lines.join("\n");
+  return lines.join('\n');
 }
 
 void runParserTest(
@@ -58,13 +58,13 @@ void runParserTest(
 
   expect(output, equals(expected),
       reason:
-          "\n\nInput:\n$input\n\nExpected:\n$expected\n\nReceived:\n$output");
+          '\n\nInput:\n$input\n\nExpected:\n$expected\n\nReceived:\n$output');
 
   if (checkParseErrors) {
     expect(parser.errors.length, equals(errors.length),
-        reason: "\n\nInput:\n$input\n\nExpected errors (${errors.length}):\n"
+        reason: '\n\nInput:\n$input\n\nExpected errors (${errors.length}):\n'
             "${errors.join('\n')}\n\n"
-            "Actual errors (${parser.errors.length}):\n"
+            'Actual errors (${parser.errors.length}):\n'
             "${parser.errors.map((e) => '$e').join('\n')}");
   }
 }
@@ -73,7 +73,7 @@ void main() {
   for (var path in getDataFiles('tree-construction')) {
     if (!path.endsWith('.dat')) continue;
 
-    var tests = TestData(path, "data");
+    var tests = TestData(path, 'data');
     var testName = pathos.basenameWithoutExtension(path);
 
     group(testName, () {
@@ -83,7 +83,7 @@ void main() {
         var innerHTML = testData['document-fragment'];
         var expected = testData['document'];
         if (errors != null) {
-          errors = errors.split("\n");
+          errors = errors.split('\n');
         }
 
         for (var treeCtor in treeTypes.values) {
@@ -100,7 +100,7 @@ void main() {
 }
 
 /// Extract the name for the test based on the test input data.
-_nameFor(String input) {
+dynamic _nameFor(String input) {
   // Using jsonDecode to unescape other unicode characters
   var escapeQuote = input
       .replaceAll(RegExp('\\\\.'), '_')
