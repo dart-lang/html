@@ -91,14 +91,12 @@ class HtmlInputStream {
     _lineStarts = <int>[0];
     _chars = <int>[];
 
-    if (_rawChars == null) {
-      _rawChars = _decodeBytes(charEncodingName, _rawBytes);
-    }
+    _rawChars ??= _decodeBytes(charEncodingName, _rawBytes);
 
-    bool skipNewline = false;
-    bool wasSurrogatePair = false;
-    for (int i = 0; i < _rawChars.length; i++) {
-      int c = _rawChars[i];
+    var skipNewline = false;
+    var wasSurrogatePair = false;
+    for (var i = 0; i < _rawChars.length; i++) {
+      var c = _rawChars[i];
       if (skipNewline) {
         skipNewline = false;
         if (c == NEWLINE) continue;
@@ -241,7 +239,7 @@ class HtmlInputStream {
   /// Returns a string of characters from the stream up to but not
   /// including any character in 'characters' or EOF.
   String charsUntil(String characters, [bool opposite = false]) {
-    int start = _offset;
+    var start = _offset;
     String c;
     while ((c = peekChar()) != null && characters.contains(c) == opposite) {
       _offset += c.codeUnits.length;
@@ -313,7 +311,7 @@ bool _invalidUnicode(int c) {
 /// string doesn't correspond to a valid encoding.
 String codecName(String encoding) {
   final asciiPunctuation = RegExp(
-      "[\u0009-\u000D\u0020-\u002F\u003A-\u0040\u005B-\u0060\u007B-\u007E]");
+      '[\u0009-\u000D\u0020-\u002F\u003A-\u0040\u005B-\u0060\u007B-\u007E]');
 
   if (encoding == null) return null;
   var canonicalName = encoding.replaceAll(asciiPunctuation, '').toLowerCase();
@@ -324,7 +322,7 @@ String codecName(String encoding) {
 /// Since UTF-8 doesn't have byte order, it's somewhat of a misnomer, but it is
 /// used in HTML to detect the UTF-
 bool _hasUtf8Bom(List<int> bytes, [int offset = 0, int length]) {
-  int end = length != null ? offset + length : bytes.length;
+  var end = length != null ? offset + length : bytes.length;
   return (offset + 3) <= end &&
       bytes[offset] == 0xEF &&
       bytes[offset + 1] == 0xBB &&

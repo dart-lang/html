@@ -14,12 +14,13 @@ class ElementCssClassSet extends _CssClassSetImpl {
 
   ElementCssClassSet(this._element);
 
+  @override
   Set<String> readClasses() {
     var s = LinkedHashSet<String>();
     var classname = _element.className;
 
-    for (String name in classname.split(' ')) {
-      String trimmed = name.trim();
+    for (var name in classname.split(' ')) {
+      var trimmed = name.trim();
       if (trimmed.isNotEmpty) {
         s.add(trimmed);
       }
@@ -27,6 +28,7 @@ class ElementCssClassSet extends _CssClassSetImpl {
     return s;
   }
 
+  @override
   void writeClasses(Set<String> s) {
     _element.className = s.join(' ');
   }
@@ -49,6 +51,7 @@ abstract class CssClassSet implements Set<String> {
   ///
   /// This is the Dart equivalent of jQuery's
   /// [hasClass](http://api.jquery.com/hasClass/).
+  @override
   bool contains(Object value);
 
   /// Add the class [value] to element.
@@ -60,6 +63,7 @@ abstract class CssClassSet implements Set<String> {
   /// the set, otherwise false.
   ///
   /// If this corresponds to many elements, null is always returned.
+  @override
   bool add(String value);
 
   /// Remove the class [value] from element, and return true on successful
@@ -67,18 +71,21 @@ abstract class CssClassSet implements Set<String> {
   ///
   /// This is the Dart equivalent of jQuery's
   /// [removeClass](http://api.jquery.com/removeClass/).
+  @override
   bool remove(Object value);
 
   /// Add all classes specified in [iterable] to element.
   ///
   /// This is the Dart equivalent of jQuery's
   /// [addClass](http://api.jquery.com/addClass/).
+  @override
   void addAll(Iterable<String> iterable);
 
   /// Remove all classes specified in [iterable] from element.
   ///
   /// This is the Dart equivalent of jQuery's
   /// [removeClass](http://api.jquery.com/removeClass/).
+  @override
   void removeAll(Iterable<Object> iterable);
 
   /// Toggles all classes specified in [iterable] on element.
@@ -93,6 +100,7 @@ abstract class CssClassSet implements Set<String> {
 }
 
 abstract class _CssClassSetImpl extends SetBase<String> implements CssClassSet {
+  @override
   String toString() {
     return readClasses().join(' ');
   }
@@ -102,10 +110,11 @@ abstract class _CssClassSetImpl extends SetBase<String> implements CssClassSet {
   ///
   /// If [shouldAdd] is true, then we always add that [value] to the element. If
   /// [shouldAdd] is false then we always remove [value] from the element.
+  @override
   bool toggle(String value, [bool shouldAdd]) {
-    Set<String> s = readClasses();
-    bool result = false;
-    if (shouldAdd == null) shouldAdd = !s.contains(value);
+    var s = readClasses();
+    var result = false;
+    shouldAdd ??= !s.contains(value);
     if (shouldAdd) {
       s.add(value);
       result = true;
@@ -118,10 +127,13 @@ abstract class _CssClassSetImpl extends SetBase<String> implements CssClassSet {
 
   /// Returns [:true:] if classes cannot be added or removed from this
   /// [:CssClassSet:].
+  @override
   bool get frozen => false;
 
+  @override
   Iterator<String> get iterator => readClasses().iterator;
 
+  @override
   int get length => readClasses().length;
 
   // interface Set - BEGIN
@@ -129,17 +141,21 @@ abstract class _CssClassSetImpl extends SetBase<String> implements CssClassSet {
   ///
   /// This is the Dart equivalent of jQuery's
   /// [hasClass](http://api.jquery.com/hasClass/).
+  @override
   bool contains(Object value) => readClasses().contains(value);
 
   /// Lookup from the Set interface. Not interesting for a String set.
+  @override
   String lookup(Object value) => contains(value) ? value as String : null;
 
+  @override
   Set<String> toSet() => readClasses().toSet();
 
   /// Add the class [value] to element.
   ///
   /// This is the Dart equivalent of jQuery's
   /// [addClass](http://api.jquery.com/addClass/).
+  @override
   bool add(String value) {
     // TODO - figure out if we need to do any validation here
     // or if the browser natively does enough.
@@ -151,10 +167,11 @@ abstract class _CssClassSetImpl extends SetBase<String> implements CssClassSet {
   ///
   /// This is the Dart equivalent of jQuery's
   /// [removeClass](http://api.jquery.com/removeClass/).
+  @override
   bool remove(Object value) {
     if (value is! String) return false;
-    Set<String> s = readClasses();
-    bool result = s.remove(value);
+    var s = readClasses();
+    var result = s.remove(value);
     writeClasses(s);
     return result;
   }
@@ -167,6 +184,7 @@ abstract class _CssClassSetImpl extends SetBase<String> implements CssClassSet {
   /// If [shouldAdd] is true, then we always add all the classes in [iterable]
   /// element. If [shouldAdd] is false then we always remove all the classes in
   /// [iterable] from the element.
+  @override
   void toggleAll(Iterable<String> iterable, [bool shouldAdd]) {
     iterable.forEach((e) => toggle(e, shouldAdd));
   }
@@ -178,8 +196,8 @@ abstract class _CssClassSetImpl extends SetBase<String> implements CssClassSet {
   ///
   ///   After f returns, the modified set is written to the
   ///       className property of this element.
-  bool _modify(bool f(Set<String> s)) {
-    Set<String> s = readClasses();
+  bool _modify(bool Function(Set<String>) f) {
+    var s = readClasses();
     var ret = f(s);
     writeClasses(s);
     return ret;

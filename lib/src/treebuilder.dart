@@ -21,8 +21,9 @@ class ActiveFormattingElements extends ListProxy<Element> {
   // Override the "add" method.
   // TODO(jmesserly): I'd rather not override this; can we do this in the
   // calling code instead?
+  @override
   void add(Element node) {
-    int equalCount = 0;
+    var equalCount = 0;
     if (node != Marker) {
       for (var element in reversed) {
         if (element == Marker) {
@@ -103,32 +104,32 @@ class TreeBuilder {
   bool elementInScope(target, {String variant}) {
     //If we pass a node in we match that. if we pass a string
     //match any node with that name
-    bool exactNode = target is Node;
+    var exactNode = target is Node;
 
-    List listElements1 = scopingElements;
-    List listElements2 = const [];
-    bool invert = false;
+    var listElements1 = scopingElements;
+    var listElements2 = const [];
+    var invert = false;
     if (variant != null) {
       switch (variant) {
-        case "button":
-          listElements2 = const [Pair(Namespaces.html, "button")];
+        case 'button':
+          listElements2 = const [Pair(Namespaces.html, 'button')];
           break;
-        case "list":
+        case 'list':
           listElements2 = const [
-            Pair(Namespaces.html, "ol"),
-            Pair(Namespaces.html, "ul")
+            Pair(Namespaces.html, 'ol'),
+            Pair(Namespaces.html, 'ul')
           ];
           break;
-        case "table":
+        case 'table':
           listElements1 = const [
-            Pair(Namespaces.html, "html"),
-            Pair(Namespaces.html, "table")
+            Pair(Namespaces.html, 'html'),
+            Pair(Namespaces.html, 'table')
           ];
           break;
-        case "select":
+        case 'select':
           listElements1 = const [
-            Pair(Namespaces.html, "optgroup"),
-            Pair(Namespaces.html, "option")
+            Pair(Namespaces.html, 'optgroup'),
+            Pair(Namespaces.html, 'option')
           ];
           invert = true;
           break;
@@ -162,7 +163,7 @@ class TreeBuilder {
     }
 
     // Step 2 and step 3: we start with the last element. So i is -1.
-    int i = activeFormattingElements.length - 1;
+    var i = activeFormattingElements.length - 1;
     var entry = activeFormattingElements[i];
     if (entry == Marker || openElements.contains(entry)) {
       return;
@@ -242,17 +243,14 @@ class TreeBuilder {
   }
 
   void insertComment(StringToken token, [Node parent]) {
-    if (parent == null) {
-      parent = openElements.last;
-    }
+    parent ??= openElements.last;
     parent.nodes.add(Comment(token.data)..sourceSpan = token.span);
   }
 
   /// Create an element but don't insert it anywhere
   Element createElement(StartTagToken token) {
     var name = token.name;
-    var namespace = token.namespace;
-    if (namespace == null) namespace = defaultNamespace;
+    var namespace = token.namespace ?? defaultNamespace;
     var element = document.createElementNS(namespace, name)
       ..attributes = token.data
       ..sourceSpan = token.span;
@@ -266,8 +264,7 @@ class TreeBuilder {
 
   Element insertElementNormal(StartTagToken token) {
     var name = token.name;
-    var namespace = token.namespace;
-    if (namespace == null) namespace = defaultNamespace;
+    var namespace = token.namespace ?? defaultNamespace;
     var element = document.createElementNS(namespace, name)
       ..attributes = token.data
       ..sourceSpan = token.span;
@@ -332,7 +329,7 @@ class TreeBuilder {
         nodes.add(Text(data)..sourceSpan = span);
       }
     } else {
-      int index = nodes.indexOf(refNode);
+      var index = nodes.indexOf(refNode);
       if (index > 0 && nodes[index - 1] is Text) {
         Text last = nodes[index - 1];
         last.appendData(data);
@@ -352,7 +349,7 @@ class TreeBuilder {
     Node fosterParent;
     Node insertBefore;
     for (var elm in openElements.reversed) {
-      if (elm.localName == "table") {
+      if (elm.localName == 'table') {
         lastTable = elm;
         break;
       }
@@ -376,7 +373,7 @@ class TreeBuilder {
     var name = openElements.last.localName;
     // XXX td, th and tr are not actually needed
     if (name != exclude &&
-        const ["dd", "dt", "li", "option", "optgroup", "p", "rp", "rt"]
+        const ['dd', 'dt', 'li', 'option', 'optgroup', 'p', 'rp', 'rt']
             .contains(name)) {
       openElements.removeLast();
       // XXX This is not entirely what the specification says. We should

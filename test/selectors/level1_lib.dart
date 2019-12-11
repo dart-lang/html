@@ -17,47 +17,47 @@ Document doc;
 /*
  * Create and append special elements that cannot be created correctly with HTML markup alone.
  */
-setupSpecialElements(parent) {
+void setupSpecialElements(parent) {
   // Setup null and undefined tests
-  parent.append(doc.createElement("null"));
-  parent.append(doc.createElement("undefined"));
+  parent.append(doc.createElement('null'));
+  parent.append(doc.createElement('undefined'));
 
   // Setup namespace tests
-  var anyNS = doc.createElement("div");
-  var noNS = doc.createElement("div");
-  anyNS.id = "any-namespace";
-  noNS.id = "no-namespace";
+  var anyNS = doc.createElement('div');
+  var noNS = doc.createElement('div');
+  anyNS.id = 'any-namespace';
+  noNS.id = 'no-namespace';
 
   var div;
   div = [
-    doc.createElement("div"),
-    doc.createElementNS("http://www.w3.org/1999/xhtml", "div"),
-    doc.createElementNS("", "div"),
-    doc.createElementNS("http://www.example.org/ns", "div")
+    doc.createElement('div'),
+    doc.createElementNS('http://www.w3.org/1999/xhtml', 'div'),
+    doc.createElementNS('', 'div'),
+    doc.createElementNS('http://www.example.org/ns', 'div')
   ];
 
-  div[0].id = "any-namespace-div1";
-  div[1].id = "any-namespace-div2";
-  div[2].attributes["id"] =
-      "any-namespace-div3"; // Non-HTML elements can't use .id property
-  div[3].attributes["id"] = "any-namespace-div4";
+  div[0].id = 'any-namespace-div1';
+  div[1].id = 'any-namespace-div2';
+  div[2].attributes['id'] =
+      'any-namespace-div3'; // Non-HTML elements can't use .id property
+  div[3].attributes['id'] = 'any-namespace-div4';
 
   for (var i = 0; i < div.length; i++) {
     anyNS.append(div[i]);
   }
 
   div = [
-    doc.createElement("div"),
-    doc.createElementNS("http://www.w3.org/1999/xhtml", "div"),
-    doc.createElementNS("", "div"),
-    doc.createElementNS("http://www.example.org/ns", "div")
+    doc.createElement('div'),
+    doc.createElementNS('http://www.w3.org/1999/xhtml', 'div'),
+    doc.createElementNS('', 'div'),
+    doc.createElementNS('http://www.example.org/ns', 'div')
   ];
 
-  div[0].id = "no-namespace-div1";
-  div[1].id = "no-namespace-div2";
-  div[2].attributes["id"] =
-      "no-namespace-div3"; // Non-HTML elements can't use .id property
-  div[3].attributes["id"] = "no-namespace-div4";
+  div[0].id = 'no-namespace-div1';
+  div[1].id = 'no-namespace-div2';
+  div[2].attributes['id'] =
+      'no-namespace-div3'; // Non-HTML elements can't use .id property
+  div[3].attributes['id'] = 'no-namespace-div4';
 
   for (var i = 0; i < div.length; i++) {
     noNS.append(div[i]);
@@ -70,114 +70,114 @@ setupSpecialElements(parent) {
 /*
  * Check that the querySelector and querySelectorAll methods exist on the given Node
  */
-interfaceCheck(type, obj) {
+void interfaceCheck(type, obj) {
   runTest(() {
     var q = obj.querySelector is Function;
-    assertTrue(q, type + " supports querySelector.");
-  }, type + " supports querySelector");
+    assertTrue(q, type + ' supports querySelector.');
+  }, type + ' supports querySelector');
 
   runTest(() {
     var qa = obj.querySelectorAll is Function;
-    assertTrue(qa, type + " supports querySelectorAll.");
-  }, type + " supports querySelectorAll");
+    assertTrue(qa, type + ' supports querySelectorAll.');
+  }, type + ' supports querySelectorAll');
 
   runTest(() {
-    var list = obj.querySelectorAll("div");
+    var list = obj.querySelectorAll('div');
     // TODO(jmesserly): testing List<Element> for now. It should return an
     // ElementList which has extra properties. Needed for dart:html compat.
     assertTrue(list is List<Element>,
-        "The result should be an instance of a NodeList");
-  }, type + ".querySelectorAll returns NodeList instance");
+        'The result should be an instance of a NodeList');
+  }, type + '.querySelectorAll returns NodeList instance');
 }
 
 /*
  * Verify that the NodeList returned by querySelectorAll is static and and that a new list is created after
  * each call. A static list should not be affected by subsequent changes to the DOM.
  */
-verifyStaticList(type, root) {
+void verifyStaticList(type, root) {
   var pre, post, preLength;
 
   runTest(() {
-    pre = root.querySelectorAll("div");
+    pre = root.querySelectorAll('div');
     preLength = pre.length;
 
-    var div = doc.createElement("div");
+    var div = doc.createElement('div');
     (root is Document ? root.body : root).append(div);
 
     assertEquals(
-        pre.length, preLength, "The length of the NodeList should not change.");
-  }, type + ": static NodeList");
+        pre.length, preLength, 'The length of the NodeList should not change.');
+  }, type + ': static NodeList');
 
   runTest(() {
-    post = root.querySelectorAll("div");
+    post = root.querySelectorAll('div');
     assertEquals(post.length, preLength + 1,
-        "The length of the new NodeList should be 1 more than the previous list.");
-  }, type + ": new NodeList");
+        'The length of the new NodeList should be 1 more than the previous list.');
+  }, type + ': new NodeList');
 }
 
 /*
  * Verify handling of special values for the selector parameter, including stringification of
  * null and undefined, and the handling of the empty string.
  */
-runSpecialSelectorTests(type, root) {
+void runSpecialSelectorTests(type, root) {
   // Dart note: changed these tests because we don't have auto conversion to
   // String like JavaScript does.
   runTest(() {
     // 1
     assertEquals(root.querySelectorAll('null').length, 1,
         "This should find one element with the tag name 'NULL'.");
-  }, type + ".querySelectorAll null");
+  }, type + '.querySelectorAll null');
 
   runTest(() {
     // 2
     assertEquals(root.querySelectorAll('undefined').length, 1,
         "This should find one element with the tag name 'UNDEFINED'.");
-  }, type + ".querySelectorAll undefined");
+  }, type + '.querySelectorAll undefined');
 
   runTest(() {
     // 3
     assertThrows((e) => e is NoSuchMethodError, () {
       root.querySelectorAll();
-    }, "This should throw a TypeError.");
-  }, type + ".querySelectorAll no parameter");
+    }, 'This should throw a TypeError.');
+  }, type + '.querySelectorAll no parameter');
 
   runTest(() {
     // 4
     var elm = root.querySelector('null');
-    assertNotEquals(elm, null, "This should find an element.");
+    assertNotEquals(elm, null, 'This should find an element.');
     // TODO(jmesserly): change "localName" back to "tagName" once implemented.
     assertEquals(
-        elm.localName.toUpperCase(), "NULL", "The tag name should be 'NULL'.");
-  }, type + ".querySelector null");
+        elm.localName.toUpperCase(), 'NULL', "The tag name should be 'NULL'.");
+  }, type + '.querySelector null');
 
   runTest(() {
     // 5
     var elm = root.querySelector('undefined');
-    assertNotEquals(elm, 'undefined', "This should find an element.");
+    assertNotEquals(elm, 'undefined', 'This should find an element.');
     // TODO(jmesserly): change "localName" back to "tagName" once implemented.
-    assertEquals(elm.localName.toUpperCase(), "UNDEFINED",
+    assertEquals(elm.localName.toUpperCase(), 'UNDEFINED',
         "The tag name should be 'UNDEFINED'.");
-  }, type + ".querySelector undefined");
+  }, type + '.querySelector undefined');
 
   runTest(() {
     // 6
     assertThrows((e) => e is NoSuchMethodError, () {
       root.querySelector();
-    }, "This should throw a TypeError.");
-  }, type + ".querySelector no parameter");
+    }, 'This should throw a TypeError.');
+  }, type + '.querySelector no parameter');
 
   runTest(() {
     // 7
-    var result = root.querySelectorAll("*");
+    var result = root.querySelectorAll('*');
     var i = 0;
     traverse(root, (elem) {
       if (!identical(elem, root)) {
         assertEquals(
-            elem, result[i], "The result in index $i should be in tree order.");
+            elem, result[i], 'The result in index $i should be in tree order.');
         i++;
       }
     });
-  }, type + ".querySelectorAll tree order");
+  }, type + '.querySelectorAll tree order');
 }
 
 /// Tests containing this string fail for an unknown reason
@@ -194,68 +194,68 @@ String _getSkip(String name) {
  * Execute queries with the specified valid selectors for both querySelector() and querySelectorAll()
  * Only run these tests when results are expected. Don't run for syntax error tests.
  */
-runValidSelectorTest(String type, root, List<Map<String, dynamic>> selectors,
-    testType, docType) {
-  var nodeType = "";
+void runValidSelectorTest(String type, root,
+    List<Map<String, dynamic>> selectors, testType, docType) {
+  var nodeType = '';
   switch (root.nodeType) {
     case Node.DOCUMENT_NODE:
-      nodeType = "document";
+      nodeType = 'document';
       break;
     case Node.ELEMENT_NODE:
-      nodeType = root.parentNode != null ? "element" : "detached";
+      nodeType = root.parentNode != null ? 'element' : 'detached';
       break;
     case Node.DOCUMENT_FRAGMENT_NODE:
-      nodeType = "fragment";
+      nodeType = 'fragment';
       break;
     default:
-      throw StateError("Reached unreachable code path.");
+      throw StateError('Reached unreachable code path.');
   }
 
   for (var i = 0; i < selectors.length; i++) {
     var s = selectors[i];
-    var n = s["name"];
+    var n = s['name'];
     var skip = _getSkip(n);
-    var q = s["selector"];
-    var e = s["expect"];
+    var q = s['selector'];
+    var e = s['expect'];
 
-    if ((s["exclude"] is! List ||
-            (s["exclude"].indexOf(nodeType) == -1 &&
-                s["exclude"].indexOf(docType) == -1)) &&
-        (s["testType"] & testType != 0)) {
+    if ((s['exclude'] is! List ||
+            (s['exclude'].indexOf(nodeType) == -1 &&
+                s['exclude'].indexOf(docType) == -1)) &&
+        (s['testType'] & testType != 0)) {
       //console.log("Running tests " + nodeType + ": " + s["testType"] + "&" + testType + "=" + (s["testType"] & testType) + ": " + JSON.stringify(s))
       var foundall, found;
 
       runTest(() {
         foundall = root.querySelectorAll(q);
-        assertNotEquals(foundall, null, "The method should not return null.");
+        assertNotEquals(foundall, null, 'The method should not return null.');
         assertEquals(foundall.length, e.length,
-            "The method should return the expected number of matches.");
+            'The method should return the expected number of matches.');
 
         for (var i = 0; i < e.length; i++) {
           assertNotEquals(
-              foundall[i], null, "The item in index $i should not be null.");
-          assertEquals(foundall[i].attributes["id"], e[i],
-              "The item in index $i should have the expected ID.");
-          assertFalse(foundall[i].attributes.containsKey("data-clone"),
-              "This should not be a cloned element.");
+              foundall[i], null, 'The item in index $i should not be null.');
+          assertEquals(foundall[i].attributes['id'], e[i],
+              'The item in index $i should have the expected ID.');
+          assertFalse(foundall[i].attributes.containsKey('data-clone'),
+              'This should not be a cloned element.');
         }
-      }, type + ".querySelectorAll: " + n + ": " + q, skip: skip);
+      }, type + '.querySelectorAll: ' + n + ': ' + q, skip: skip);
 
       runTest(() {
         found = root.querySelector(q);
 
         if (e.isNotEmpty) {
-          assertNotEquals(found, null, "The method should return a match.");
-          assertEquals(found.attributes["id"], e[0],
-              "The method should return the first match.");
+          assertNotEquals(found, null, 'The method should return a match.');
+          assertEquals(found.attributes['id'], e[0],
+              'The method should return the first match.');
           assertEquals(found, foundall[0],
-              "The result should match the first item from querySelectorAll.");
-          assertFalse(found.attributes.containsKey("data-clone"),
-              "This should not be annotated as a cloned element.");
+              'The result should match the first item from querySelectorAll.');
+          assertFalse(found.attributes.containsKey('data-clone'),
+              'This should not be annotated as a cloned element.');
         } else {
-          assertEquals(found, null, "The method should not match anything.");
+          assertEquals(found, null, 'The method should not match anything.');
         }
-      }, type + ".querySelector: " + n + ": " + q, skip: skip);
+      }, type + '.querySelector: ' + n + ': ' + q, skip: skip);
     } else {
       //console.log("Excluding for " + nodeType + ": " + s["testType"] + "&" + testType + "=" + (s["testType"] & testType) + ": " + JSON.stringify(s))
     }
@@ -266,28 +266,28 @@ runValidSelectorTest(String type, root, List<Map<String, dynamic>> selectors,
  * Execute queries with the specified invalid selectors for both querySelector() and querySelectorAll()
  * Only run these tests when errors are expected. Don't run for valid selector tests.
  */
-runInvalidSelectorTest(String type, root, List selectors) {
+void runInvalidSelectorTest(String type, root, List selectors) {
   for (var i = 0; i < selectors.length; i++) {
     var s = selectors[i];
-    var n = s["name"];
-    var q = s["selector"];
+    var n = s['name'];
+    var q = s['selector'];
 
     // Dart note: FormatException seems a reasonable mapping of SyntaxError
     runTest(() {
       assertThrows((e) => e is FormatException, () {
         root.querySelector(q);
       });
-    }, type + ".querySelector: " + n + ": " + q);
+    }, type + '.querySelector: ' + n + ': ' + q);
 
     runTest(() {
       assertThrows((e) => e is FormatException, () {
         root.querySelectorAll(q);
       });
-    }, type + ".querySelectorAll: " + n + ": " + q);
+    }, type + '.querySelectorAll: ' + n + ': ' + q);
   }
 }
 
-traverse(Node elem, void fn(Node elem)) {
+void traverse(Node elem, void Function(Node) fn) {
   if (elem.nodeType == Node.ELEMENT_NODE) {
     fn(elem);
   }
@@ -298,19 +298,19 @@ traverse(Node elem, void fn(Node elem)) {
   }
 }
 
-runTest(Function body, String name, {String skip}) =>
+void runTest(Function body, String name, {String skip}) =>
     unittest.test(name, body, skip: skip);
 
-assertTrue(bool value, String reason) =>
+void assertTrue(bool value, String reason) =>
     unittest.expect(value, unittest.isTrue, reason: reason);
 
-assertFalse(bool value, String reason) =>
+void assertFalse(bool value, String reason) =>
     unittest.expect(value, unittest.isFalse, reason: reason);
 
-assertEquals(x, y, String reason) => unittest.expect(x, y, reason: reason);
+void assertEquals(x, y, String reason) => unittest.expect(x, y, reason: reason);
 
-assertNotEquals(x, y, String reason) =>
+void assertNotEquals(x, y, String reason) =>
     unittest.expect(x, unittest.isNot(y), reason: reason);
 
-assertThrows(exception, body(), [String reason]) =>
+void assertThrows(exception, void Function() body, [String reason]) =>
     unittest.expect(body, unittest.throwsA(exception), reason: reason);

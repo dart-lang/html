@@ -36,6 +36,7 @@ class AttributeName implements Comparable {
 
   const AttributeName(this.prefix, this.name, this.namespace);
 
+  @override
   String toString() {
     // Implement:
     // http://www.whatwg.org/specs/web-apps/current-work/multipage/the-end.html#serializing-html-fragments
@@ -45,24 +46,26 @@ class AttributeName implements Comparable {
     return prefix != null ? '$prefix:$name' : name;
   }
 
+  @override
   int get hashCode {
-    int h = prefix.hashCode;
+    var h = prefix.hashCode;
     h = 37 * (h & 0x1FFFFF) + name.hashCode;
     h = 37 * (h & 0x1FFFFF) + namespace.hashCode;
     return h & 0x3FFFFFFF;
   }
 
+  @override
   int compareTo(other) {
     // Not sure about this sort order
     if (other is! AttributeName) return 1;
-    int cmp = (prefix != null ? prefix : "")
-        .compareTo((other.prefix != null ? other.prefix : ""));
+    var cmp = (prefix ?? '').compareTo((other.prefix ?? ''));
     if (cmp != 0) return cmp;
     cmp = name.compareTo(other.name);
     if (cmp != 0) return cmp;
     return namespace.compareTo(other.namespace);
   }
 
+  @override
   bool operator ==(x) {
     if (x is! AttributeName) return false;
     return prefix == x.prefix && name == x.name && namespace == x.namespace;
@@ -184,12 +187,7 @@ abstract class Node {
     return _attributeValueSpans;
   }
 
-  List<Element> get children {
-    if (_elements == null) {
-      _elements = FilteredElementList(this);
-    }
-    return _elements;
-  }
+  List<Element> get children => _elements ??= FilteredElementList(this);
 
   /// Returns a copy of this node.
   ///
@@ -223,7 +221,7 @@ abstract class Node {
   void _addOuterHtml(StringBuffer str);
 
   void _addInnerHtml(StringBuffer str) {
-    for (Node child in nodes) {
+    for (var child in nodes) {
       child._addOuterHtml(str);
     }
   }
@@ -301,7 +299,7 @@ abstract class Node {
     }
   }
 
-  _clone(Node shallowClone, bool deep) {
+  Node _clone(Node shallowClone, bool deep) {
     if (deep) {
       for (var child in nodes) {
         shallowClone.append(child.clone(true));
@@ -316,6 +314,7 @@ class Document extends Node
   Document() : super._();
   factory Document.html(String html) => parse(html);
 
+  @override
   int get nodeType => Node.DOCUMENT_NODE;
 
   // TODO(jmesserly): optmize this if needed
@@ -331,10 +330,13 @@ class Document extends Node
   // to dom_parsing, where we keep other custom APIs?
   String get outerHtml => _outerHtml;
 
-  String toString() => "#document";
+  @override
+  String toString() => '#document';
 
+  @override
   void _addOuterHtml(StringBuffer str) => _addInnerHtml(str);
 
+  @override
   Document clone(bool deep) => _clone(Document(), deep);
 
   Element createElement(String tag) => Element.tag(tag);
@@ -353,6 +355,7 @@ class DocumentFragment extends Node with _ParentNode, _NonElementParentNode {
   DocumentFragment() : super._();
   factory DocumentFragment.html(String html) => parseFragment(html);
 
+  @override
   int get nodeType => Node.DOCUMENT_FRAGMENT_NODE;
 
   /// Returns a fragment of HTML or XML that represents the element and its
@@ -363,13 +366,18 @@ class DocumentFragment extends Node with _ParentNode, _NonElementParentNode {
   // to dom_parsing, where we keep other custom APIs?
   String get outerHtml => _outerHtml;
 
-  String toString() => "#document-fragment";
+  @override
+  String toString() => '#document-fragment';
 
+  @override
   DocumentFragment clone(bool deep) => _clone(DocumentFragment(), deep);
 
+  @override
   void _addOuterHtml(StringBuffer str) => _addInnerHtml(str);
 
+  @override
   String get text => _getText(this);
+  @override
   set text(String value) => _setText(this, value);
 }
 
@@ -380,24 +388,28 @@ class DocumentType extends Node {
 
   DocumentType(this.name, this.publicId, this.systemId) : super._();
 
+  @override
   int get nodeType => Node.DOCUMENT_TYPE_NODE;
 
+  @override
   String toString() {
     if (publicId != null || systemId != null) {
       // TODO(jmesserly): the html5 serialization spec does not add these. But
       // it seems useful, and the parser can handle it, so for now keeping it.
-      var pid = publicId != null ? publicId : '';
-      var sid = systemId != null ? systemId : '';
+      var pid = publicId ?? '';
+      var sid = systemId ?? '';
       return '<!DOCTYPE $name "$pid" "$sid">';
     } else {
       return '<!DOCTYPE $name>';
     }
   }
 
+  @override
   void _addOuterHtml(StringBuffer str) {
     str.write(toString());
   }
 
+  @override
   DocumentType clone(bool deep) => DocumentType(name, publicId, systemId);
 }
 
@@ -408,20 +420,24 @@ class Text extends Node {
   dynamic _data;
 
   Text(String data)
-      : _data = data != null ? data : '',
+      : _data = data ?? '',
         super._();
 
+  @override
   int get nodeType => Node.TEXT_NODE;
 
   String get data => _data = _data.toString();
   set data(String value) {
-    _data = value != null ? value : '';
+    _data = value ?? '';
   }
 
+  @override
   String toString() => '"$data"';
 
+  @override
   void _addOuterHtml(StringBuffer str) => writeTextNodeAsHtml(str, this);
 
+  @override
   Text clone(bool deep) => Text(data);
 
   void appendData(String data) {
@@ -430,7 +446,9 @@ class Text extends Node {
     sb.write(data);
   }
 
+  @override
   String get text => data;
+  @override
   set text(String value) {
     data = value;
   }
@@ -484,7 +502,7 @@ class Element extends Node with _ParentNode, _ElementAndDocument {
     // 2) Verify that the html does not contain leading or trailing text nodes.
     // 3) Verify that the html does not contain both <head> and <body> tags.
     // 4) Detatch the created element from its dummy parent.
-    String parentTag = 'div';
+    var parentTag = 'div';
     String tag;
     final match = _startTagRegexp.firstMatch(html);
     if (match != null) {
@@ -509,13 +527,14 @@ class Element extends Node with _ParentNode, _ElementAndDocument {
     return element;
   }
 
+  @override
   int get nodeType => Node.ELEMENT_NODE;
 
   // TODO(jmesserly): we can make this faster
   Element get previousElementSibling {
     if (parentNode == null) return null;
     var siblings = parentNode.nodes;
-    for (int i = siblings.indexOf(this) - 1; i >= 0; i--) {
+    for (var i = siblings.indexOf(this) - 1; i >= 0; i--) {
       var s = siblings[i];
       if (s is Element) return s;
     }
@@ -525,19 +544,22 @@ class Element extends Node with _ParentNode, _ElementAndDocument {
   Element get nextElementSibling {
     if (parentNode == null) return null;
     var siblings = parentNode.nodes;
-    for (int i = siblings.indexOf(this) + 1; i < siblings.length; i++) {
+    for (var i = siblings.indexOf(this) + 1; i < siblings.length; i++) {
       var s = siblings[i];
       if (s is Element) return s;
     }
     return null;
   }
 
+  @override
   String toString() {
     var prefix = Namespaces.getPrefix(namespaceUri);
     return "<${prefix == null ? '' : '$prefix '}$localName>";
   }
 
+  @override
   String get text => _getText(this);
+  @override
   set text(String value) => _setText(this, value);
 
   /// Returns a fragment of HTML or XML that represents the element and its
@@ -557,6 +579,7 @@ class Element extends Node with _ParentNode, _ElementAndDocument {
     nodes.addAll(parseFragment(value, container: localName).nodes);
   }
 
+  @override
   void _addOuterHtml(StringBuffer str) {
     // http://www.whatwg.org/specs/web-apps/current-work/multipage/the-end.html#serializing-html-fragments
     // Element is the most complicated one.
@@ -611,6 +634,7 @@ class Element extends Node with _ParentNode, _ElementAndDocument {
     return prefix == null ? '' : '$prefix:';
   }
 
+  @override
   Element clone(bool deep) {
     var result = Element._(localName, namespaceUri)
       ..attributes = LinkedHashMap.from(attributes);
@@ -620,7 +644,7 @@ class Element extends Node with _ParentNode, _ElementAndDocument {
   // http://dom.spec.whatwg.org/#dom-element-id
   String get id {
     var result = attributes['id'];
-    return result != null ? result : '';
+    return result ?? '';
   }
 
   set id(String value) {
@@ -630,7 +654,7 @@ class Element extends Node with _ParentNode, _ElementAndDocument {
   // http://dom.spec.whatwg.org/#dom-element-classname
   String get className {
     var result = attributes['class'];
-    return result != null ? result : '';
+    return result ?? '';
   }
 
   set className(String value) {
@@ -653,17 +677,23 @@ class Comment extends Node {
 
   Comment(this.data) : super._();
 
+  @override
   int get nodeType => Node.COMMENT_NODE;
 
-  String toString() => "<!-- $data -->";
+  @override
+  String toString() => '<!-- $data -->';
 
+  @override
   void _addOuterHtml(StringBuffer str) {
-    str.write("<!--$data-->");
+    str.write('<!--$data-->');
   }
 
+  @override
   Comment clone(bool deep) => Comment(data);
 
+  @override
   String get text => data;
+  @override
   set text(String value) {
     data = value;
   }
@@ -687,6 +717,7 @@ class NodeList extends ListProxy<Node> {
     return node;
   }
 
+  @override
   void add(Node value) {
     if (value is DocumentFragment) {
       addAll(value.nodes);
@@ -697,6 +728,7 @@ class NodeList extends ListProxy<Node> {
 
   void addLast(Node value) => add(value);
 
+  @override
   void addAll(Iterable<Node> collection) {
     // Note: we need to be careful if collection is another NodeList.
     // In particular:
@@ -712,6 +744,7 @@ class NodeList extends ListProxy<Node> {
     super.addAll(list);
   }
 
+  @override
   void insert(int index, Node value) {
     if (value is DocumentFragment) {
       insertAll(index, value.nodes);
@@ -720,10 +753,13 @@ class NodeList extends ListProxy<Node> {
     }
   }
 
+  @override
   Node removeLast() => super.removeLast()..parentNode = null;
 
+  @override
   Node removeAt(int i) => super.removeAt(i)..parentNode = null;
 
+  @override
   void clear() {
     for (var node in this) {
       node.parentNode = null;
@@ -731,6 +767,7 @@ class NodeList extends ListProxy<Node> {
     super.clear();
   }
 
+  @override
   void operator []=(int index, Node value) {
     if (value is DocumentFragment) {
       removeAt(index);
@@ -743,46 +780,52 @@ class NodeList extends ListProxy<Node> {
 
   // TODO(jmesserly): These aren't implemented in DOM _NodeListImpl, see
   // http://code.google.com/p/dart/issues/detail?id=5371
+  @override
   void setRange(int start, int rangeLength, Iterable<Node> from,
       [int startFrom = 0]) {
-    List<Node> fromVar = from as List<Node>;
+    var fromVar = from as List<Node>;
     if (fromVar is NodeList) {
       // Note: this is presumed to make a copy
       fromVar = fromVar.sublist(startFrom, startFrom + rangeLength);
     }
     // Note: see comment in [addAll]. We need to be careful about the order of
     // operations if [from] is also a NodeList.
-    for (int i = rangeLength - 1; i >= 0; i--) {
+    for (var i = rangeLength - 1; i >= 0; i--) {
       this[start + i] = fromVar[startFrom + i];
     }
   }
 
+  @override
   void replaceRange(int start, int end, Iterable<Node> newContents) {
     removeRange(start, end);
     insertAll(start, newContents);
   }
 
+  @override
   void removeRange(int start, int rangeLength) {
-    for (int i = start; i < rangeLength; i++) {
+    for (var i = start; i < rangeLength; i++) {
       this[i].parentNode = null;
     }
     super.removeRange(start, rangeLength);
   }
 
-  void removeWhere(bool test(Node e)) {
+  @override
+  void removeWhere(bool Function(Node) test) {
     for (var node in where(test)) {
       node.parentNode = null;
     }
     super.removeWhere(test);
   }
 
-  void retainWhere(bool test(Node e)) {
+  @override
+  void retainWhere(bool Function(Node) test) {
     for (var node in where((n) => !test(n))) {
       node.parentNode = null;
     }
     super.retainWhere(test);
   }
 
+  @override
   void insertAll(int index, Iterable<Node> collection) {
     // Note: we need to be careful how we copy nodes. See note in addAll.
     var list = _flattenDocFragments(collection);
@@ -832,70 +875,85 @@ class FilteredElementList extends IterableBase<Element>
   // forEach, every, any, ... could directly work on the _childNodes.
   List<Element> get _filtered => _childNodes.whereType<Element>().toList();
 
-  void forEach(void f(Element element)) {
+  @override
+  void forEach(void Function(Element) f) {
     _filtered.forEach(f);
   }
 
+  @override
   void operator []=(int index, Element value) {
     this[index].replaceWith(value);
   }
 
+  @override
   set length(int newLength) {
     final len = length;
     if (newLength >= len) {
       return;
     } else if (newLength < 0) {
-      throw ArgumentError("Invalid list length");
+      throw ArgumentError('Invalid list length');
     }
 
     removeRange(newLength, len);
   }
 
-  String join([String separator = ""]) => _filtered.join(separator);
+  @override
+  String join([String separator = '']) => _filtered.join(separator);
 
+  @override
   void add(Element value) {
     _childNodes.add(value);
   }
 
+  @override
   void addAll(Iterable<Element> iterable) {
-    for (Element element in iterable) {
+    for (var element in iterable) {
       add(element);
     }
   }
 
+  @override
   bool contains(Object element) {
     return element is Element && _childNodes.contains(element);
   }
 
+  @override
   Iterable<Element> get reversed => _filtered.reversed;
 
-  void sort([int compare(Element a, Element b)]) {
+  @override
+  void sort([int Function(Element, Element) compare]) {
     throw UnsupportedError('TODO(jacobr): should we impl?');
   }
 
+  @override
   void setRange(int start, int end, Iterable<Element> iterable,
       [int skipCount = 0]) {
     throw UnimplementedError();
   }
 
+  @override
   void fillRange(int start, int end, [Element fillValue]) {
     throw UnimplementedError();
   }
 
+  @override
   void replaceRange(int start, int end, Iterable<Element> iterable) {
     throw UnimplementedError();
   }
 
+  @override
   void removeRange(int start, int end) {
     _filtered.sublist(start, end).forEach((el) => el.remove());
   }
 
+  @override
   void clear() {
     // Currently, ElementList#clear clears even non-element nodes, so we follow
     // that behavior.
     _childNodes.clear();
   }
 
+  @override
   Element removeLast() {
     final result = last;
     if (result != null) {
@@ -904,28 +962,35 @@ class FilteredElementList extends IterableBase<Element>
     return result;
   }
 
-  Iterable<T> map<T>(T f(Element element)) => _filtered.map(f);
-  Iterable<Element> where(bool f(Element element)) => _filtered.where(f);
-  Iterable<T> expand<T>(Iterable<T> f(Element element)) => _filtered.expand(f);
+  @override
+  Iterable<T> map<T>(T Function(Element) f) => _filtered.map(f);
+  @override
+  Iterable<Element> where(bool Function(Element) f) => _filtered.where(f);
+  @override
+  Iterable<T> expand<T>(Iterable<T> Function(Element) f) => _filtered.expand(f);
 
+  @override
   void insert(int index, Element value) {
     _childNodes.insert(index, value);
   }
 
+  @override
   void insertAll(int index, Iterable<Element> iterable) {
     _childNodes.insertAll(index, iterable);
   }
 
+  @override
   Element removeAt(int index) {
     final result = this[index];
     result.remove();
     return result;
   }
 
+  @override
   bool remove(Object element) {
     if (element is! Element) return false;
-    for (int i = 0; i < length; i++) {
-      Element indexElement = this[i];
+    for (var i = 0; i < length; i++) {
+      var indexElement = this[i];
       if (identical(indexElement, element)) {
         indexElement.remove();
         return true;
@@ -934,59 +999,82 @@ class FilteredElementList extends IterableBase<Element>
     return false;
   }
 
-  Element reduce(Element combine(Element value, Element element)) {
+  @override
+  Element reduce(Element Function(Element, Element) combine) {
     return _filtered.reduce(combine);
   }
 
-  T fold<T>(T initialValue, T combine(T previousValue, Element element)) {
+  @override
+  T fold<T>(
+      T initialValue, T Function(T previousValue, Element element) combine) {
     return _filtered.fold(initialValue, combine);
   }
 
-  bool every(bool f(Element element)) => _filtered.every(f);
-  bool any(bool f(Element element)) => _filtered.any(f);
+  @override
+  bool every(bool Function(Element) f) => _filtered.every(f);
+  @override
+  bool any(bool Function(Element) f) => _filtered.any(f);
+  @override
   List<Element> toList({bool growable = true}) =>
       List<Element>.from(this, growable: growable);
+  @override
   Set<Element> toSet() => Set<Element>.from(this);
-  Element firstWhere(bool test(Element value), {Element orElse()}) {
+  @override
+  Element firstWhere(bool Function(Element) test, {Element Function() orElse}) {
     return _filtered.firstWhere(test, orElse: orElse);
   }
 
-  Element lastWhere(bool test(Element value), {Element orElse()}) {
+  @override
+  Element lastWhere(bool Function(Element) test, {Element Function() orElse}) {
     return _filtered.lastWhere(test, orElse: orElse);
   }
 
-  Element singleWhere(bool test(Element value), {Element orElse()}) {
+  @override
+  Element singleWhere(bool Function(Element) test,
+      {Element Function() orElse}) {
     if (orElse != null) throw UnimplementedError('orElse');
     return _filtered.singleWhere(test);
   }
 
+  @override
   Element elementAt(int index) {
     return this[index];
   }
 
+  @override
   bool get isEmpty => _filtered.isEmpty;
+  @override
   int get length => _filtered.length;
+  @override
   Element operator [](int index) => _filtered[index];
+  @override
   Iterator<Element> get iterator => _filtered.iterator;
+  @override
   List<Element> sublist(int start, [int end]) => _filtered.sublist(start, end);
+  @override
   Iterable<Element> getRange(int start, int end) =>
       _filtered.getRange(start, end);
   // TODO(sigmund): this should be typed Element, but we currently run into a
   // bug where ListMixin<E>.indexOf() expects Object as the argument.
+  @override
   int indexOf(Object element, [int start = 0]) =>
       _filtered.indexOf(element, start);
 
   // TODO(sigmund): this should be typed Element, but we currently run into a
   // bug where ListMixin<E>.lastIndexOf() expects Object as the argument.
+  @override
   int lastIndexOf(Object element, [int start]) {
-    if (start == null) start = length - 1;
+    start ??= length - 1;
     return _filtered.lastIndexOf(element, start);
   }
 
+  @override
   Element get first => _filtered.first;
 
+  @override
   Element get last => _filtered.last;
 
+  @override
   Element get single => _filtered.single;
 }
 
@@ -1002,9 +1090,11 @@ void _setText(Node node, String value) {
 class _ConcatTextVisitor extends TreeVisitor {
   final _str = StringBuffer();
 
+  @override
   String toString() => _str.toString();
 
-  visitText(Text node) {
+  @override
+  void visitText(Text node) {
     _str.write(node.data);
   }
 }
