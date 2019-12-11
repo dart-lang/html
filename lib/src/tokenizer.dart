@@ -108,7 +108,7 @@ class HtmlTokenizer implements Iterator<Token> {
   void _markAttributeNameEnd(int offset) => _markAttributeEnd(offset);
 
   void _addAttribute(String name) {
-     _attributes ??= [];
+    _attributes ??= [];
     _attributeName.clear();
     _attributeName.write(name);
     _attributeValue.clear();
@@ -1079,7 +1079,7 @@ class HtmlTokenizer implements Iterator<Token> {
         attrName = asciiUpper2Lower(attrName);
       }
       _attributes.last.name = attrName;
-       _attributeNames ??= {};
+      _attributeNames ??= {};
       if (_attributeNames.contains(attrName)) {
         _addToken(ParseErrorToken('duplicate-attribute'));
       }

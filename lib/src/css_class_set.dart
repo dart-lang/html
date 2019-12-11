@@ -114,7 +114,7 @@ abstract class _CssClassSetImpl extends SetBase<String> implements CssClassSet {
   bool toggle(String value, [bool shouldAdd]) {
     var s = readClasses();
     var result = false;
-     shouldAdd ??= !s.contains(value);
+    shouldAdd ??= !s.contains(value);
     if (shouldAdd) {
       s.add(value);
       result = true;

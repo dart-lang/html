@@ -1030,7 +1030,8 @@ class FilteredElementList extends IterableBase<Element>
   }
 
   @override
-  Element singleWhere(bool Function(Element) test, {Element Function() orElse}) {
+  Element singleWhere(bool Function(Element) test,
+      {Element Function() orElse}) {
     if (orElse != null) throw UnimplementedError('orElse');
     return _filtered.singleWhere(test);
   }

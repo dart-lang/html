@@ -194,8 +194,8 @@ String _getSkip(String name) {
  * Execute queries with the specified valid selectors for both querySelector() and querySelectorAll()
  * Only run these tests when results are expected. Don't run for syntax error tests.
  */
-void runValidSelectorTest(String type, root, List<Map<String, dynamic>> selectors,
-    testType, docType) {
+void runValidSelectorTest(String type, root,
+    List<Map<String, dynamic>> selectors, testType, docType) {
   var nodeType = '';
   switch (root.nodeType) {
     case Node.DOCUMENT_NODE:

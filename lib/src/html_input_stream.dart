@@ -91,7 +91,7 @@ class HtmlInputStream {
     _lineStarts = <int>[0];
     _chars = <int>[];
 
-      _rawChars ??= _decodeBytes(charEncodingName, _rawBytes);
+    _rawChars ??= _decodeBytes(charEncodingName, _rawBytes);
 
     var skipNewline = false;
     var wasSurrogatePair = false;
