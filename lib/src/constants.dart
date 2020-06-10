@@ -1,5 +1,3 @@
-library constants;
-
 import 'utils.dart';
 
 // TODO(jmesserly): fix up the const lists. For the bigger ones, we need faster
@@ -513,44 +511,6 @@ const rcdataElements = [
   'noframes',
   'noscript'
 ];
-
-const Map<String, List<String>> booleanAttributes = {
-  '': [
-    'irrelevant',
-  ],
-  'style': [
-    'scoped',
-  ],
-  'img': [
-    'ismap',
-  ],
-  'audio': ['autoplay', 'controls'],
-  'video': ['autoplay', 'controls'],
-  'script': ['defer', 'async'],
-  'details': [
-    'open',
-  ],
-  'datagrid': ['multiple', 'disabled'],
-  'command': ['hidden', 'disabled', 'checked', 'default'],
-  'hr': ['noshade'],
-  'men': [
-    'autosubmit',
-  ],
-  'fieldset': ['disabled', 'readonly'],
-  'option': ['disabled', 'readonly', 'selected'],
-  'optgroup': ['disabled', 'readonly'],
-  'button': ['disabled', 'autofocus'],
-  'input': [
-    'disabled',
-    'readonly',
-    'required',
-    'autofocus',
-    'checked',
-    'ismap'
-  ],
-  'select': ['disabled', 'readonly', 'autofocus', 'multiple'],
-  'output': ['disabled', 'readonly'],
-};
 
 // entitiesWindows1252 has to be _ordered_ and needs to have an index. It
 // therefore can't be a frozenset.

@@ -187,7 +187,7 @@ class HtmlTokenizer implements Iterator<Token> {
     }
 
     // Convert the set of characters consumed to an int.
-    var charAsInt = parseIntRadix(charStack.join(), radix);
+    var charAsInt = int.parse(charStack.join(), radix: radix);
 
     // Certain characters get replaced with others
     var char = replacementCharacters[charAsInt];
