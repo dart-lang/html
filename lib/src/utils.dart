@@ -1,9 +1,4 @@
-/// Misc things that were useful when porting the code from Python.
-library utils;
-
 import 'constants.dart';
-
-typedef Predicate = bool Function();
 
 class Pair<F, S> {
   final F first;
@@ -18,32 +13,8 @@ class Pair<F, S> {
   bool operator ==(other) => other.first == first && other.second == second;
 }
 
-int parseIntRadix(String str, [int radix = 10]) {
-  var val = 0;
-  for (var i = 0; i < str.length; i++) {
-    var digit = str.codeUnitAt(i);
-    if (digit >= LOWER_A) {
-      digit += 10 - LOWER_A;
-    } else if (digit >= UPPER_A) {
-      digit += 10 - UPPER_A;
-    } else {
-      digit -= ZERO;
-    }
-    val = val * radix + digit;
-  }
-  return val;
-}
-
-bool any(List<bool> iterable) => iterable.any((f) => f);
-
-bool startsWithAny(String str, List<String> prefixes) {
-  for (var prefix in prefixes) {
-    if (str.startsWith(prefix)) {
-      return true;
-    }
-  }
-  return false;
-}
+bool startsWithAny(String str, List<String> prefixes) =>
+    prefixes.any(str.startsWith);
 
 // Like the python [:] operator.
 List<T> slice<T>(List<T> list, int start, [int end]) {
@@ -85,8 +56,6 @@ String formatStr(String format, Map data) {
     var result = StringBuffer();
     var search = '%($key)';
     int last = 0, match;
-    // This is a bug in the linter
-    // ignore: prefer_contains
     while ((match = format.indexOf(search, last)) >= 0) {
       result.write(format.substring(last, match));
       match += search.length;
