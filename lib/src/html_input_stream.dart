@@ -335,12 +335,12 @@ bool _hasUtf8Bom(List<int> bytes, [int offset = 0, int length]) {
 List<int> _decodeBytes(String encoding, List<int> bytes) {
   switch (encoding) {
     case 'ascii':
-      return ascii.decode(bytes).codeUnits;
+      return ascii.decode(bytes, allowInvalid: true).codeUnits;
 
     case 'utf-8':
       // NOTE: To match the behavior of the other decode functions, we eat the
       // UTF-8 BOM here. This is the default behavior of `utf8.decode`.
-      return utf8.decode(bytes).codeUnits;
+      return utf8.decode(bytes, allowMalformed: true).codeUnits;
 
     default:
       throw ArgumentError('Encoding $encoding not supported');
