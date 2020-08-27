@@ -1,3 +1,7 @@
+## 0.14.1
+
+- Fix infinite loop issue by limiting the attempts of processing a token.
+
 ## 0.14.0+3
 
 - Fix spans generated for HTML with higher-plane unicode characters

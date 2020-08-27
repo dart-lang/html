@@ -313,7 +313,15 @@ class HtmlParser {
       var token = tokenizer.current;
       var newToken = token;
       int type;
+      var attemptCount = 0;
       while (newToken != null) {
+        // Limit the number of attempts to process the current token, and give
+        // up after an arbitrary limit.
+        attemptCount++;
+        if (attemptCount == 100) {
+          parseError(token.span, 'undefined-error');
+          break;
+        }
         type = newToken.kind;
 
         // Note: avoid "is" test here, see http://dartbug.com/4795
