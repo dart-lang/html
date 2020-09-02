@@ -315,12 +315,14 @@ class HtmlParser {
       int type;
       var attemptCount = 0;
       while (newToken != null) {
+        // HACK: Downgrade infinite OOM bug to an error.
         // Limit the number of attempts to process the current token, and give
         // up after an arbitrary limit.
         attemptCount++;
         if (attemptCount == 100) {
-          parseError(token.span, 'undefined-error');
-          break;
+          final tokenDescr = token is StartTagToken ? token.name : '$token';
+          throw UnimplementedError(
+              'Reached maximum attempt count, giving up on token: $tokenDescr (${token.span}).');
         }
         type = newToken.kind;
 
