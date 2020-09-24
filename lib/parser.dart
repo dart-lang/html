@@ -1411,6 +1411,7 @@ class InBodyPhase extends Phase {
       case 'address':
       case 'article':
       case 'aside':
+      case 'button':
       case 'blockquote':
       case 'center':
       case 'details':
