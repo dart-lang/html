@@ -1,3 +1,8 @@
+## 0.14.0+4
+
+- Fix a bug parsing bad HTML where a 'button' end tag needs to close other
+  elements.
+
 ## 0.14.0+3
 
 - Fix spans generated for HTML with higher-plane unicode characters
