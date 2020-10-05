@@ -63,9 +63,7 @@ abstract class StringToken extends Token {
     return _string;
   }
 
-  StringToken(string)
-      : _string = string,
-        _buffer = string == null ? StringBuffer() : null;
+  StringToken(this._string) : _buffer = _string == null ? StringBuffer() : null;
 
   StringToken add(String data) {
     _buffer.write(data);

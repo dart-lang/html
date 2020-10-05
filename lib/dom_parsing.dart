@@ -10,17 +10,17 @@ class TreeVisitor {
   void visit(Node node) {
     switch (node.nodeType) {
       case Node.ELEMENT_NODE:
-        return visitElement(node);
+        return visitElement(node as Element);
       case Node.TEXT_NODE:
-        return visitText(node);
+        return visitText(node as Text);
       case Node.COMMENT_NODE:
-        return visitComment(node);
+        return visitComment(node as Comment);
       case Node.DOCUMENT_FRAGMENT_NODE:
-        return visitDocumentFragment(node);
+        return visitDocumentFragment(node as DocumentFragment);
       case Node.DOCUMENT_NODE:
-        return visitDocument(node);
+        return visitDocument(node as Document);
       case Node.DOCUMENT_TYPE_NODE:
-        return visitDocumentType(node);
+        return visitDocumentType(node as DocumentType);
       default:
         throw UnsupportedError('DOM node type ${node.nodeType}');
     }

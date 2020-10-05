@@ -28,8 +28,7 @@ void setupSpecialElements(parent) {
   anyNS.id = 'any-namespace';
   noNS.id = 'no-namespace';
 
-  var div;
-  div = [
+  var div = [
     doc.createElement('div'),
     doc.createElementNS('http://www.w3.org/1999/xhtml', 'div'),
     doc.createElementNS('', 'div'),
@@ -70,7 +69,7 @@ void setupSpecialElements(parent) {
 /*
  * Check that the querySelector and querySelectorAll methods exist on the given Node
  */
-void interfaceCheck(type, obj) {
+void interfaceCheck(String type, obj) {
   runTest(() {
     var q = obj.querySelector is Function;
     assertTrue(q, type + ' supports querySelector.');
@@ -94,7 +93,7 @@ void interfaceCheck(type, obj) {
  * Verify that the NodeList returned by querySelectorAll is static and and that a new list is created after
  * each call. A static list should not be affected by subsequent changes to the DOM.
  */
-void verifyStaticList(type, root) {
+void verifyStaticList(String type, root) {
   var pre, post, preLength;
 
   runTest(() {
@@ -119,7 +118,7 @@ void verifyStaticList(type, root) {
  * Verify handling of special values for the selector parameter, including stringification of
  * null and undefined, and the handling of the empty string.
  */
-void runSpecialSelectorTests(type, root) {
+void runSpecialSelectorTests(String type, root) {
   // Dart note: changed these tests because we don't have auto conversion to
   // String like JavaScript does.
   runTest(() {
@@ -170,7 +169,7 @@ void runSpecialSelectorTests(type, root) {
     // 7
     var result = root.querySelectorAll('*');
     var i = 0;
-    traverse(root, (elem) {
+    traverse(root as Node, (elem) {
       if (!identical(elem, root)) {
         assertEquals(
             elem, result[i], 'The result in index $i should be in tree order.');
@@ -197,7 +196,7 @@ String _getSkip(String name) {
 void runValidSelectorTest(String type, root,
     List<Map<String, dynamic>> selectors, testType, docType) {
   var nodeType = '';
-  switch (root.nodeType) {
+  switch ((root as Node).nodeType) {
     case Node.DOCUMENT_NODE:
       nodeType = 'document';
       break;
@@ -213,20 +212,21 @@ void runValidSelectorTest(String type, root,
 
   for (var i = 0; i < selectors.length; i++) {
     var s = selectors[i];
-    var n = s['name'];
+    var n = s['name'] as String;
     var skip = _getSkip(n);
-    var q = s['selector'];
-    var e = s['expect'];
+    var q = s['selector'] as String;
+    var e = s['expect'] as List;
 
     if ((s['exclude'] is! List ||
             (s['exclude'].indexOf(nodeType) == -1 &&
                 s['exclude'].indexOf(docType) == -1)) &&
         (s['testType'] & testType != 0)) {
       //console.log("Running tests " + nodeType + ": " + s["testType"] + "&" + testType + "=" + (s["testType"] & testType) + ": " + JSON.stringify(s))
-      var foundall, found;
+      List<Element> foundall;
+      Element found;
 
       runTest(() {
-        foundall = root.querySelectorAll(q);
+        foundall = root.querySelectorAll(q) as List<Element>;
         assertNotEquals(foundall, null, 'The method should not return null.');
         assertEquals(foundall.length, e.length,
             'The method should return the expected number of matches.');
@@ -242,7 +242,7 @@ void runValidSelectorTest(String type, root,
       }, type + '.querySelectorAll: ' + n + ': ' + q, skip: skip);
 
       runTest(() {
-        found = root.querySelector(q);
+        found = root.querySelector(q) as Element;
 
         if (e.isNotEmpty) {
           assertNotEquals(found, null, 'The method should return a match.');
@@ -269,8 +269,8 @@ void runValidSelectorTest(String type, root,
 void runInvalidSelectorTest(String type, root, List selectors) {
   for (var i = 0; i < selectors.length; i++) {
     var s = selectors[i];
-    var n = s['name'];
-    var q = s['selector'];
+    var n = s['name'] as String;
+    var q = s['selector'] as String;
 
     // Dart note: FormatException seems a reasonable mapping of SyntaxError
     runTest(() {
@@ -298,7 +298,7 @@ void traverse(Node elem, void Function(Node) fn) {
   }
 }
 
-void runTest(Function body, String name, {String skip}) =>
+void runTest(dynamic Function() body, String name, {String skip}) =>
     unittest.test(name, body, skip: skip);
 
 void assertTrue(bool value, String reason) =>
