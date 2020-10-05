@@ -1060,13 +1060,13 @@ class FilteredElementList extends IterableBase<Element>
       _filtered.getRange(start, end);
   @override
   int indexOf(Object element, [int start = 0]) =>
-      // Cast force by ListMixin https://github.com/dart-lang/sdk/issues/31311
+      // Cast forced by ListMixin https://github.com/dart-lang/sdk/issues/31311
       _filtered.indexOf(element as Element, start);
 
   @override
   int lastIndexOf(Object element, [int start]) {
     start ??= length - 1;
-    // Cast force by ListMixin https://github.com/dart-lang/sdk/issues/31311
+    // Cast forced by ListMixin https://github.com/dart-lang/sdk/issues/31311
     return _filtered.lastIndexOf(element as Element, start);
   }
 
