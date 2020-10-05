@@ -1058,17 +1058,15 @@ class FilteredElementList extends IterableBase<Element>
   @override
   Iterable<Element> getRange(int start, int end) =>
       _filtered.getRange(start, end);
-  // TODO(sigmund): this should be typed Element, but we currently run into a
-  // bug where ListMixin<E>.indexOf() expects Object as the argument.
   @override
   int indexOf(Object element, [int start = 0]) =>
+      // Cast force by ListMixin https://github.com/dart-lang/sdk/issues/31311
       _filtered.indexOf(element as Element, start);
 
-  // TODO(sigmund): this should be typed Element, but we currently run into a
-  // bug where ListMixin<E>.lastIndexOf() expects Object as the argument.
   @override
   int lastIndexOf(Object element, [int start]) {
     start ??= length - 1;
+    // Cast force by ListMixin https://github.com/dart-lang/sdk/issues/31311
     return _filtered.lastIndexOf(element as Element, start);
   }
 
