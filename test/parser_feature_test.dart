@@ -13,7 +13,7 @@ void main() {
   _testElementSpans();
   test('doctype is cloneable', () {
     var doc = parse('<!doctype HTML>');
-    DocumentType doctype = doc.nodes[0];
+    final doctype = doc.nodes[0] as DocumentType;
     expect(doctype.clone(false).toString(), '<!DOCTYPE html>');
   });
 
@@ -86,7 +86,7 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
     var textContent = '\n  hello {{name}}';
     var html = '<body><div>$textContent</div>';
     var doc = parse(html, generateSpans: true);
-    Text text = doc.body.nodes[0].nodes[0];
+    final text = doc.body.nodes[0].nodes[0] as Text;
     expect(text, const TypeMatcher<Text>());
     expect(text.data, textContent);
     expect(text.sourceSpan.start.offset, html.indexOf(textContent));
@@ -186,35 +186,35 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
     });
 
     test('escaping Text node in <script>', () {
-      Element e = parseFragment('<script>a && b</script>').firstChild;
+      final e = parseFragment('<script>a && b</script>').firstChild as Element;
       expect(e.outerHtml, '<script>a && b</script>');
     });
 
     test('escaping Text node in <span>', () {
-      Element e = parseFragment('<span>a && b</span>').firstChild;
+      final e = parseFragment('<span>a && b</span>').firstChild as Element;
       expect(e.outerHtml, '<span>a &amp;&amp; b</span>');
     });
 
     test('Escaping attributes', () {
-      Element e = parseFragment('<div class="a<b>">').firstChild;
+      var e = parseFragment('<div class="a<b>">').firstChild as Element;
       expect(e.outerHtml, '<div class="a<b>"></div>');
-      e = parseFragment('<div class=\'a"b\'>').firstChild;
+      e = parseFragment('<div class=\'a"b\'>').firstChild as Element;
       expect(e.outerHtml, '<div class="a&quot;b"></div>');
     });
 
     test('Escaping non-breaking space', () {
       var text = '<span>foO\u00A0bar</span>';
       expect(text.codeUnitAt(text.indexOf('O') + 1), 0xA0);
-      Element e = parseFragment(text).firstChild;
+      var e = parseFragment(text).firstChild as Element;
       expect(e.outerHtml, '<span>foO&nbsp;bar</span>');
     });
 
     test('Newline after <pre>', () {
-      Element e = parseFragment('<pre>\n\nsome text</span>').firstChild;
+      var e = parseFragment('<pre>\n\nsome text</span>').firstChild as Element;
       expect((e.firstChild as Text).data, '\nsome text');
       expect(e.outerHtml, '<pre>\n\nsome text</pre>');
 
-      e = parseFragment('<pre>\nsome text</span>').firstChild;
+      e = parseFragment('<pre>\nsome text</span>').firstChild as Element;
       expect((e.firstChild as Text).data, 'some text');
       expect(e.outerHtml, '<pre>some text</pre>');
     });
@@ -278,7 +278,7 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
   test('Text.text', () {
     var doc = parseFragment('<div>foo<div>bar</div>baz</div>');
     var e = doc.firstChild;
-    Text text = e.firstChild;
+    final text = e.firstChild as Text;
     expect(text.data, 'foo');
     expect(text.text, 'foo');
 

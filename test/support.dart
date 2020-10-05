@@ -29,7 +29,7 @@ Iterable<String> getDataFiles(String subdirectory) {
 
 // TODO(jmesserly): make this class simpler. We could probably split on
 // "\n#" instead of newline and remove a lot of code.
-class TestData extends IterableBase<Map> {
+class TestData extends IterableBase<Map<String, String>> {
   final String _text;
   final String newTestHeading;
 
@@ -40,12 +40,12 @@ class TestData extends IterableBase<Map> {
   // Note: in Python this was a generator, but since we can't do that in Dart,
   // it's easier to convert it into an upfront computation.
   @override
-  Iterator<Map> get iterator => _getData().iterator;
+  Iterator<Map<String, String>> get iterator => _getData().iterator;
 
-  List<Map> _getData() {
+  List<Map<String, String>> _getData() {
     var data = <String, String>{};
     String key;
-    var result = <Map>[];
+    var result = <Map<String, String>>[];
     var lines = _text.split('\n');
     // Remove trailing newline to match Python
     if (lines.last == '') {
@@ -79,7 +79,7 @@ class TestData extends IterableBase<Map> {
     return line.startsWith('#') ? line.substring(1).trim() : null;
   }
 
-  static Map normaliseOutput(Map data) {
+  static Map<String, String> normaliseOutput(Map<String, String> data) {
     // Remove trailing newlines
     data.forEach((key, value) {
       if (value.endsWith('\n')) {
@@ -91,7 +91,7 @@ class TestData extends IterableBase<Map> {
 }
 
 /// Serialize the [document] into the html5 test data format.
-String testSerializer(document) {
+String testSerializer(Node document) {
   return (TestSerializer()..visit(document)).toString();
 }
 
@@ -143,7 +143,7 @@ class TestSerializer extends TreeVisitor {
   @override
   void visitDocument(node) => _visitDocumentOrFragment(node);
 
-  void _visitDocumentOrFragment(node) {
+  void _visitDocumentOrFragment(Node node) {
     indent += 1;
     for (var child in node.nodes) {
       visit(child);
@@ -161,12 +161,16 @@ class TestSerializer extends TreeVisitor {
     _str.write(node);
     if (node.attributes.isNotEmpty) {
       indent += 2;
-      var keys = List.from(node.attributes.keys);
-      keys.sort((x, y) => x.compareTo(y));
+      var keys = node.attributes.keys.toList();
+      keys.sort((x, y) {
+        if (x is String) return x.compareTo(y as String);
+        if (x is AttributeName) return x.compareTo(y as AttributeName);
+        throw StateError('Cannot sort');
+      });
       for (var key in keys) {
         var v = node.attributes[key];
         if (key is AttributeName) {
-          AttributeName attr = key;
+          final attr = key as AttributeName;
           key = '${attr.prefix} ${attr.name}';
         }
         _newline();

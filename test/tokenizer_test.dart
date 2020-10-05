@@ -35,7 +35,8 @@ class TokenizerTestParser {
     // Note: we can't get a closure of the state method. However, we can
     // create a new closure to invoke it via mirrors.
     var mtok = reflect(tokenizer);
-    tokenizer.state = () => mtok.invoke(Symbol(_state), const []).reflectee;
+    tokenizer.state =
+        () => mtok.invoke(Symbol(_state), const []).reflectee as bool;
 
     if (_lastStartTag != null) {
       tokenizer.currentToken = StartTagToken(_lastStartTag);
@@ -45,25 +46,25 @@ class TokenizerTestParser {
       var token = tokenizer.current;
       switch (token.kind) {
         case TokenKind.characters:
-          processCharacters(token);
+          processCharacters(token as CharactersToken);
           break;
         case TokenKind.spaceCharacters:
-          processSpaceCharacters(token);
+          processSpaceCharacters(token as SpaceCharactersToken);
           break;
         case TokenKind.startTag:
-          processStartTag(token);
+          processStartTag(token as StartTagToken);
           break;
         case TokenKind.endTag:
-          processEndTag(token);
+          processEndTag(token as EndTagToken);
           break;
         case TokenKind.comment:
-          processComment(token);
+          processComment(token as CommentToken);
           break;
         case TokenKind.doctype:
-          processDoctype(token);
+          processDoctype(token as DoctypeToken);
           break;
         case TokenKind.parseError:
-          processParseError(token);
+          processParseError(token as ParseErrorToken);
           break;
       }
     }
@@ -186,20 +187,22 @@ void expectTokensMatch(
   }
 }
 
-void runTokenizerTest(Map testInfo) {
+void runTokenizerTest(Map<String, dynamic> testInfo) {
   // XXX - move this out into the setup function
   // concatenate all consecutive character tokens into a single token
   if (testInfo.containsKey('doubleEscaped')) {
     testInfo = unescape(testInfo);
   }
 
-  var expected = concatenateCharacterTokens(testInfo['output']);
+  var expected = concatenateCharacterTokens(testInfo['output'] as List);
   if (!testInfo.containsKey('lastStartTag')) {
     testInfo['lastStartTag'] = null;
   }
-  var parser = TokenizerTestParser(testInfo['initialState'],
-      testInfo['lastStartTag'], testInfo['generateSpans'] ?? false);
-  var tokens = parser.parse(testInfo['input']);
+  var parser = TokenizerTestParser(
+      testInfo['initialState'] as String,
+      testInfo['lastStartTag'] as String,
+      testInfo['generateSpans'] as bool /*?*/ ?? false);
+  var tokens = parser.parse(testInfo['input'] as String);
   tokens = concatenateCharacterTokens(tokens);
   var received = normalizeTokens(tokens);
   var errorMsg = [
@@ -212,12 +215,12 @@ void runTokenizerTest(Map testInfo) {
     '\nreceived:',
     tokens
   ].map((s) => '$s').join('\n');
-  var ignoreErrorOrder = testInfo['ignoreErrorOrder'] ?? false;
+  var ignoreErrorOrder = testInfo['ignoreErrorOrder'] as bool /*?*/ ?? false;
 
   expectTokensMatch(expected, received, ignoreErrorOrder, true, errorMsg);
 }
 
-Map unescape(Map testInfo) {
+Map<String, dynamic> unescape(Map<String, dynamic> testInfo) {
   // TODO(sigmundch,jmesserly): we currently use jsonDecode to unescape the
   // unicode characters in the string, we should use a decoding that works with
   // any control characters.
@@ -229,7 +232,7 @@ Map unescape(Map testInfo) {
       continue;
     } else {
       token[1] = decode(token[1]);
-      if (token.length > 2) {
+      if ((token as List).length > 2) {
         for (var pair in token[2]) {
           var key = pair[0];
           var value = pair[1];
@@ -260,17 +263,17 @@ void main() {
     var text = File(path).readAsStringSync();
     var tests = jsonDecode(text);
     var testName = pathos.basenameWithoutExtension(path);
-    var testList = tests['tests'];
+    var testList = tests['tests'] as List;
     if (testList == null) continue;
 
     group(testName, () {
       for (var index = 0; index < testList.length; index++) {
-        final testInfo = testList[index];
+        final testInfo = testList[index] as Map<String, dynamic>;
 
         testInfo.putIfAbsent('initialStates', () => ['Data state']);
         for (var initialState in testInfo['initialStates']) {
           test(testInfo['description'], () {
-            testInfo['initialState'] = camelCase(initialState);
+            testInfo['initialState'] = camelCase(initialState as String);
             runTokenizerTest(testInfo);
           });
         }

@@ -79,12 +79,10 @@ void main() {
     group(testName, () {
       for (var testData in tests) {
         var input = testData['data'];
-        var errors = testData['errors'];
+        final errorString = testData['errors'];
+        final errors = errorString?.split('\n');
         var innerHTML = testData['document-fragment'];
         var expected = testData['document'];
-        if (errors != null) {
-          errors = errors.split('\n');
-        }
 
         for (var treeCtor in treeTypes.values) {
           for (var namespaceHTMLElements in const [false, true]) {

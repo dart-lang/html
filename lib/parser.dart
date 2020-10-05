@@ -318,7 +318,7 @@ class HtmlParser {
 
         // Note: avoid "is" test here, see http://dartbug.com/4795
         if (type == TokenKind.parseError) {
-          ParseErrorToken error = newToken;
+          final error = newToken as ParseErrorToken;
           parseError(error.span, error.data, error.messageParams);
           newToken = null;
         } else {
@@ -329,22 +329,24 @@ class HtmlParser {
 
           switch (type) {
             case TokenKind.characters:
-              newToken = localPhase.processCharacters(newToken);
+              newToken =
+                  localPhase.processCharacters(newToken as CharactersToken);
               break;
             case TokenKind.spaceCharacters:
-              newToken = localPhase.processSpaceCharacters(newToken);
+              newToken = localPhase
+                  .processSpaceCharacters(newToken as SpaceCharactersToken);
               break;
             case TokenKind.startTag:
-              newToken = localPhase.processStartTag(newToken);
+              newToken = localPhase.processStartTag(newToken as StartTagToken);
               break;
             case TokenKind.endTag:
-              newToken = localPhase.processEndTag(newToken);
+              newToken = localPhase.processEndTag(newToken as EndTagToken);
               break;
             case TokenKind.comment:
-              newToken = localPhase.processComment(newToken);
+              newToken = localPhase.processComment(newToken as CommentToken);
               break;
             case TokenKind.doctype:
-              newToken = localPhase.processDoctype(newToken);
+              newToken = localPhase.processDoctype(newToken as DoctypeToken);
               break;
           }
         }
@@ -571,7 +573,7 @@ class HtmlParser {
   void parseRCDataRawtext(Token token, String contentType) {
     assert(contentType == 'RAWTEXT' || contentType == 'RCDATA');
 
-    tree.insertElement(token);
+    tree.insertElement(token as StartTagToken);
 
     if (contentType == 'RAWTEXT') {
       tokenizer.state = tokenizer.rawtextState;
@@ -665,7 +667,7 @@ class Phase {
 }
 
 class InitialPhase extends Phase {
-  InitialPhase(parser) : super(parser);
+  InitialPhase(HtmlParser parser) : super(parser);
 
   @override
   Token processSpaceCharacters(SpaceCharactersToken token) {
@@ -824,7 +826,7 @@ class InitialPhase extends Phase {
 }
 
 class BeforeHtmlPhase extends Phase {
-  BeforeHtmlPhase(parser) : super(parser);
+  BeforeHtmlPhase(HtmlParser parser) : super(parser);
 
   // helper methods
   void insertHtmlElement() {
@@ -885,7 +887,7 @@ class BeforeHtmlPhase extends Phase {
 }
 
 class BeforeHeadPhase extends Phase {
-  BeforeHeadPhase(parser) : super(parser);
+  BeforeHeadPhase(HtmlParser parser) : super(parser);
 
   @override
   Token processStartTag(StartTagToken token) {
@@ -959,7 +961,7 @@ class BeforeHeadPhase extends Phase {
 }
 
 class InHeadPhase extends Phase {
-  InHeadPhase(parser) : super(parser);
+  InHeadPhase(HtmlParser parser) : super(parser);
 
   @override
   Token processStartTag(StartTagToken token) {
@@ -1106,7 +1108,7 @@ class InHeadPhase extends Phase {
 // class InHeadNoScriptPhase extends Phase {
 
 class AfterHeadPhase extends Phase {
-  AfterHeadPhase(parser) : super(parser);
+  AfterHeadPhase(HtmlParser parser) : super(parser);
 
   @override
   Token processStartTag(StartTagToken token) {
@@ -1182,7 +1184,7 @@ class AfterHeadPhase extends Phase {
   void startTagFromHead(StartTagToken token) {
     parser.parseError(token.span, 'unexpected-start-tag-out-of-my-head',
         {'name': token.name});
-    tree.openElements.add(tree.headPointer);
+    tree.openElements.add(tree.headPointer as Element);
     parser._inHeadPhase.processStartTag(token);
     for (var node in tree.openElements.reversed) {
       if (node.localName == 'head') {
@@ -1225,7 +1227,7 @@ class InBodyPhase extends Phase {
 
   // http://www.whatwg.org/specs/web-apps/current-work///parsing-main-inbody
   // the really-really-really-very crazy mode
-  InBodyPhase(parser) : super(parser);
+  InBodyPhase(HtmlParser parser) : super(parser);
 
   @override
   Token processStartTag(StartTagToken token) {
@@ -1501,7 +1503,7 @@ class InBodyPhase extends Phase {
   }
 
   // helper
-  void addFormattingElement(token) {
+  void addFormattingElement(StartTagToken token) {
     tree.insertElement(token);
     var element = tree.openElements.last;
 
@@ -1509,7 +1511,7 @@ class InBodyPhase extends Phase {
     for (Node node in tree.activeFormattingElements.reversed) {
       if (node == Marker) {
         break;
-      } else if (isMatchingFormattingElement(node, element)) {
+      } else if (isMatchingFormattingElement(node as Element, element)) {
         matchingElements.add(node);
       }
     }
@@ -1816,7 +1818,7 @@ class InBodyPhase extends Phase {
     if (tree.formPointer != null) {
       return;
     }
-    var formAttrs = <dynamic, String>{};
+    var formAttrs = LinkedHashMap<dynamic, String>();
     var dataAction = token.data['action'];
     if (dataAction != null) {
       formAttrs['action'] = dataAction;
@@ -2113,7 +2115,7 @@ class InBodyPhase extends Phase {
       // Step 2
       // Start of the adoption agency algorithm proper
       var afeIndex = tree.openElements.indexOf(formattingElement);
-      Node furthestBlock;
+      Element furthestBlock;
       for (var element in slice(tree.openElements, afeIndex)) {
         if (specialElements.contains(getElementNameTuple(element))) {
           furthestBlock = element;
@@ -2270,7 +2272,7 @@ class InBodyPhase extends Phase {
 }
 
 class TextPhase extends Phase {
-  TextPhase(parser) : super(parser);
+  TextPhase(HtmlParser parser) : super(parser);
 
   // "Tried to process start tag %s in RCDATA/RAWTEXT mode"%token.name
   @override
@@ -2321,7 +2323,7 @@ class TextPhase extends Phase {
 
 class InTablePhase extends Phase {
   // http://www.whatwg.org/specs/web-apps/current-work///in-table
-  InTablePhase(parser) : super(parser);
+  InTablePhase(HtmlParser parser) : super(parser);
 
   @override
   Token processStartTag(StartTagToken token) {
@@ -2622,7 +2624,7 @@ class InTableTextPhase extends Phase {
 
 class InCaptionPhase extends Phase {
   // http://www.whatwg.org/specs/web-apps/current-work///in-caption
-  InCaptionPhase(parser) : super(parser);
+  InCaptionPhase(HtmlParser parser) : super(parser);
 
   @override
   Token processStartTag(StartTagToken token) {
@@ -2744,7 +2746,7 @@ class InCaptionPhase extends Phase {
 
 class InColumnGroupPhase extends Phase {
   // http://www.whatwg.org/specs/web-apps/current-work///in-column
-  InColumnGroupPhase(parser) : super(parser);
+  InColumnGroupPhase(HtmlParser parser) : super(parser);
 
   @override
   Token processStartTag(StartTagToken token) {
@@ -2832,7 +2834,7 @@ class InColumnGroupPhase extends Phase {
 
 class InTableBodyPhase extends Phase {
   // http://www.whatwg.org/specs/web-apps/current-work///in-table0
-  InTableBodyPhase(parser) : super(parser);
+  InTableBodyPhase(HtmlParser parser) : super(parser);
 
   @override
   Token processStartTag(StartTagToken token) {
@@ -2925,7 +2927,7 @@ class InTableBodyPhase extends Phase {
     return token;
   }
 
-  Token startTagTableOther(token) => endTagTable(token);
+  Token startTagTableOther(TagToken token) => endTagTable(token);
 
   Token startTagOther(StartTagToken token) {
     return parser._inTablePhase.processStartTag(token);
@@ -2971,7 +2973,7 @@ class InTableBodyPhase extends Phase {
 
 class InRowPhase extends Phase {
   // http://www.whatwg.org/specs/web-apps/current-work///in-row
-  InRowPhase(parser) : super(parser);
+  InRowPhase(HtmlParser parser) : super(parser);
 
   @override
   Token processStartTag(StartTagToken token) {
@@ -3117,7 +3119,7 @@ class InRowPhase extends Phase {
 
 class InCellPhase extends Phase {
   // http://www.whatwg.org/specs/web-apps/current-work///in-cell
-  InCellPhase(parser) : super(parser);
+  InCellPhase(HtmlParser parser) : super(parser);
 
   @override
   Token processStartTag(StartTagToken token) {
@@ -3241,7 +3243,7 @@ class InCellPhase extends Phase {
 }
 
 class InSelectPhase extends Phase {
-  InSelectPhase(parser) : super(parser);
+  InSelectPhase(HtmlParser parser) : super(parser);
 
   @override
   Token processStartTag(StartTagToken token) {
@@ -3397,7 +3399,7 @@ class InSelectPhase extends Phase {
 }
 
 class InSelectInTablePhase extends Phase {
-  InSelectInTablePhase(parser) : super(parser);
+  InSelectInTablePhase(HtmlParser parser) : super(parser);
 
   @override
   Token processStartTag(StartTagToken token) {
@@ -3523,7 +3525,7 @@ class InForeignContentPhase extends Phase {
     'var'
   ];
 
-  InForeignContentPhase(parser) : super(parser);
+  InForeignContentPhase(HtmlParser parser) : super(parser);
 
   void adjustSVGTagNames(token) {
     final replacements = const {
@@ -3628,7 +3630,7 @@ class InForeignContentPhase extends Phase {
       if (asciiUpper2Lower(node.localName) == token.name) {
         //XXX this isn't in the spec but it seems necessary
         if (parser.phase == parser._inTableTextPhase) {
-          InTableTextPhase inTableText = parser.phase;
+          final inTableText = parser.phase as InTableTextPhase;
           inTableText.flushCharacters();
           parser.phase = inTableText.originalPhase;
         }
@@ -3653,7 +3655,7 @@ class InForeignContentPhase extends Phase {
 }
 
 class AfterBodyPhase extends Phase {
-  AfterBodyPhase(parser) : super(parser);
+  AfterBodyPhase(HtmlParser parser) : super(parser);
 
   @override
   Token processStartTag(StartTagToken token) {
@@ -3725,7 +3727,7 @@ class AfterBodyPhase extends Phase {
 
 class InFramesetPhase extends Phase {
   // http://www.whatwg.org/specs/web-apps/current-work///in-frameset
-  InFramesetPhase(parser) : super(parser);
+  InFramesetPhase(HtmlParser parser) : super(parser);
 
   @override
   Token processStartTag(StartTagToken token) {
@@ -3818,7 +3820,7 @@ class InFramesetPhase extends Phase {
 
 class AfterFramesetPhase extends Phase {
   // http://www.whatwg.org/specs/web-apps/current-work///after3
-  AfterFramesetPhase(parser) : super(parser);
+  AfterFramesetPhase(HtmlParser parser) : super(parser);
 
   @override
   Token processStartTag(StartTagToken token) {
@@ -3875,7 +3877,7 @@ class AfterFramesetPhase extends Phase {
 }
 
 class AfterAfterBodyPhase extends Phase {
-  AfterAfterBodyPhase(parser) : super(parser);
+  AfterAfterBodyPhase(HtmlParser parser) : super(parser);
 
   @override
   Token processStartTag(StartTagToken token) {
@@ -3926,7 +3928,7 @@ class AfterAfterBodyPhase extends Phase {
 }
 
 class AfterAfterFramesetPhase extends Phase {
-  AfterAfterFramesetPhase(parser) : super(parser);
+  AfterAfterFramesetPhase(HtmlParser parser) : super(parser);
 
   @override
   Token processStartTag(StartTagToken token) {

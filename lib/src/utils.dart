@@ -79,7 +79,7 @@ String formatStr(String format, Map data) {
           result.write(padWithZeros(number, numberSize));
           break;
         case 'x':
-          var number = value.toRadixString(16);
+          var number = (value as int).toRadixString(16);
           result.write(padWithZeros(number, numberSize));
           break;
         default:

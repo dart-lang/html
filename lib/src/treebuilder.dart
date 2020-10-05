@@ -13,7 +13,7 @@ import 'utils.dart';
 // The scope markers are inserted when entering object elements,
 // marquees, table cells, and table captions, and are used to prevent formatting
 // from "leaking" into tables, object elements, and marquees.
-const Node Marker = null;
+const Element Marker = null;
 
 // TODO(jmesserly): this should extend ListBase<Element>, but my simple attempt
 // didn't work.
@@ -230,7 +230,7 @@ class TreeBuilder {
     return null;
   }
 
-  void insertRoot(Token token) {
+  void insertRoot(StartTagToken token) {
     var element = createElement(token);
     openElements.add(element);
     document.nodes.add(element);
@@ -273,7 +273,7 @@ class TreeBuilder {
     return element;
   }
 
-  Element insertElementTable(token) {
+  Element insertElementTable(StartTagToken token) {
     /// Create an element and insert it into the tree
     var element = createElement(token);
     if (!tableInsertModeElements.contains(openElements.last.localName)) {
@@ -307,7 +307,7 @@ class TreeBuilder {
       // We should be in the InTable mode. This means we want to do
       // special magic element rearranging
       var nodePos = getTableMisnestedNodePosition();
-      _insertText(nodePos[0], data, span, nodePos[1]);
+      _insertText(nodePos[0], data, span, nodePos[1] as Element);
     }
   }
 
@@ -318,7 +318,7 @@ class TreeBuilder {
     var nodes = parent.nodes;
     if (refNode == null) {
       if (nodes.isNotEmpty && nodes.last is Text) {
-        Text last = nodes.last;
+        final last = nodes.last as Text;
         last.appendData(data);
 
         if (span != null) {
@@ -331,7 +331,7 @@ class TreeBuilder {
     } else {
       var index = nodes.indexOf(refNode);
       if (index > 0 && nodes[index - 1] is Text) {
-        Text last = nodes[index - 1];
+        final last = nodes[index - 1] as Text;
         last.appendData(data);
       } else {
         nodes.insert(index, Text(data)..sourceSpan = span);
@@ -345,7 +345,7 @@ class TreeBuilder {
     // The foster parent element is the one which comes before the most
     // recently opened table element
     // XXX - this is really inelegant
-    Node lastTable;
+    Element lastTable;
     Node fosterParent;
     Node insertBefore;
     for (var elm in openElements.reversed) {

@@ -7,7 +7,7 @@ import 'package:csslib/visitor.dart'; // the CSSOM
 import 'package:html/dom.dart';
 import 'package:html/src/constants.dart' show isWhitespaceCC;
 
-bool matches(Node node, String selector) =>
+bool matches(Element node, String selector) =>
     SelectorEvaluator().matches(node, _parseSelectorList(selector));
 
 Element querySelector(Node node, String selector) =>
@@ -40,10 +40,9 @@ class SelectorEvaluator extends Visitor {
   }
 
   Element querySelector(Node root, SelectorGroup selector) {
-    for (var node in root.nodes) {
-      if (node is! Element) continue;
-      if (matches(node, selector)) return node;
-      var result = querySelector(node, selector);
+    for (var element in root.nodes.whereType<Element>()) {
+      if (matches(element, selector)) return element;
+      var result = querySelector(element, selector);
       if (result != null) return result;
     }
     return null;
@@ -51,10 +50,9 @@ class SelectorEvaluator extends Visitor {
 
   void querySelectorAll(
       Node root, SelectorGroup selector, List<Element> results) {
-    for (var node in root.nodes) {
-      if (node is! Element) continue;
-      if (matches(node, selector)) results.add(node);
-      querySelectorAll(node, selector, results);
+    for (var element in root.nodes.whereType<Element>()) {
+      if (matches(element, selector)) results.add(element);
+      querySelectorAll(element, selector, results);
     }
   }
 
@@ -71,13 +69,13 @@ class SelectorEvaluator extends Visitor {
     int combinator;
     for (var s in selector.simpleSelectorSequences.reversed) {
       if (combinator == null) {
-        result = s.simpleSelector.visit(this);
+        result = s.simpleSelector.visit(this) as bool;
       } else if (combinator == TokenKind.COMBINATOR_DESCENDANT) {
         // descendant combinator
         // http://dev.w3.org/csswg/selectors-4/#descendant-combinators
         do {
           _element = _element.parent;
-        } while (_element != null && !s.simpleSelector.visit(this));
+        } while (_element != null && !(s.simpleSelector.visit(this) as bool));
 
         if (_element == null) result = false;
       } else if (combinator == TokenKind.COMBINATOR_TILDE) {
@@ -85,7 +83,7 @@ class SelectorEvaluator extends Visitor {
         // http://dev.w3.org/csswg/selectors-4/#general-sibling-combinators
         do {
           _element = _element.previousElementSibling;
-        } while (_element != null && !s.simpleSelector.visit(this));
+        } while (_element != null && !(s.simpleSelector.visit(this) as bool));
 
         if (_element == null) result = false;
       }
@@ -216,10 +214,10 @@ class SelectorEvaluator extends Visitor {
         // TODO(jmesserly): support An+B syntax too.
         var exprs = selector.expression.expressions;
         if (exprs.length == 1 && exprs[0] is LiteralTerm) {
-          LiteralTerm literal = exprs[0];
+          final literal = exprs[0] as LiteralTerm;
           var parent = _element.parentNode;
           return parent != null &&
-              literal.value > 0 &&
+              (literal.value as num) > 0 &&
               parent.nodes.indexOf(_element) == literal.value;
         }
         break;
@@ -248,7 +246,7 @@ class SelectorEvaluator extends Visitor {
   @override
   bool visitNamespaceSelector(NamespaceSelector selector) {
     // Match element tag name
-    if (!selector.nameAsSimpleSelector.visit(this)) return false;
+    if (!(selector.nameAsSimpleSelector.visit(this) as bool)) return false;
 
     if (selector.isNamespaceWildcard) return true;
 
@@ -273,7 +271,7 @@ class SelectorEvaluator extends Visitor {
   // http://dev.w3.org/csswg/selectors-4/#negation
   @override
   bool visitNegationSelector(NegationSelector selector) =>
-      !selector.negationArg.visit(this);
+      !(selector.negationArg.visit(this) as bool);
 
   @override
   bool visitAttributeSelector(AttributeSelector selector) {

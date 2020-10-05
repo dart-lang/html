@@ -24,7 +24,7 @@ export 'src/css_class_set.dart' show CssClassSet;
 
 // TODO(jmesserly): this needs to be replaced by an AttributeMap for attributes
 // that exposes namespace info.
-class AttributeName implements Comparable {
+class AttributeName implements Comparable<Object> {
   /// The namespace prefix, e.g. `xlink`.
   final String prefix;
 
@@ -55,14 +55,15 @@ class AttributeName implements Comparable {
   }
 
   @override
-  int compareTo(other) {
+  int compareTo(dynamic other) {
     // Not sure about this sort order
     if (other is! AttributeName) return 1;
-    var cmp = (prefix ?? '').compareTo((other.prefix ?? ''));
+    final otherAttributeName = other as AttributeName;
+    var cmp = (prefix ?? '').compareTo((otherAttributeName.prefix ?? ''));
     if (cmp != 0) return cmp;
-    cmp = name.compareTo(other.name);
+    cmp = name.compareTo(otherAttributeName.name);
     if (cmp != 0) return cmp;
-    return namespace.compareTo(other.namespace);
+    return namespace.compareTo(otherAttributeName.namespace);
   }
 
   @override
@@ -141,7 +142,10 @@ abstract class Node {
   ///
   /// Returns null if this node either does not have a parent or its parent is
   /// not an element.
-  Element get parent => parentNode is Element ? parentNode : null;
+  Element get parent {
+    final parentNode = this.parentNode;
+    return parentNode is Element ? parentNode : null;
+  }
 
   // TODO(jmesserly): should move to Element.
   /// A map holding name, value pairs for attributes of the node.
@@ -299,7 +303,7 @@ abstract class Node {
     }
   }
 
-  Node _clone(Node shallowClone, bool deep) {
+  T _clone<T extends Node>(T shallowClone, bool deep) {
     if (deep) {
       for (var child in nodes) {
         shallowClone.append(child.clone(true));
@@ -442,7 +446,7 @@ class Text extends Node {
 
   void appendData(String data) {
     if (_data is! StringBuffer) _data = StringBuffer(_data);
-    StringBuffer sb = _data;
+    final sb = _data as StringBuffer;
     sb.write(data);
   }
 
@@ -1054,18 +1058,16 @@ class FilteredElementList extends IterableBase<Element>
   @override
   Iterable<Element> getRange(int start, int end) =>
       _filtered.getRange(start, end);
-  // TODO(sigmund): this should be typed Element, but we currently run into a
-  // bug where ListMixin<E>.indexOf() expects Object as the argument.
   @override
   int indexOf(Object element, [int start = 0]) =>
-      _filtered.indexOf(element, start);
+      // Cast forced by ListMixin https://github.com/dart-lang/sdk/issues/31311
+      _filtered.indexOf(element as Element, start);
 
-  // TODO(sigmund): this should be typed Element, but we currently run into a
-  // bug where ListMixin<E>.lastIndexOf() expects Object as the argument.
   @override
   int lastIndexOf(Object element, [int start]) {
     start ??= length - 1;
-    return _filtered.lastIndexOf(element, start);
+    // Cast forced by ListMixin https://github.com/dart-lang/sdk/issues/31311
+    return _filtered.lastIndexOf(element as Element, start);
   }
 
   @override
