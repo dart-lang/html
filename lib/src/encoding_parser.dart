@@ -15,7 +15,7 @@ class EncodingBytes {
   int get _length => _bytes.length;
 
   String _next() {
-    var p = __position = __position + 1;
+    final p = __position = __position + 1;
     if (p >= _length) {
       throw StateError('No more elements');
     } else if (p < 0) {
@@ -60,7 +60,7 @@ class EncodingBytes {
     skipChars ??= isWhitespace;
     var p = _position; // use property for the error-checking
     while (p < _length) {
-      var c = _bytes[p];
+      final c = _bytes[p];
       if (!skipChars(c)) {
         __position = p;
         return c;
@@ -74,7 +74,7 @@ class EncodingBytes {
   String _skipUntil(_CharPredicate untilChars) {
     var p = _position;
     while (p < _length) {
-      var c = _bytes[p];
+      final c = _bytes[p];
       if (untilChars(c)) {
         __position = p;
         return c;
@@ -88,11 +88,11 @@ class EncodingBytes {
   /// are found return true and advance the position to the byte after the
   /// match. Otherwise return false and leave the position alone.
   bool _matchBytes(String bytes) {
-    var p = _position;
+    final p = _position;
     if (_bytes.length < p + bytes.length) {
       return false;
     }
-    var data = _bytes.substring(p, p + bytes.length);
+    final data = _bytes.substring(p, p + bytes.length);
     if (data == bytes) {
       _position += bytes.length;
       return true;
@@ -103,7 +103,7 @@ class EncodingBytes {
   /// Look for the next sequence of bytes matching a given sequence. If
   /// a match is found advance the position to the last byte of the match
   bool _jumpTo(String bytes) {
-    var newPosition = _bytes.indexOf(bytes, _position);
+    final newPosition = _bytes.indexOf(bytes, _position);
     if (newPosition >= 0) {
       __position = newPosition + bytes.length - 1;
       return true;
@@ -152,7 +152,7 @@ class EncodingParser {
       for (;;) {
         for (var dispatch in methodDispatch) {
           if (_data._matchBytes(dispatch.pattern)) {
-            var keepParsing = dispatch.handler();
+            final keepParsing = dispatch.handler();
             if (keepParsing) break;
 
             // We found an encoding. Stop.
@@ -179,20 +179,20 @@ class EncodingParser {
     // We have a valid meta element we want to search for attributes
     while (true) {
       // Try to find the next attribute after the current position
-      var attr = _getAttribute();
+      final attr = _getAttribute();
       if (attr == null) return true;
 
       if (attr[0] == 'charset') {
-        var tentativeEncoding = attr[1];
-        var codec = codecName(tentativeEncoding);
+        final tentativeEncoding = attr[1];
+        final codec = codecName(tentativeEncoding);
         if (codec != null) {
           _encoding = codec;
           return false;
         }
       } else if (attr[0] == 'content') {
-        var contentParser = ContentAttrParser(EncodingBytes(attr[1]));
-        var tentativeEncoding = contentParser.parse();
-        var codec = codecName(tentativeEncoding);
+        final contentParser = ContentAttrParser(EncodingBytes(attr[1]));
+        final tentativeEncoding = contentParser.parse();
+        final codec = codecName(tentativeEncoding);
         if (codec != null) {
           _encoding = codec;
           return false;
@@ -220,7 +220,7 @@ class EncodingParser {
       return true;
     }
 
-    var c = _data._skipUntil(_isSpaceOrAngleBracket);
+    final c = _data._skipUntil(_isSpaceOrAngleBracket);
     if (c == '<') {
       // return to the first step in the overall "two step" algorithm
       // reprocessing the < byte
@@ -247,8 +247,8 @@ class EncodingParser {
       return null;
     }
     // Step 3
-    var attrName = [];
-    var attrValue = [];
+    final attrName = [];
+    final attrValue = [];
     // Step 4 attribute name
     while (true) {
       if (c == null) {
@@ -282,7 +282,7 @@ class EncodingParser {
     // Step 10
     if (c == "'" || c == '"') {
       // 10.1
-      var quoteChar = c;
+      final quoteChar = c;
       while (true) {
         // 10.2
         c = _data._next();
@@ -343,9 +343,9 @@ class ContentAttrParser {
       data._skipChars();
       // Look for an encoding between matching quote marks
       if (data._currentByte == '"' || data._currentByte == "'") {
-        var quoteMark = data._currentByte;
+        final quoteMark = data._currentByte;
         data._position += 1;
-        var oldPosition = data._position;
+        final oldPosition = data._position;
         if (data._jumpTo(quoteMark)) {
           return data._slice(oldPosition, data._position);
         } else {
@@ -353,7 +353,7 @@ class ContentAttrParser {
         }
       } else {
         // Unquoted value
-        var oldPosition = data._position;
+        final oldPosition = data._position;
         try {
           data._skipUntil(isWhitespace);
           return data._slice(oldPosition, data._position);

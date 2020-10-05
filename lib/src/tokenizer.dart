@@ -12,7 +12,7 @@ import 'utils.dart';
 // TODO(jmesserly): we could use a better data structure here like a trie, if
 // we had it implemented in Dart.
 Map<String, List<String>> entitiesByFirstChar = (() {
-  var result = <String, List<String>>{};
+  final result = <String, List<String>>{};
   for (var k in entities.keys) {
     result.putIfAbsent(k[0], () => []).add(k);
   }
@@ -110,7 +110,7 @@ class HtmlTokenizer implements Iterator<Token> {
     _attributeName.clear();
     _attributeName.write(name);
     _attributeValue.clear();
-    var attr = TagAttribute();
+    final attr = TagAttribute();
     _attributes.add(attr);
     if (attributeSpans) attr.start = stream.position - name.length;
   }
@@ -154,7 +154,7 @@ class HtmlTokenizer implements Iterator<Token> {
   /// Adds a token to the queue. Sets the span if needed.
   void _addToken(Token token) {
     if (generateSpans && token.span == null) {
-      var offset = stream.position;
+      final offset = stream.position;
       token.span = stream.fileInfo.span(_lastOffset, offset);
       if (token is! ParseErrorToken) {
         _lastOffset = offset;
@@ -174,7 +174,7 @@ class HtmlTokenizer implements Iterator<Token> {
       radix = 16;
     }
 
-    var charStack = [];
+    final charStack = [];
 
     // Consume all the characters that are in range while making sure we
     // don't hit an EOF.
@@ -185,7 +185,7 @@ class HtmlTokenizer implements Iterator<Token> {
     }
 
     // Convert the set of characters consumed to an int.
-    var charAsInt = int.parse(charStack.join(), radix: radix);
+    final charAsInt = int.parse(charStack.join(), radix: radix);
 
     // Certain characters get replaced with others
     var char = replacementCharacters[charAsInt];
@@ -259,7 +259,7 @@ class HtmlTokenizer implements Iterator<Token> {
     // Initialise to the default output for when no entity is matched
     var output = '&';
 
-    var charStack = [stream.char()];
+    final charStack = [stream.char()];
     if (isWhitespace(charStack[0]) ||
         charStack[0] == '<' ||
         charStack[0] == '&' ||
@@ -296,7 +296,7 @@ class HtmlTokenizer implements Iterator<Token> {
       var filteredEntityList = entitiesByFirstChar[charStack[0]] ?? const [];
 
       while (charStack.last != eof) {
-        var name = charStack.join();
+        final name = charStack.join();
         filteredEntityList =
             filteredEntityList.where((e) => e.startsWith(name)).toList();
 
@@ -315,7 +315,7 @@ class HtmlTokenizer implements Iterator<Token> {
 
       int entityLen;
       for (entityLen = charStack.length - 1; entityLen > 1; entityLen--) {
-        var possibleEntityName = charStack.sublist(0, entityLen).join();
+        final possibleEntityName = charStack.sublist(0, entityLen).join();
         if (entities.containsKey(possibleEntityName)) {
           entityName = possibleEntityName;
           break;
@@ -323,7 +323,7 @@ class HtmlTokenizer implements Iterator<Token> {
       }
 
       if (entityName != null) {
-        var lastChar = entityName[entityName.length - 1];
+        final lastChar = entityName[entityName.length - 1];
         if (lastChar != ';') {
           _addToken(ParseErrorToken('named-entity-without-semicolon'));
         }
@@ -366,7 +366,7 @@ class HtmlTokenizer implements Iterator<Token> {
   /// the state to "data" because that's what's needed after a token has been
   /// emitted.
   void emitCurrentToken() {
-    var token = currentToken;
+    final token = currentToken;
     // Add token to the queue to be yielded
     if (token is TagToken) {
       if (lowercaseElementName) {
@@ -400,7 +400,7 @@ class HtmlTokenizer implements Iterator<Token> {
   // Below are the various tokenizer states worked out.
 
   bool dataState() {
-    var data = stream.char();
+    final data = stream.char();
     if (data == '&') {
       state = entityDataState;
     } else if (data == '<') {
@@ -421,7 +421,7 @@ class HtmlTokenizer implements Iterator<Token> {
       // have already been appended to lastFourChars and will have broken
       // any <!-- or --> sequences
     } else {
-      var chars = stream.charsUntil('&<\u0000');
+      final chars = stream.charsUntil('&<\u0000');
       _addToken(CharactersToken('$data$chars'));
     }
     return true;
@@ -434,7 +434,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool rcdataState() {
-    var data = stream.char();
+    final data = stream.char();
     if (data == '&') {
       state = characterReferenceInRcdata;
     } else if (data == '<') {
@@ -452,7 +452,7 @@ class HtmlTokenizer implements Iterator<Token> {
       _addToken(SpaceCharactersToken(
           '$data${stream.charsUntil(spaceCharacters, true)}'));
     } else {
-      var chars = stream.charsUntil('&<');
+      final chars = stream.charsUntil('&<');
       _addToken(CharactersToken('$data$chars'));
     }
     return true;
@@ -465,7 +465,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool rawtextState() {
-    var data = stream.char();
+    final data = stream.char();
     if (data == '<') {
       state = rawtextLessThanSignState;
     } else if (data == '\u0000') {
@@ -475,14 +475,14 @@ class HtmlTokenizer implements Iterator<Token> {
       // Tokenization ends.
       return false;
     } else {
-      var chars = stream.charsUntil('<\u0000');
+      final chars = stream.charsUntil('<\u0000');
       _addToken(CharactersToken('$data$chars'));
     }
     return true;
   }
 
   bool scriptDataState() {
-    var data = stream.char();
+    final data = stream.char();
     if (data == '<') {
       state = scriptDataLessThanSignState;
     } else if (data == '\u0000') {
@@ -492,14 +492,14 @@ class HtmlTokenizer implements Iterator<Token> {
       // Tokenization ends.
       return false;
     } else {
-      var chars = stream.charsUntil('<\u0000');
+      final chars = stream.charsUntil('<\u0000');
       _addToken(CharactersToken('$data$chars'));
     }
     return true;
   }
 
   bool plaintextState() {
-    var data = stream.char();
+    final data = stream.char();
     if (data == eof) {
       // Tokenization ends.
       return false;
@@ -513,7 +513,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool tagOpenState() {
-    var data = stream.char();
+    final data = stream.char();
     if (data == '!') {
       state = markupDeclarationOpenState;
     } else if (data == '/') {
@@ -544,7 +544,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool closeTagOpenState() {
-    var data = stream.char();
+    final data = stream.char();
     if (isLetter(data)) {
       currentToken = EndTagToken(data);
       state = tagNameState;
@@ -566,7 +566,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool tagNameState() {
-    var data = stream.char();
+    final data = stream.char();
     if (isWhitespace(data)) {
       state = beforeAttributeNameState;
     } else if (data == '>') {
@@ -588,7 +588,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool rcdataLessThanSignState() {
-    var data = stream.char();
+    final data = stream.char();
     if (data == '/') {
       _buffer.clear();
       state = rcdataEndTagOpenState;
@@ -601,7 +601,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool rcdataEndTagOpenState() {
-    var data = stream.char();
+    final data = stream.char();
     if (isLetter(data)) {
       _buffer.write(data);
       state = rcdataEndTagNameState;
@@ -620,8 +620,8 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool rcdataEndTagNameState() {
-    var appropriate = _tokenIsAppropriate();
-    var data = stream.char();
+    final appropriate = _tokenIsAppropriate();
+    final data = stream.char();
     if (isWhitespace(data) && appropriate) {
       currentToken = EndTagToken('$_buffer');
       state = beforeAttributeNameState;
@@ -643,7 +643,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool rawtextLessThanSignState() {
-    var data = stream.char();
+    final data = stream.char();
     if (data == '/') {
       _buffer.clear();
       state = rawtextEndTagOpenState;
@@ -656,7 +656,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool rawtextEndTagOpenState() {
-    var data = stream.char();
+    final data = stream.char();
     if (isLetter(data)) {
       _buffer.write(data);
       state = rawtextEndTagNameState;
@@ -669,8 +669,8 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool rawtextEndTagNameState() {
-    var appropriate = _tokenIsAppropriate();
-    var data = stream.char();
+    final appropriate = _tokenIsAppropriate();
+    final data = stream.char();
     if (isWhitespace(data) && appropriate) {
       currentToken = EndTagToken('$_buffer');
       state = beforeAttributeNameState;
@@ -692,7 +692,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool scriptDataLessThanSignState() {
-    var data = stream.char();
+    final data = stream.char();
     if (data == '/') {
       _buffer.clear();
       state = scriptDataEndTagOpenState;
@@ -708,7 +708,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool scriptDataEndTagOpenState() {
-    var data = stream.char();
+    final data = stream.char();
     if (isLetter(data)) {
       _buffer.write(data);
       state = scriptDataEndTagNameState;
@@ -721,8 +721,8 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool scriptDataEndTagNameState() {
-    var appropriate = _tokenIsAppropriate();
-    var data = stream.char();
+    final appropriate = _tokenIsAppropriate();
+    final data = stream.char();
     if (isWhitespace(data) && appropriate) {
       currentToken = EndTagToken('$_buffer');
       state = beforeAttributeNameState;
@@ -744,7 +744,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool scriptDataEscapeStartState() {
-    var data = stream.char();
+    final data = stream.char();
     if (data == '-') {
       _addToken(CharactersToken('-'));
       state = scriptDataEscapeStartDashState;
@@ -756,7 +756,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool scriptDataEscapeStartDashState() {
-    var data = stream.char();
+    final data = stream.char();
     if (data == '-') {
       _addToken(CharactersToken('-'));
       state = scriptDataEscapedDashDashState;
@@ -768,7 +768,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool scriptDataEscapedState() {
-    var data = stream.char();
+    final data = stream.char();
     if (data == '-') {
       _addToken(CharactersToken('-'));
       state = scriptDataEscapedDashState;
@@ -780,14 +780,14 @@ class HtmlTokenizer implements Iterator<Token> {
     } else if (data == eof) {
       state = dataState;
     } else {
-      var chars = stream.charsUntil('<-\u0000');
+      final chars = stream.charsUntil('<-\u0000');
       _addToken(CharactersToken('$data$chars'));
     }
     return true;
   }
 
   bool scriptDataEscapedDashState() {
-    var data = stream.char();
+    final data = stream.char();
     if (data == '-') {
       _addToken(CharactersToken('-'));
       state = scriptDataEscapedDashDashState;
@@ -807,7 +807,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool scriptDataEscapedDashDashState() {
-    var data = stream.char();
+    final data = stream.char();
     if (data == '-') {
       _addToken(CharactersToken('-'));
     } else if (data == '<') {
@@ -829,7 +829,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool scriptDataEscapedLessThanSignState() {
-    var data = stream.char();
+    final data = stream.char();
     if (data == '/') {
       _buffer.clear();
       state = scriptDataEscapedEndTagOpenState;
@@ -847,7 +847,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool scriptDataEscapedEndTagOpenState() {
-    var data = stream.char();
+    final data = stream.char();
     if (isLetter(data)) {
       _buffer.clear();
       _buffer.write(data);
@@ -861,8 +861,8 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool scriptDataEscapedEndTagNameState() {
-    var appropriate = _tokenIsAppropriate();
-    var data = stream.char();
+    final appropriate = _tokenIsAppropriate();
+    final data = stream.char();
     if (isWhitespace(data) && appropriate) {
       currentToken = EndTagToken('$_buffer');
       state = beforeAttributeNameState;
@@ -884,7 +884,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool scriptDataDoubleEscapeStartState() {
-    var data = stream.char();
+    final data = stream.char();
     if (isWhitespace(data) || data == '/' || data == '>') {
       _addToken(CharactersToken(data));
       if ('$_buffer'.toLowerCase() == 'script') {
@@ -903,7 +903,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool scriptDataDoubleEscapedState() {
-    var data = stream.char();
+    final data = stream.char();
     if (data == '-') {
       _addToken(CharactersToken('-'));
       state = scriptDataDoubleEscapedDashState;
@@ -923,7 +923,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool scriptDataDoubleEscapedDashState() {
-    var data = stream.char();
+    final data = stream.char();
     if (data == '-') {
       _addToken(CharactersToken('-'));
       state = scriptDataDoubleEscapedDashDashState;
@@ -947,7 +947,7 @@ class HtmlTokenizer implements Iterator<Token> {
   // TODO(jmesserly): report bug in original code
   // (was "Dash" instead of "DashDash")
   bool scriptDataDoubleEscapedDashDashState() {
-    var data = stream.char();
+    final data = stream.char();
     if (data == '-') {
       _addToken(CharactersToken('-'));
     } else if (data == '<') {
@@ -971,7 +971,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool scriptDataDoubleEscapedLessThanSignState() {
-    var data = stream.char();
+    final data = stream.char();
     if (data == '/') {
       _addToken(CharactersToken('/'));
       _buffer.clear();
@@ -984,7 +984,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool scriptDataDoubleEscapeEndState() {
-    var data = stream.char();
+    final data = stream.char();
     if (isWhitespace(data) || data == '/' || data == '>') {
       _addToken(CharactersToken(data));
       if ('$_buffer'.toLowerCase() == 'script') {
@@ -1003,7 +1003,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool beforeAttributeNameState() {
-    var data = stream.char();
+    final data = stream.char();
     if (isWhitespace(data)) {
       stream.charsUntil(spaceCharacters, true);
     } else if (isLetter(data)) {
@@ -1032,7 +1032,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool attributeNameState() {
-    var data = stream.char();
+    final data = stream.char();
     var leavingThisState = true;
     var emitToken = false;
     if (data == '=') {
@@ -1092,7 +1092,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool afterAttributeNameState() {
-    var data = stream.char();
+    final data = stream.char();
     if (isWhitespace(data)) {
       stream.charsUntil(spaceCharacters, true);
     } else if (data == '=') {
@@ -1123,7 +1123,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool beforeAttributeValueState() {
-    var data = stream.char();
+    final data = stream.char();
     if (isWhitespace(data)) {
       stream.charsUntil(spaceCharacters, true);
     } else if (data == '"') {
@@ -1162,7 +1162,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool attributeValueDoubleQuotedState() {
-    var data = stream.char();
+    final data = stream.char();
     if (data == '"') {
       _markAttributeValueEnd(-1);
       _markAttributeEnd(0);
@@ -1184,7 +1184,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool attributeValueSingleQuotedState() {
-    var data = stream.char();
+    final data = stream.char();
     if (data == "'") {
       _markAttributeValueEnd(-1);
       _markAttributeEnd(0);
@@ -1206,7 +1206,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool attributeValueUnQuotedState() {
-    var data = stream.char();
+    final data = stream.char();
     if (isWhitespace(data)) {
       _markAttributeValueEnd(-1);
       state = beforeAttributeNameState;
@@ -1234,7 +1234,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool afterAttributeValueState() {
-    var data = stream.char();
+    final data = stream.char();
     if (isWhitespace(data)) {
       state = beforeAttributeNameState;
     } else if (data == '>') {
@@ -1254,7 +1254,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool selfClosingStartTagState() {
-    var data = stream.char();
+    final data = stream.char();
     if (data == '>') {
       currentTagToken.selfClosing = true;
       emitCurrentToken();
@@ -1286,7 +1286,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool markupDeclarationOpenState() {
-    var charStack = [stream.char()];
+    final charStack = [stream.char()];
     if (charStack.last == '-') {
       charStack.add(stream.char());
       if (charStack.last == '-') {
@@ -1297,7 +1297,7 @@ class HtmlTokenizer implements Iterator<Token> {
     } else if (charStack.last == 'd' || charStack.last == 'D') {
       var matched = true;
       for (var expected in const ['oO', 'cC', 'tT', 'yY', 'pP', 'eE']) {
-        var char = stream.char();
+        final char = stream.char();
         charStack.add(char);
         if (char == eof || !expected.contains(char)) {
           matched = false;
@@ -1338,7 +1338,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool commentStartState() {
-    var data = stream.char();
+    final data = stream.char();
     if (data == '-') {
       state = commentStartDashState;
     } else if (data == '\u0000') {
@@ -1360,7 +1360,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool commentStartDashState() {
-    var data = stream.char();
+    final data = stream.char();
     if (data == '-') {
       state = commentEndState;
     } else if (data == '\u0000') {
@@ -1382,7 +1382,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool commentState() {
-    var data = stream.char();
+    final data = stream.char();
     if (data == '-') {
       state = commentEndDashState;
     } else if (data == '\u0000') {
@@ -1399,7 +1399,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool commentEndDashState() {
-    var data = stream.char();
+    final data = stream.char();
     if (data == '-') {
       state = commentEndState;
     } else if (data == '\u0000') {
@@ -1418,7 +1418,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool commentEndState() {
-    var data = stream.char();
+    final data = stream.char();
     if (data == '>') {
       _addToken(currentToken);
       state = dataState;
@@ -1448,7 +1448,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool commentEndBangState() {
-    var data = stream.char();
+    final data = stream.char();
     if (data == '>') {
       _addToken(currentToken);
       state = dataState;
@@ -1471,7 +1471,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool doctypeState() {
-    var data = stream.char();
+    final data = stream.char();
     if (isWhitespace(data)) {
       state = beforeDoctypeNameState;
     } else if (data == eof) {
@@ -1488,7 +1488,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool beforeDoctypeNameState() {
-    var data = stream.char();
+    final data = stream.char();
     if (isWhitespace(data)) {
       return true;
     } else if (data == '>') {
@@ -1513,7 +1513,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool doctypeNameState() {
-    var data = stream.char();
+    final data = stream.char();
     if (isWhitespace(data)) {
       currentDoctypeToken.name = asciiUpper2Lower(currentDoctypeToken.name);
       state = afterDoctypeNameState;
@@ -1594,7 +1594,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool afterDoctypePublicKeywordState() {
-    var data = stream.char();
+    final data = stream.char();
     if (isWhitespace(data)) {
       state = beforeDoctypePublicIdentifierState;
     } else if (data == "'" || data == '"') {
@@ -1614,7 +1614,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool beforeDoctypePublicIdentifierState() {
-    var data = stream.char();
+    final data = stream.char();
     if (isWhitespace(data)) {
       return true;
     } else if (data == '"') {
@@ -1642,7 +1642,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool doctypePublicIdentifierDoubleQuotedState() {
-    var data = stream.char();
+    final data = stream.char();
     if (data == '"') {
       state = afterDoctypePublicIdentifierState;
     } else if (data == '\u0000') {
@@ -1665,7 +1665,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool doctypePublicIdentifierSingleQuotedState() {
-    var data = stream.char();
+    final data = stream.char();
     if (data == "'") {
       state = afterDoctypePublicIdentifierState;
     } else if (data == '\u0000') {
@@ -1688,7 +1688,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool afterDoctypePublicIdentifierState() {
-    var data = stream.char();
+    final data = stream.char();
     if (isWhitespace(data)) {
       state = betweenDoctypePublicAndSystemIdentifiersState;
     } else if (data == '>') {
@@ -1716,7 +1716,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool betweenDoctypePublicAndSystemIdentifiersState() {
-    var data = stream.char();
+    final data = stream.char();
     if (isWhitespace(data)) {
       return true;
     } else if (data == '>') {
@@ -1742,7 +1742,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool afterDoctypeSystemKeywordState() {
-    var data = stream.char();
+    final data = stream.char();
     if (isWhitespace(data)) {
       state = beforeDoctypeSystemIdentifierState;
     } else if (data == "'" || data == '"') {
@@ -1762,7 +1762,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool beforeDoctypeSystemIdentifierState() {
-    var data = stream.char();
+    final data = stream.char();
     if (isWhitespace(data)) {
       return true;
     } else if (data == '"') {
@@ -1790,7 +1790,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool doctypeSystemIdentifierDoubleQuotedState() {
-    var data = stream.char();
+    final data = stream.char();
     if (data == '"') {
       state = afterDoctypeSystemIdentifierState;
     } else if (data == '\u0000') {
@@ -1813,7 +1813,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool doctypeSystemIdentifierSingleQuotedState() {
-    var data = stream.char();
+    final data = stream.char();
     if (data == "'") {
       state = afterDoctypeSystemIdentifierState;
     } else if (data == '\u0000') {
@@ -1836,7 +1836,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool afterDoctypeSystemIdentifierState() {
-    var data = stream.char();
+    final data = stream.char();
     if (isWhitespace(data)) {
       return true;
     } else if (data == '>') {
@@ -1855,7 +1855,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool bogusDoctypeState() {
-    var data = stream.char();
+    final data = stream.char();
     if (data == '>') {
       _addToken(currentToken);
       state = dataState;
@@ -1869,7 +1869,7 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool cdataSectionState() {
-    var data = <String>[];
+    final data = <String>[];
     var matchedEnd = 0;
     while (true) {
       var ch = stream.char();

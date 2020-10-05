@@ -20,9 +20,9 @@ String namespaceHtml(String expected) {
   // final namespaceExpected = new RegExp(@"^(\s*)<(\S+)>", multiLine: true);
   // return expected.replaceAll(namespaceExpected, @"$1<html $2>");
   final namespaceExpected = RegExp(r'^(\|\s*)<(\S+)>');
-  var lines = expected.split('\n');
+  final lines = expected.split('\n');
   for (var i = 0; i < lines.length; i++) {
-    var match = namespaceExpected.firstMatch(lines[i]);
+    final match = namespaceExpected.firstMatch(lines[i]);
     if (match != null) {
       lines[i] = '${match[1]}<html ${match[2]}>';
     }
@@ -40,8 +40,8 @@ void runParserTest(
     bool namespaceHTMLElements) {
   // XXX - move this out into the setup function
   // concatenate all consecutive character tokens into a single token
-  var builder = treeCtor(namespaceHTMLElements);
-  var parser = HtmlParser(input, tree: builder);
+  final builder = treeCtor(namespaceHTMLElements);
+  final parser = HtmlParser(input, tree: builder);
 
   Node document;
   if (innerHTML != null) {
@@ -50,7 +50,7 @@ void runParserTest(
     document = parser.parse();
   }
 
-  var output = testSerializer(document);
+  final output = testSerializer(document);
 
   if (namespaceHTMLElements) {
     expected = namespaceHtml(expected);
@@ -73,16 +73,16 @@ void main() {
   for (var path in getDataFiles('tree-construction')) {
     if (!path.endsWith('.dat')) continue;
 
-    var tests = TestData(path, 'data');
-    var testName = pathos.basenameWithoutExtension(path);
+    final tests = TestData(path, 'data');
+    final testName = pathos.basenameWithoutExtension(path);
 
     group(testName, () {
       for (var testData in tests) {
-        var input = testData['data'];
+        final input = testData['data'];
         final errorString = testData['errors'];
         final errors = errorString?.split('\n');
-        var innerHTML = testData['document-fragment'];
-        var expected = testData['document'];
+        final innerHTML = testData['document-fragment'];
+        final expected = testData['document'];
 
         for (var treeCtor in treeTypes.values) {
           for (var namespaceHTMLElements in const [false, true]) {
@@ -100,7 +100,7 @@ void main() {
 /// Extract the name for the test based on the test input data.
 dynamic _nameFor(String input) {
   // Using jsonDecode to unescape other unicode characters
-  var escapeQuote = input
+  final escapeQuote = input
       .replaceAll(RegExp('\\\\.'), '_')
       .replaceAll(RegExp('\u0000'), '_')
       .replaceAll('"', '\\"')

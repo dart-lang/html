@@ -24,8 +24,8 @@ void main() {
         '<div id=Foo>');
 
     test('getElementById', () {
-      var foo = doc.body.nodes[0];
-      var fooVar = foo.nodes[2];
+      final foo = doc.body.nodes[0];
+      final fooVar = foo.nodes[2];
       expect((foo as Element).id, 'foo');
       expect((fooVar as Element).id, 'Foo');
       expect(doc.getElementById('foo'), foo);
@@ -33,9 +33,9 @@ void main() {
     });
 
     test('getElementsByClassName', () {
-      var foo = doc.body.nodes[0];
-      var barBaz = foo.nodes[0];
-      var quxBaz = foo.nodes[1];
+      final foo = doc.body.nodes[0];
+      final barBaz = foo.nodes[0];
+      final quxBaz = foo.nodes[1];
       expect((barBaz as Element).className, ' bar baz');
       expect((quxBaz as Element).className, 'qux  baz ');
       expect(doc.getElementsByClassName('baz'), [barBaz, quxBaz]);
@@ -45,17 +45,17 @@ void main() {
     });
 
     test('getElementsByTagName', () {
-      var foo = doc.body.nodes[0];
-      var barBaz = foo.nodes[0];
-      var quxBaz = foo.nodes[1];
-      var fooVar = foo.nodes[2];
+      final foo = doc.body.nodes[0];
+      final barBaz = foo.nodes[0];
+      final quxBaz = foo.nodes[1];
+      final fooVar = foo.nodes[2];
       expect(doc.getElementsByTagName('div'), [foo, barBaz, quxBaz, fooVar]);
     });
   });
 
   group('fragments are flattened', () {
     test('add', () {
-      var doc = parse('<body>');
+      final doc = parse('<body>');
       doc.body.nodes.add(parseFragment('<x-foo>'));
       expect((doc.body.nodes[0] as Element).localName, 'x-foo');
       doc.body.nodes.add(parseFragment('<x-bar>'));
@@ -63,7 +63,7 @@ void main() {
     });
 
     test('addLast', () {
-      var doc = parse('<body>');
+      final doc = parse('<body>');
       doc.body.nodes.addLast(parseFragment('<x-foo>'));
       expect((doc.body.nodes[0] as Element).localName, 'x-foo');
       doc.body.nodes.addLast(parseFragment('<x-bar>'));
@@ -71,7 +71,7 @@ void main() {
     });
 
     test('addAll', () {
-      var doc = parse('<body><x-a></x-a>');
+      final doc = parse('<body><x-a></x-a>');
       doc.body.nodes.addAll([parseFragment('<x-b></x-b><x-c></x-c>')]);
       expect((doc.body.nodes[0] as Element).localName, 'x-a');
       expect((doc.body.nodes[1] as Element).localName, 'x-b');
@@ -177,8 +177,8 @@ void main() {
     });
 
     test('replaceWith', () {
-      var fragment = parseFragment('<y-b></y-b><y-c></y-c>');
-      var doc = parse('<body><x-a></x-a><x-b></x-b><x-c></x-c>');
+      final fragment = parseFragment('<y-b></y-b><y-c></y-c>');
+      final doc = parse('<body><x-a></x-a><x-b></x-b><x-c></x-c>');
       doc.body.nodes[1].replaceWith(fragment);
       expect((doc.body.nodes[0] as Element).localName, 'x-a');
       expect((doc.body.nodes[1] as Element).localName, 'y-b');

@@ -23,8 +23,8 @@ void setupSpecialElements(parent) {
   parent.append(doc.createElement('undefined'));
 
   // Setup namespace tests
-  var anyNS = doc.createElement('div');
-  var noNS = doc.createElement('div');
+  final anyNS = doc.createElement('div');
+  final noNS = doc.createElement('div');
   anyNS.id = 'any-namespace';
   noNS.id = 'no-namespace';
 
@@ -71,17 +71,17 @@ void setupSpecialElements(parent) {
  */
 void interfaceCheck(String type, obj) {
   runTest(() {
-    var q = obj.querySelector is Function;
+    final q = obj.querySelector is Function;
     assertTrue(q, type + ' supports querySelector.');
   }, type + ' supports querySelector');
 
   runTest(() {
-    var qa = obj.querySelectorAll is Function;
+    final qa = obj.querySelectorAll is Function;
     assertTrue(qa, type + ' supports querySelectorAll.');
   }, type + ' supports querySelectorAll');
 
   runTest(() {
-    var list = obj.querySelectorAll('div');
+    final list = obj.querySelectorAll('div');
     // TODO(jmesserly): testing List<Element> for now. It should return an
     // ElementList which has extra properties. Needed for dart:html compat.
     assertTrue(list is List<Element>,
@@ -100,7 +100,7 @@ void verifyStaticList(String type, root) {
     pre = root.querySelectorAll('div');
     preLength = pre.length;
 
-    var div = doc.createElement('div');
+    final div = doc.createElement('div');
     (root is Document ? root.body : root).append(div);
 
     assertEquals(
@@ -142,7 +142,7 @@ void runSpecialSelectorTests(String type, root) {
 
   runTest(() {
     // 4
-    var elm = root.querySelector('null');
+    final elm = root.querySelector('null');
     assertNotEquals(elm, null, 'This should find an element.');
     // TODO(jmesserly): change "localName" back to "tagName" once implemented.
     assertEquals(
@@ -151,7 +151,7 @@ void runSpecialSelectorTests(String type, root) {
 
   runTest(() {
     // 5
-    var elm = root.querySelector('undefined');
+    final elm = root.querySelector('undefined');
     assertNotEquals(elm, 'undefined', 'This should find an element.');
     // TODO(jmesserly): change "localName" back to "tagName" once implemented.
     assertEquals(elm.localName.toUpperCase(), 'UNDEFINED',
@@ -167,7 +167,7 @@ void runSpecialSelectorTests(String type, root) {
 
   runTest(() {
     // 7
-    var result = root.querySelectorAll('*');
+    final result = root.querySelectorAll('*');
     var i = 0;
     traverse(root as Node, (elem) {
       if (!identical(elem, root)) {
@@ -211,11 +211,11 @@ void runValidSelectorTest(String type, root,
   }
 
   for (var i = 0; i < selectors.length; i++) {
-    var s = selectors[i];
-    var n = s['name'] as String;
-    var skip = _getSkip(n);
-    var q = s['selector'] as String;
-    var e = s['expect'] as List;
+    final s = selectors[i];
+    final n = s['name'] as String;
+    final skip = _getSkip(n);
+    final q = s['selector'] as String;
+    final e = s['expect'] as List;
 
     if ((s['exclude'] is! List ||
             (s['exclude'].indexOf(nodeType) == -1 &&
@@ -268,9 +268,9 @@ void runValidSelectorTest(String type, root,
  */
 void runInvalidSelectorTest(String type, root, List selectors) {
   for (var i = 0; i < selectors.length; i++) {
-    var s = selectors[i];
-    var n = s['name'] as String;
-    var q = s['selector'] as String;
+    final s = selectors[i];
+    final n = s['name'] as String;
+    final q = s['selector'] as String;
 
     // Dart note: FormatException seems a reasonable mapping of SyntaxError
     runTest(() {

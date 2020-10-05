@@ -23,7 +23,7 @@ final testDir = p.join(p.dirname(p.fromUri(Platform.packageConfig)), 'test');
 final testDataDir = p.join(testDir, 'data');
 
 Iterable<String> getDataFiles(String subdirectory) {
-  var dir = Directory(p.join(testDataDir, subdirectory));
+  final dir = Directory(p.join(testDataDir, subdirectory));
   return dir.listSync().whereType<File>().map((f) => f.path);
 }
 
@@ -45,14 +45,14 @@ class TestData extends IterableBase<Map<String, String>> {
   List<Map<String, String>> _getData() {
     var data = <String, String>{};
     String key;
-    var result = <Map<String, String>>[];
-    var lines = _text.split('\n');
+    final result = <Map<String, String>>[];
+    final lines = _text.split('\n');
     // Remove trailing newline to match Python
     if (lines.last == '') {
       lines.removeLast();
     }
     for (var line in lines) {
-      var heading = sectionHeading(line);
+      final heading = sectionHeading(line);
       if (heading != null) {
         if (data.isNotEmpty && heading == newTestHeading) {
           // Remove trailing newline
@@ -111,7 +111,7 @@ class TestSerializer extends TreeVisitor {
   set indent(int value) {
     if (_indent == value) return;
 
-    var arr = List<int>(value);
+    final arr = List<int>(value);
     for (var i = 0; i < value; i++) {
       arr[i] = 32;
     }
@@ -161,14 +161,14 @@ class TestSerializer extends TreeVisitor {
     _str.write(node);
     if (node.attributes.isNotEmpty) {
       indent += 2;
-      var keys = node.attributes.keys.toList();
+      final keys = node.attributes.keys.toList();
       keys.sort((x, y) {
         if (x is String) return x.compareTo(y as String);
         if (x is AttributeName) return x.compareTo(y as AttributeName);
         throw StateError('Cannot sort');
       });
       for (var key in keys) {
-        var v = node.attributes[key];
+        final v = node.attributes[key];
         if (key is AttributeName) {
           final attr = key as AttributeName;
           key = '${attr.prefix} ${attr.name}';

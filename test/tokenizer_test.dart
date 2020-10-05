@@ -27,14 +27,14 @@ class TokenizerTestParser {
 
   List parse(String str) {
     // Note: we need to pass bytes to the tokenizer if we want it to handle BOM.
-    var bytes = utf8.encode(str);
-    var tokenizer =
+    final bytes = utf8.encode(str);
+    final tokenizer =
         HtmlTokenizer(bytes, encoding: 'utf-8', generateSpans: _generateSpans);
     outputTokens = [];
 
     // Note: we can't get a closure of the state method. However, we can
     // create a new closure to invoke it via mirrors.
-    var mtok = reflect(tokenizer);
+    final mtok = reflect(tokenizer);
     tokenizer.state =
         () => mtok.invoke(Symbol(_state), const []).reflectee as bool;
 
@@ -43,7 +43,7 @@ class TokenizerTestParser {
     }
 
     while (tokenizer.moveNext()) {
-      var token = tokenizer.current;
+      final token = tokenizer.current;
       switch (token.kind) {
         case TokenKind.characters:
           processCharacters(token as CharactersToken);
@@ -117,7 +117,7 @@ class TokenizerTestParser {
 }
 
 List concatenateCharacterTokens(List tokens) {
-  var outputTokens = [];
+  final outputTokens = [];
   for (var token in tokens) {
     if (token.indexOf('ParseError') == -1 && token[0] == 'Character') {
       if (outputTokens.isNotEmpty &&
@@ -137,7 +137,7 @@ List concatenateCharacterTokens(List tokens) {
 List normalizeTokens(List tokens) {
   // TODO: convert tests to reflect arrays
   for (var i = 0; i < tokens.length; i++) {
-    var token = tokens[i];
+    final token = tokens[i];
     if (token[0] == 'ParseError') {
       tokens[i] = token[0];
     }
@@ -175,13 +175,15 @@ void expectTokensMatch(
     expect(receivedTokens, equals(expectedTokens), reason: message);
   } else {
     // Sort the tokens into two groups; non-parse errors and parse errors
-    var expectedNonErrors = expectedTokens.where((t) => t != 'ParseError');
-    var receivedNonErrors = receivedTokens.where((t) => t != 'ParseError');
+    final expectedNonErrors = expectedTokens.where((t) => t != 'ParseError');
+    final receivedNonErrors = receivedTokens.where((t) => t != 'ParseError');
 
     expect(receivedNonErrors, equals(expectedNonErrors), reason: message);
     if (!ignoreErrors) {
-      var expectedParseErrors = expectedTokens.where((t) => t == 'ParseError');
-      var receivedParseErrors = receivedTokens.where((t) => t == 'ParseError');
+      final expectedParseErrors =
+          expectedTokens.where((t) => t == 'ParseError');
+      final receivedParseErrors =
+          receivedTokens.where((t) => t == 'ParseError');
       expect(receivedParseErrors, equals(expectedParseErrors), reason: message);
     }
   }
@@ -194,18 +196,18 @@ void runTokenizerTest(Map<String, dynamic> testInfo) {
     testInfo = unescape(testInfo);
   }
 
-  var expected = concatenateCharacterTokens(testInfo['output'] as List);
+  final expected = concatenateCharacterTokens(testInfo['output'] as List);
   if (!testInfo.containsKey('lastStartTag')) {
     testInfo['lastStartTag'] = null;
   }
-  var parser = TokenizerTestParser(
+  final parser = TokenizerTestParser(
       testInfo['initialState'] as String,
       testInfo['lastStartTag'] as String,
       testInfo['generateSpans'] as bool /*?*/ ?? false);
   var tokens = parser.parse(testInfo['input'] as String);
   tokens = concatenateCharacterTokens(tokens);
-  var received = normalizeTokens(tokens);
-  var errorMsg = [
+  final received = normalizeTokens(tokens);
+  final errorMsg = [
     '\n\nInitial state:',
     testInfo['initialState'],
     '\nInput:',
@@ -215,7 +217,7 @@ void runTokenizerTest(Map<String, dynamic> testInfo) {
     '\nreceived:',
     tokens
   ].map((s) => '$s').join('\n');
-  var ignoreErrorOrder = testInfo['ignoreErrorOrder'] as bool /*?*/ ?? false;
+  final ignoreErrorOrder = testInfo['ignoreErrorOrder'] as bool /*?*/ ?? false;
 
   expectTokensMatch(expected, received, ignoreErrorOrder, true, errorMsg);
 }
@@ -234,8 +236,8 @@ Map<String, dynamic> unescape(Map<String, dynamic> testInfo) {
       token[1] = decode(token[1]);
       if ((token as List).length > 2) {
         for (var pair in token[2]) {
-          var key = pair[0];
-          var value = pair[1];
+          final key = pair[0];
+          final value = pair[1];
           token[2].remove(key);
           token[2][decode(key)] = decode(value);
         }
@@ -247,7 +249,7 @@ Map<String, dynamic> unescape(Map<String, dynamic> testInfo) {
 
 String camelCase(String s) {
   s = s.toLowerCase();
-  var result = StringBuffer();
+  final result = StringBuffer();
   for (var match in RegExp(r'\W+(\w)(\w+)').allMatches(s)) {
     if (result.length == 0) result.write(s.substring(0, match.start));
     result.write(match.group(1).toUpperCase());
@@ -260,10 +262,10 @@ void main() {
   for (var path in getDataFiles('tokenizer')) {
     if (!path.endsWith('.test')) continue;
 
-    var text = File(path).readAsStringSync();
-    var tests = jsonDecode(text);
-    var testName = pathos.basenameWithoutExtension(path);
-    var testList = tests['tests'] as List;
+    final text = File(path).readAsStringSync();
+    final tests = jsonDecode(text);
+    final testName = pathos.basenameWithoutExtension(path);
+    final testList = tests['tests'] as List;
     if (testList == null) continue;
 
     group(testName, () {

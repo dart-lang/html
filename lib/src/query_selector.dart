@@ -14,7 +14,7 @@ Element querySelector(Node node, String selector) =>
     SelectorEvaluator().querySelector(node, _parseSelectorList(selector));
 
 List<Element> querySelectorAll(Node node, String selector) {
-  var results = <Element>[];
+  final results = <Element>[];
   SelectorEvaluator()
       .querySelectorAll(node, _parseSelectorList(selector), results);
   return results;
@@ -22,8 +22,8 @@ List<Element> querySelectorAll(Node node, String selector) {
 
 // http://dev.w3.org/csswg/selectors-4/#grouping
 SelectorGroup _parseSelectorList(String selector) {
-  var errors = <Message>[];
-  var group = css.parseSelectorGroup(selector, errors: errors);
+  final errors = <Message>[];
+  final group = css.parseSelectorGroup(selector, errors: errors);
   if (group == null || errors.isNotEmpty) {
     throw FormatException("'$selector' is not a valid selector: $errors");
   }
@@ -42,7 +42,7 @@ class SelectorEvaluator extends Visitor {
   Element querySelector(Node root, SelectorGroup selector) {
     for (var element in root.nodes.whereType<Element>()) {
       if (matches(element, selector)) return element;
-      var result = querySelector(element, selector);
+      final result = querySelector(element, selector);
       if (result != null) return result;
     }
     return null;
@@ -62,7 +62,7 @@ class SelectorEvaluator extends Visitor {
 
   @override
   bool visitSelector(Selector selector) {
-    var old = _element;
+    final old = _element;
     var result = true;
 
     // Note: evaluate selectors right-to-left as it's more efficient.
@@ -212,10 +212,10 @@ class SelectorEvaluator extends Visitor {
       // http://dev.w3.org/csswg/selectors-4/#the-nth-child-pseudo
       case 'nth-child':
         // TODO(jmesserly): support An+B syntax too.
-        var exprs = selector.expression.expressions;
+        final exprs = selector.expression.expressions;
         if (exprs.length == 1 && exprs[0] is LiteralTerm) {
           final literal = exprs[0] as LiteralTerm;
-          var parent = _element.parentNode;
+          final parent = _element.parentNode;
           return parent != null &&
               (literal.value as num) > 0 &&
               parent.nodes.indexOf(_element) == literal.value;
@@ -226,8 +226,8 @@ class SelectorEvaluator extends Visitor {
       case 'lang':
         // TODO(jmesserly): shouldn't need to get the raw text here, but csslib
         // gets confused by the "-" in the expression, such as in "es-AR".
-        var toMatch = selector.expression.span.text;
-        var lang = _getInheritedLanguage(_element);
+        final toMatch = selector.expression.span.text;
+        final lang = _getInheritedLanguage(_element);
         // TODO(jmesserly): implement wildcards in level 4
         return lang != null && lang.startsWith(toMatch);
     }
@@ -236,7 +236,7 @@ class SelectorEvaluator extends Visitor {
 
   static String _getInheritedLanguage(Node node) {
     while (node != null) {
-      var lang = node.attributes['lang'];
+      final lang = node.attributes['lang'];
       if (lang != null) return lang;
       node = node.parent;
     }
@@ -276,12 +276,12 @@ class SelectorEvaluator extends Visitor {
   @override
   bool visitAttributeSelector(AttributeSelector selector) {
     // Match name first
-    var value = _element.attributes[selector.name.toLowerCase()];
+    final value = _element.attributes[selector.name.toLowerCase()];
     if (value == null) return false;
 
     if (selector.operatorKind == TokenKind.NO_MATCH) return true;
 
-    var select = '${selector.value}';
+    final select = '${selector.value}';
     switch (selector.operatorKind) {
       case TokenKind.EQUALS:
         return value == select;

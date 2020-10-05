@@ -111,7 +111,7 @@ class CodeMarkupVisitor extends TreeVisitor {
 
   @override
   void visitComment(Comment node) {
-    var data = htmlSerializeEscape(node.data);
+    final data = htmlSerializeEscape(node.data);
     _str.write('<code class="markup comment">&lt;!--$data--></code>');
   }
 }
@@ -138,7 +138,7 @@ String htmlSerializeEscape(String text, {bool attributeMode = false}) {
   // StringBuffer seems cleaner assuming Dart can unbox 1-char strings.
   StringBuffer result;
   for (var i = 0; i < text.length; i++) {
-    var ch = text[i];
+    final ch = text[i];
     String replace;
     switch (ch) {
       case '&':
@@ -201,7 +201,7 @@ void writeTextNodeAsHtml(StringBuffer str, Text node) {
   // Don't escape text for certain elements, notably <script>.
   final parent = node.parentNode;
   if (parent is Element) {
-    var tag = parent.localName;
+    final tag = parent.localName;
     if (rcdataElements.contains(tag) || tag == 'plaintext') {
       str.write(node.data);
       return;
