@@ -18,7 +18,7 @@ import 'level1_lib.dart';
 import 'selectors.dart';
 
 Document getTestContentDocument() {
-  var testPath = p.join(testDir, 'selectors', 'level1-content.html');
+  final testPath = p.join(testDir, 'selectors', 'level1-content.html');
   return parse(File(testPath).readAsStringSync());
 }
 
@@ -64,12 +64,12 @@ void main() {
   //doc = frame.contentDocument;                 // Document Node tests
   doc = getTestContentDocument();
 
-  var element = doc.getElementById('root'); // In-document Element Node tests
+  final element = doc.getElementById('root'); // In-document Element Node tests
 
   //Setup the namespace tests
   setupSpecialElements(element);
 
-  var outOfScope = element
+  final outOfScope = element
       .clone(true); // Append this to the body before running the in-document
   // Element tests, but after running the Document tests. This
   // tests that no elements that are not descendants of element
@@ -81,9 +81,9 @@ void main() {
         ''; // that none of these elements ever match.
   });
 
-  var detached = element.clone(true); // Detached Element Node tests
+  final detached = element.clone(true); // Detached Element Node tests
 
-  var fragment = doc.createDocumentFragment(); // Fragment Node tests
+  final fragment = doc.createDocumentFragment(); // Fragment Node tests
   fragment.append(element.clone(true));
 
   // Setup Tests
@@ -118,9 +118,7 @@ void main() {
       doc.body.append(outOfScope); // Append before in-document Element tests.
       // None of these elements should match
     });
-    tearDown(() {
-      outOfScope.remove();
-    });
+    tearDown(outOfScope.remove);
     runValidSelectorTest(
         'In-document Element', element, validSelectors, testType, docType);
   });

@@ -12,29 +12,29 @@ import 'package:test/test.dart';
 void main() {
   _testElementSpans();
   test('doctype is cloneable', () {
-    var doc = parse('<!doctype HTML>');
+    final doc = parse('<!doctype HTML>');
     final doctype = doc.nodes[0] as DocumentType;
     expect(doctype.clone(false).toString(), '<!DOCTYPE html>');
   });
 
   test('line counter', () {
     // http://groups.google.com/group/html5lib-discuss/browse_frm/thread/f4f00e4a2f26d5c0
-    var doc = parse('<pre>\nx\n&gt;\n</pre>');
+    final doc = parse('<pre>\nx\n&gt;\n</pre>');
     expect(doc.body.innerHtml, '<pre>x\n&gt;\n</pre>');
   });
 
   test('namespace html elements on', () {
-    var doc = HtmlParser('', tree: TreeBuilder(true)).parse();
+    final doc = HtmlParser('', tree: TreeBuilder(true)).parse();
     expect((doc.nodes[0] as Element).namespaceUri, Namespaces.html);
   });
 
   test('namespace html elements off', () {
-    var doc = HtmlParser('', tree: TreeBuilder(false)).parse();
+    final doc = HtmlParser('', tree: TreeBuilder(false)).parse();
     expect((doc.nodes[0] as Element).namespaceUri, null);
   });
 
   test('parse error spans - full', () {
-    var parser = HtmlParser('''
+    final parser = HtmlParser('''
 <!DOCTYPE html>
 <html>
   <body>
@@ -42,10 +42,10 @@ void main() {
   </body>
 </html>
 ''', generateSpans: true, sourceUrl: 'ParseError');
-    var doc = parser.parse();
+    final doc = parser.parse();
     expect(doc.body.outerHtml, '<body>\n  \n  \n\n</body>');
     expect(parser.errors.length, 1);
-    var error = parser.errors[0];
+    final error = parser.errors[0];
     expect(error.errorCode, 'unexpected-doctype');
 
     // Note: these values are 0-based, but the printed format is 1-based.
@@ -64,7 +64,7 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
   });
 
   test('parse error spans - minimal', () {
-    var parser = HtmlParser('''
+    final parser = HtmlParser('''
 <!DOCTYPE html>
 <html>
   <body>
@@ -72,10 +72,10 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
   </body>
 </html>
 ''');
-    var doc = parser.parse();
+    final doc = parser.parse();
     expect(doc.body.outerHtml, '<body>\n  \n  \n\n</body>');
     expect(parser.errors.length, 1);
-    var error = parser.errors[0];
+    final error = parser.errors[0];
     expect(error.errorCode, 'unexpected-doctype');
     expect(error.span.start.line, 3);
     // Note: error position is at the end, not the beginning
@@ -83,9 +83,9 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
   });
 
   test('text spans should have the correct length', () {
-    var textContent = '\n  hello {{name}}';
-    var html = '<body><div>$textContent</div>';
-    var doc = parse(html, generateSpans: true);
+    final textContent = '\n  hello {{name}}';
+    final html = '<body><div>$textContent</div>';
+    final doc = parse(html, generateSpans: true);
     final text = doc.body.nodes[0].nodes[0] as Text;
     expect(text, const TypeMatcher<Text>());
     expect(text.data, textContent);
@@ -94,45 +94,45 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
   });
 
   test('attribute spans', () {
-    var text = '<element name="x-foo" extends="x-bar" constructor="Foo">';
-    var doc = parse(text, generateSpans: true);
-    var elem = doc.querySelector('element');
+    final text = '<element name="x-foo" extends="x-bar" constructor="Foo">';
+    final doc = parse(text, generateSpans: true);
+    final elem = doc.querySelector('element');
     expect(elem.sourceSpan.start.offset, 0);
     expect(elem.sourceSpan.end.offset, text.length);
     expect(elem.sourceSpan.text, text);
 
     expect(elem.attributeSpans['quux'], null);
 
-    var span = elem.attributeSpans['extends'];
+    final span = elem.attributeSpans['extends'];
     expect(span.start.offset, text.indexOf('extends'));
     expect(span.text, 'extends="x-bar"');
   });
 
   test('attribute value spans', () {
-    var text = '<element name="x-foo" extends="x-bar" constructor="Foo">';
-    var doc = parse(text, generateSpans: true);
-    var elem = doc.querySelector('element');
+    final text = '<element name="x-foo" extends="x-bar" constructor="Foo">';
+    final doc = parse(text, generateSpans: true);
+    final elem = doc.querySelector('element');
 
     expect(elem.attributeValueSpans['quux'], null);
 
-    var span = elem.attributeValueSpans['extends'];
+    final span = elem.attributeValueSpans['extends'];
     expect(span.start.offset, text.indexOf('x-bar'));
     expect(span.text, 'x-bar');
   });
 
   test('attribute spans if no attributes', () {
-    var text = '<element>';
-    var doc = parse(text, generateSpans: true);
-    var elem = doc.querySelector('element');
+    final text = '<element>';
+    final doc = parse(text, generateSpans: true);
+    final elem = doc.querySelector('element');
 
     expect(elem.attributeSpans['quux'], null);
     expect(elem.attributeValueSpans['quux'], null);
   });
 
   test('attribute spans if no attribute value', () {
-    var text = '<foo template>';
-    var doc = parse(text, generateSpans: true);
-    var elem = doc.querySelector('foo');
+    final text = '<foo template>';
+    final doc = parse(text, generateSpans: true);
+    final elem = doc.querySelector('foo');
 
     expect(
         elem.attributeSpans['template'].start.offset, text.indexOf('template'));
@@ -140,9 +140,9 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
   });
 
   test('attribute spans null if code parsed without spans', () {
-    var text = '<element name="x-foo" extends="x-bar" constructor="Foo">';
-    var doc = parse(text);
-    var elem = doc.querySelector('element');
+    final text = '<element name="x-foo" extends="x-bar" constructor="Foo">';
+    final doc = parse(text);
+    final elem = doc.querySelector('element');
     expect(elem.sourceSpan, null);
     expect(elem.attributeSpans['quux'], null);
     expect(elem.attributeSpans['extends'], null);
@@ -160,8 +160,8 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
   });
 
   test('empty document has html, body, and head', () {
-    var doc = parse('');
-    var html = '<html><head></head><body></body></html>';
+    final doc = parse('');
+    final html = '<html><head></head><body></body></html>';
     expect(doc.outerHtml, html);
     expect(doc.documentElement.outerHtml, html);
     expect(doc.head.outerHtml, '<head></head>');
@@ -169,7 +169,7 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
   });
 
   test('strange table case', () {
-    var doc = parse('<table><tbody><foo>').body;
+    final doc = parse('<table><tbody><foo>').body;
     expect(doc.innerHtml, '<foo></foo><table><tbody></tbody></table>');
   });
 
@@ -177,7 +177,7 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
     test('attribute order', () {
       // Note: the spec only requires a stable order.
       // However, we preserve the input order via LinkedHashMap
-      var body = parse('<foo d=1 a=2 c=3 b=4>').body;
+      final body = parse('<foo d=1 a=2 c=3 b=4>').body;
       expect(body.innerHtml, '<foo d="1" a="2" c="3" b="4"></foo>');
       expect(body.querySelector('foo').attributes.remove('a'), '2');
       expect(body.innerHtml, '<foo d="1" c="3" b="4"></foo>');
@@ -203,9 +203,9 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
     });
 
     test('Escaping non-breaking space', () {
-      var text = '<span>foO\u00A0bar</span>';
+      final text = '<span>foO\u00A0bar</span>';
       expect(text.codeUnitAt(text.indexOf('O') + 1), 0xA0);
-      var e = parseFragment(text).firstChild as Element;
+      final e = parseFragment(text).firstChild as Element;
       expect(e.outerHtml, '<span>foO&nbsp;bar</span>');
     });
 
@@ -222,15 +222,15 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
     test('xml namespaces', () {
       // Note: this is a nonsensical example, but it triggers the behavior
       // we're looking for with attribute names in foreign content.
-      var doc = parse('''
+      final doc = parse('''
         <body>
         <svg>
         <desc xlink:type="simple"
               xlink:href="http://example.com/logo.png"
               xlink:show="new"></desc>
       ''');
-      var n = doc.querySelector('desc');
-      var keys = n.attributes.keys.toList();
+      final n = doc.querySelector('desc');
+      final keys = n.attributes.keys.toList();
       expect(keys[0], const TypeMatcher<AttributeName>());
       expect(keys[0].prefix, 'xlink');
       expect(keys[0].namespace, 'http://www.w3.org/1999/xlink');
@@ -244,8 +244,8 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
   });
 
   test('error printing without spans', () {
-    var parser = HtmlParser('foo');
-    var doc = parser.parse();
+    final parser = HtmlParser('foo');
+    final doc = parser.parse();
     expect(doc.body.innerHtml, 'foo');
     expect(parser.errors.length, 1);
     expect(parser.errors[0].errorCode, 'expected-doctype-but-got-chars');
@@ -262,9 +262,9 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
   });
 
   test('Element.text', () {
-    var doc = parseFragment('<div>foo<div>bar</div>baz</div>');
-    var e = doc.firstChild;
-    var text = e.firstChild;
+    final doc = parseFragment('<div>foo<div>bar</div>baz</div>');
+    final e = doc.firstChild;
+    final text = e.firstChild;
     expect((text as Text).data, 'foo');
     expect(e.text, 'foobarbaz');
 
@@ -276,8 +276,8 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
   });
 
   test('Text.text', () {
-    var doc = parseFragment('<div>foo<div>bar</div>baz</div>');
-    var e = doc.firstChild;
+    final doc = parseFragment('<div>foo<div>bar</div>baz</div>');
+    final e = doc.firstChild;
     final text = e.firstChild as Text;
     expect(text.data, 'foo');
     expect(text.text, 'foo');
@@ -289,9 +289,9 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
   });
 
   test('Comment.text', () {
-    var doc = parseFragment('<div><!--foo-->bar</div>');
-    var e = doc.firstChild;
-    var c = e.firstChild;
+    final doc = parseFragment('<div><!--foo-->bar</div>');
+    final e = doc.firstChild;
+    final c = e.firstChild;
     expect((c as Comment).data, 'foo');
     expect(c.text, 'foo');
     expect(e.text, 'bar');
@@ -303,16 +303,16 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
   });
 
   test('foreignObject end tag', () {
-    var p = HtmlParser('''
+    final p = HtmlParser('''
 <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"
      version="1.1">
     <foreignObject width="320px" height="200px">
         <x-flow></x-flow>
     </foreignObject>
 </svg>''');
-    var doc = p.parseFragment();
+    final doc = p.parseFragment();
     expect(p.errors, isEmpty);
-    var svg = doc.querySelector('svg');
+    final svg = doc.querySelector('svg');
     expect(svg.children[0].children[0].localName, 'x-flow');
   });
 
@@ -359,129 +359,129 @@ void _testElementSpans() {
 
   group('element spans', () {
     test('html and body', () {
-      var text = '<html><body>123</body></html>';
-      var doc = parse(text, generateSpans: true);
+      final text = '<html><body>123</body></html>';
+      final doc = parse(text, generateSpans: true);
       {
-        var elem = doc.querySelector('html');
+        final elem = doc.querySelector('html');
         assertSpan(elem.sourceSpan, 0, 6, '<html>');
         assertSpan(elem.endSourceSpan, 22, 29, '</html>');
       }
       {
-        var elem = doc.querySelector('body');
+        final elem = doc.querySelector('body');
         assertSpan(elem.sourceSpan, 6, 12, '<body>');
         assertSpan(elem.endSourceSpan, 15, 22, '</body>');
       }
     });
 
     test('normal', () {
-      var text = '<div><element><span></span></element></div>';
-      var doc = parse(text, generateSpans: true);
-      var elem = doc.querySelector('element');
+      final text = '<div><element><span></span></element></div>';
+      final doc = parse(text, generateSpans: true);
+      final elem = doc.querySelector('element');
       assertSpan(elem.sourceSpan, 5, 14, '<element>');
       assertSpan(elem.endSourceSpan, 27, 37, '</element>');
     });
 
     test('block', () {
-      var text = '<div>123</div>';
-      var doc = parse(text, generateSpans: true);
-      var elem = doc.querySelector('div');
+      final text = '<div>123</div>';
+      final doc = parse(text, generateSpans: true);
+      final elem = doc.querySelector('div');
       assertSpan(elem.sourceSpan, 0, 5, '<div>');
       assertSpan(elem.endSourceSpan, 8, 14, '</div>');
     });
 
     test('form', () {
-      var text = '<form>123</form>';
-      var doc = parse(text, generateSpans: true);
-      var elem = doc.querySelector('form');
+      final text = '<form>123</form>';
+      final doc = parse(text, generateSpans: true);
+      final elem = doc.querySelector('form');
       assertSpan(elem.sourceSpan, 0, 6, '<form>');
       assertSpan(elem.endSourceSpan, 9, 16, '</form>');
     });
 
     test('p explicit end', () {
-      var text = '<p>123</p>';
-      var doc = parse(text, generateSpans: true);
-      var elem = doc.querySelector('p');
+      final text = '<p>123</p>';
+      final doc = parse(text, generateSpans: true);
+      final elem = doc.querySelector('p');
       assertSpan(elem.sourceSpan, 0, 3, '<p>');
       assertSpan(elem.endSourceSpan, 6, 10, '</p>');
     });
 
     test('p implicit end', () {
-      var text = '<div><p>123<p>456</div>';
-      var doc = parse(text, generateSpans: true);
-      var elem = doc.querySelector('p');
+      final text = '<div><p>123<p>456</div>';
+      final doc = parse(text, generateSpans: true);
+      final elem = doc.querySelector('p');
       assertSpan(elem.sourceSpan, 5, 8, '<p>');
       expect(elem.endSourceSpan, isNull);
     });
 
     test('li', () {
-      var text = '<li>123</li>';
-      var doc = parse(text, generateSpans: true);
-      var elem = doc.querySelector('li');
+      final text = '<li>123</li>';
+      final doc = parse(text, generateSpans: true);
+      final elem = doc.querySelector('li');
       assertSpan(elem.sourceSpan, 0, 4, '<li>');
       assertSpan(elem.endSourceSpan, 7, 12, '</li>');
     });
 
     test('heading', () {
-      var text = '<h1>123</h1>';
-      var doc = parse(text, generateSpans: true);
-      var elem = doc.querySelector('h1');
+      final text = '<h1>123</h1>';
+      final doc = parse(text, generateSpans: true);
+      final elem = doc.querySelector('h1');
       assertSpan(elem.sourceSpan, 0, 4, '<h1>');
       assertSpan(elem.endSourceSpan, 7, 12, '</h1>');
     });
 
     test('formatting', () {
-      var text = '<b>123</b>';
-      var doc = parse(text, generateSpans: true);
-      var elem = doc.querySelector('b');
+      final text = '<b>123</b>';
+      final doc = parse(text, generateSpans: true);
+      final elem = doc.querySelector('b');
       assertSpan(elem.sourceSpan, 0, 3, '<b>');
       assertSpan(elem.endSourceSpan, 6, 10, '</b>');
     });
 
     test('table tbody', () {
-      var text = '<table><tbody>  </tbody></table>';
-      var doc = parse(text, generateSpans: true);
+      final text = '<table><tbody>  </tbody></table>';
+      final doc = parse(text, generateSpans: true);
       {
-        var elem = doc.querySelector('tbody');
+        final elem = doc.querySelector('tbody');
         assertSpan(elem.sourceSpan, 7, 14, '<tbody>');
         assertSpan(elem.endSourceSpan, 16, 24, '</tbody>');
       }
     });
 
     test('table tr td', () {
-      var text = '<table><tr><td>123</td></tr></table>';
-      var doc = parse(text, generateSpans: true);
+      final text = '<table><tr><td>123</td></tr></table>';
+      final doc = parse(text, generateSpans: true);
       {
-        var elem = doc.querySelector('table');
+        final elem = doc.querySelector('table');
         assertSpan(elem.sourceSpan, 0, 7, '<table>');
         assertSpan(elem.endSourceSpan, 28, 36, '</table>');
       }
       {
-        var elem = doc.querySelector('tr');
+        final elem = doc.querySelector('tr');
         assertSpan(elem.sourceSpan, 7, 11, '<tr>');
         assertSpan(elem.endSourceSpan, 23, 28, '</tr>');
       }
       {
-        var elem = doc.querySelector('td');
+        final elem = doc.querySelector('td');
         assertSpan(elem.sourceSpan, 11, 15, '<td>');
         assertSpan(elem.endSourceSpan, 18, 23, '</td>');
       }
     });
 
     test('select optgroup option', () {
-      var text = '<select><optgroup><option>123</option></optgroup></select>';
-      var doc = parse(text, generateSpans: true);
+      final text = '<select><optgroup><option>123</option></optgroup></select>';
+      final doc = parse(text, generateSpans: true);
       {
-        var elem = doc.querySelector('select');
+        final elem = doc.querySelector('select');
         assertSpan(elem.sourceSpan, 0, 8, '<select>');
         assertSpan(elem.endSourceSpan, 49, 58, '</select>');
       }
       {
-        var elem = doc.querySelector('optgroup');
+        final elem = doc.querySelector('optgroup');
         assertSpan(elem.sourceSpan, 8, 18, '<optgroup>');
         assertSpan(elem.endSourceSpan, 38, 49, '</optgroup>');
       }
       {
-        var elem = doc.querySelector('option');
+        final elem = doc.querySelector('option');
         assertSpan(elem.sourceSpan, 18, 26, '<option>');
         assertSpan(elem.endSourceSpan, 29, 38, '</option>');
       }

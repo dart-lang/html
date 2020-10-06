@@ -48,7 +48,7 @@ bool _mapEquals(Map a, Map b) {
   if (a.isEmpty) return true;
 
   for (var keyA in a.keys) {
-    var valB = b[keyA];
+    final valB = b[keyA];
     if (valB == null && !b.containsKey(keyA)) {
       return false;
     }
@@ -104,7 +104,7 @@ class TreeBuilder {
   bool elementInScope(target, {String variant}) {
     //If we pass a node in we match that. if we pass a string
     //match any node with that name
-    var exactNode = target is Node;
+    final exactNode = target is Node;
 
     var listElements1 = scopingElements;
     var listElements2 = const [];
@@ -189,13 +189,13 @@ class TreeBuilder {
       entry = activeFormattingElements[i];
 
       // TODO(jmesserly): optimize this. No need to create a token.
-      var cloneToken = StartTagToken(entry.localName,
+      final cloneToken = StartTagToken(entry.localName,
           namespace: entry.namespaceUri,
           data: LinkedHashMap.from(entry.attributes))
         ..span = entry.sourceSpan;
 
       // Step 9
-      var element = insertElement(cloneToken);
+      final element = insertElement(cloneToken);
 
       // Step 10
       activeFormattingElements[i] = element;
@@ -231,13 +231,13 @@ class TreeBuilder {
   }
 
   void insertRoot(StartTagToken token) {
-    var element = createElement(token);
+    final element = createElement(token);
     openElements.add(element);
     document.nodes.add(element);
   }
 
   void insertDoctype(DoctypeToken token) {
-    var doctype = DocumentType(token.name, token.publicId, token.systemId)
+    final doctype = DocumentType(token.name, token.publicId, token.systemId)
       ..sourceSpan = token.span;
     document.nodes.add(doctype);
   }
@@ -249,9 +249,9 @@ class TreeBuilder {
 
   /// Create an element but don't insert it anywhere
   Element createElement(StartTagToken token) {
-    var name = token.name;
-    var namespace = token.namespace ?? defaultNamespace;
-    var element = document.createElementNS(namespace, name)
+    final name = token.name;
+    final namespace = token.namespace ?? defaultNamespace;
+    final element = document.createElementNS(namespace, name)
       ..attributes = token.data
       ..sourceSpan = token.span;
     return element;
@@ -263,9 +263,9 @@ class TreeBuilder {
   }
 
   Element insertElementNormal(StartTagToken token) {
-    var name = token.name;
-    var namespace = token.namespace ?? defaultNamespace;
-    var element = document.createElementNS(namespace, name)
+    final name = token.name;
+    final namespace = token.namespace ?? defaultNamespace;
+    final element = document.createElementNS(namespace, name)
       ..attributes = token.data
       ..sourceSpan = token.span;
     openElements.last.nodes.add(element);
@@ -275,13 +275,13 @@ class TreeBuilder {
 
   Element insertElementTable(StartTagToken token) {
     /// Create an element and insert it into the tree
-    var element = createElement(token);
+    final element = createElement(token);
     if (!tableInsertModeElements.contains(openElements.last.localName)) {
       return insertElementNormal(token);
     } else {
       // We should be in the InTable mode. This means we want to do
       // special magic element rearranging
-      var nodePos = getTableMisnestedNodePosition();
+      final nodePos = getTableMisnestedNodePosition();
       if (nodePos[1] == null) {
         // TODO(jmesserly): I don't think this is reachable. If insertFromTable
         // is true, there will be a <table> element open, and it always has a
@@ -297,7 +297,7 @@ class TreeBuilder {
 
   /// Insert text data.
   void insertText(String data, FileSpan span) {
-    var parent = openElements.last;
+    final parent = openElements.last;
 
     if (!insertFromTable ||
         insertFromTable &&
@@ -306,7 +306,7 @@ class TreeBuilder {
     } else {
       // We should be in the InTable mode. This means we want to do
       // special magic element rearranging
-      var nodePos = getTableMisnestedNodePosition();
+      final nodePos = getTableMisnestedNodePosition();
       _insertText(nodePos[0], data, span, nodePos[1] as Element);
     }
   }
@@ -315,7 +315,7 @@ class TreeBuilder {
   /// start of node [refNode] or to the end of the node's text.
   static void _insertText(Node parent, String data, FileSpan span,
       [Element refNode]) {
-    var nodes = parent.nodes;
+    final nodes = parent.nodes;
     if (refNode == null) {
       if (nodes.isNotEmpty && nodes.last is Text) {
         final last = nodes.last as Text;
@@ -329,7 +329,7 @@ class TreeBuilder {
         nodes.add(Text(data)..sourceSpan = span);
       }
     } else {
-      var index = nodes.indexOf(refNode);
+      final index = nodes.indexOf(refNode);
       if (index > 0 && nodes[index - 1] is Text) {
         final last = nodes[index - 1] as Text;
         last.appendData(data);
@@ -370,7 +370,7 @@ class TreeBuilder {
   }
 
   void generateImpliedEndTags([String exclude]) {
-    var name = openElements.last.localName;
+    final name = openElements.last.localName;
     // XXX td, th and tr are not actually needed
     if (name != exclude &&
         const ['dd', 'dt', 'li', 'option', 'optgroup', 'p', 'rp', 'rt']
@@ -388,7 +388,7 @@ class TreeBuilder {
   /// Return the final fragment.
   DocumentFragment getFragment() {
     //XXX assert innerHTML
-    var fragment = DocumentFragment();
+    final fragment = DocumentFragment();
     openElements[0].reparentChildren(fragment);
     return fragment;
   }

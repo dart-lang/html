@@ -38,7 +38,7 @@ import 'src/utils.dart';
 /// extracted from.
 Document parse(input,
     {String encoding, bool generateSpans = false, String sourceUrl}) {
-  var p = HtmlParser(input,
+  final p = HtmlParser(input,
       encoding: encoding, generateSpans: generateSpans, sourceUrl: sourceUrl);
   return p.parse();
 }
@@ -60,7 +60,7 @@ DocumentFragment parseFragment(input,
     String encoding,
     bool generateSpans = false,
     String sourceUrl}) {
-  var p = HtmlParser(input,
+  final p = HtmlParser(input,
       encoding: encoding, generateSpans: generateSpans, sourceUrl: sourceUrl);
   return p.parseFragment(container);
 }
@@ -277,7 +277,7 @@ class HtmlParser {
   bool inForeignContent(Token token, int type) {
     if (tree.openElements.isEmpty) return false;
 
-    var node = tree.openElements.last;
+    final node = tree.openElements.last;
     if (node.namespaceUri == tree.defaultNamespace) return false;
 
     if (isMathMLTextIntegrationPoint(node)) {
@@ -310,7 +310,7 @@ class HtmlParser {
 
   void mainLoop() {
     while (tokenizer.moveNext()) {
-      var token = tokenizer.current;
+      final token = tokenizer.current;
       var newToken = token;
       int type;
       while (newToken != null) {
@@ -362,7 +362,7 @@ class HtmlParser {
 
     // When the loop finishes it's EOF
     var reprocess = true;
-    var reprocessPhases = [];
+    final reprocessPhases = [];
     while (reprocess) {
       reprocessPhases.add(phase);
       reprocess = phase.processEOF();
@@ -376,7 +376,7 @@ class HtmlParser {
   /// better.
   SourceSpan get _lastSpan {
     if (tokenizer.stream.fileInfo == null) return null;
-    var pos = tokenizer.stream.position;
+    final pos = tokenizer.stream.position;
     return tokenizer.stream.fileInfo.location(pos).pointSpan();
   }
 
@@ -386,13 +386,13 @@ class HtmlParser {
       span = _lastSpan;
     }
 
-    var err = ParseError(errorcode, span, datavars);
+    final err = ParseError(errorcode, span, datavars);
     errors.add(err);
     if (strict) throw err;
   }
 
   void adjustMathMLAttributes(StartTagToken token) {
-    var orig = token.data.remove('definitionurl');
+    final orig = token.data.remove('definitionurl');
     if (orig != null) {
       token.data['definitionURL'] = orig;
     }
@@ -464,7 +464,7 @@ class HtmlParser {
       'zoomandpan': 'zoomAndPan'
     };
     for (var originalName in token.data.keys.toList()) {
-      var svgName = replacements[originalName];
+      final svgName = replacements[originalName];
       if (svgName != null) {
         token.data[svgName] = token.data.remove(originalName);
       }
@@ -490,7 +490,7 @@ class HtmlParser {
     };
 
     for (var originalName in token.data.keys.toList()) {
-      var foreignName = replacements[originalName];
+      final foreignName = replacements[originalName];
       if (foreignName != null) {
         token.data[foreignName] = token.data.remove(originalName);
       }
@@ -502,7 +502,7 @@ class HtmlParser {
     // specification.)
     for (var node in tree.openElements.reversed) {
       var nodeName = node.localName;
-      var last = node == tree.openElements[0];
+      final last = node == tree.openElements[0];
       if (last) {
         assert(innerHTMLMode);
         nodeName = innerHTML;
@@ -655,7 +655,7 @@ class Phase {
 
   /// Helper method for popping openElements.
   void popOpenElementsUntil(EndTagToken token) {
-    var name = token.name;
+    final name = token.name;
     var node = tree.openElements.removeLast();
     while (node.localName != name) {
       node = tree.openElements.removeLast();
@@ -682,10 +682,10 @@ class InitialPhase extends Phase {
 
   @override
   Token processDoctype(DoctypeToken token) {
-    var name = token.name;
+    final name = token.name;
     var publicId = token.publicId;
-    var systemId = token.systemId;
-    var correct = token.correct;
+    final systemId = token.systemId;
+    final correct = token.correct;
 
     if ((name != 'html' ||
         publicId != null ||
@@ -1046,15 +1046,15 @@ class InHeadPhase extends Phase {
     tree.openElements.removeLast();
     token.selfClosingAcknowledged = true;
 
-    var attributes = token.data;
+    final attributes = token.data;
     if (!parser.tokenizer.stream.charEncodingCertain) {
-      var charset = attributes['charset'];
-      var content = attributes['content'];
+      final charset = attributes['charset'];
+      final content = attributes['content'];
       if (charset != null) {
         parser.tokenizer.stream.changeEncoding(charset);
       } else if (content != null) {
-        var data = EncodingBytes(content);
-        var codec = ContentAttrParser(data).parse();
+        final data = EncodingBytes(content);
+        final codec = ContentAttrParser(data).parse();
         parser.tokenizer.stream.changeEncoding(codec);
       }
     }
@@ -1082,7 +1082,7 @@ class InHeadPhase extends Phase {
   }
 
   void endTagHead(EndTagToken token) {
-    var node = parser.tree.openElements.removeLast();
+    final node = parser.tree.openElements.removeLast();
     assert(node.localName == 'head');
     node.endSourceSpan = token.span;
     parser.phase = parser._afterHeadPhase;
@@ -1505,9 +1505,9 @@ class InBodyPhase extends Phase {
   // helper
   void addFormattingElement(StartTagToken token) {
     tree.insertElement(token);
-    var element = tree.openElements.last;
+    final element = tree.openElements.last;
 
-    var matchingElements = [];
+    final matchingElements = [];
     for (Node node in tree.activeFormattingElements.reversed) {
       if (node == Marker) {
         break;
@@ -1555,7 +1555,7 @@ class InBodyPhase extends Phase {
     var data = token.data;
     dropNewline = false;
     if (data.startsWith('\n')) {
-      var lastOpen = tree.openElements.last;
+      final lastOpen = tree.openElements.last;
       if (const ['pre', 'listing', 'textarea'].contains(lastOpen.localName) &&
           !lastOpen.hasContent()) {
         data = data.substring(1);
@@ -1662,7 +1662,7 @@ class InBodyPhase extends Phase {
       'dt': ['dt', 'dd'],
       'dd': ['dt', 'dd']
     };
-    var stopNames = stopNamesMap[token.name];
+    final stopNames = stopNamesMap[token.name];
     for (var node in tree.openElements.reversed) {
       if (stopNames.contains(node.localName)) {
         parser.phase.processEndTag(EndTagToken(node.localName));
@@ -1702,7 +1702,7 @@ class InBodyPhase extends Phase {
   }
 
   void startTagA(StartTagToken token) {
-    var afeAElement = tree.elementInActiveFormattingElements('a');
+    final afeAElement = tree.elementInActiveFormattingElements('a');
     if (afeAElement != null) {
       parser.parseError(token.span, 'unexpected-start-tag-implies-end-tag',
           {'startName': 'a', 'endName': 'a'});
@@ -1781,7 +1781,7 @@ class InBodyPhase extends Phase {
   }
 
   void startTagInput(StartTagToken token) {
-    var savedFramesetOK = parser.framesetOK;
+    final savedFramesetOK = parser.framesetOK;
     startTagVoidFormatting(token);
     if (asciiUpper2Lower(token.data['type']) == 'hidden') {
       //input type=hidden doesn't change framesetOK
@@ -1818,8 +1818,8 @@ class InBodyPhase extends Phase {
     if (tree.formPointer != null) {
       return;
     }
-    var formAttrs = LinkedHashMap<dynamic, String>();
-    var dataAction = token.data['action'];
+    final formAttrs = LinkedHashMap<dynamic, String>();
+    final dataAction = token.data['action'];
     if (dataAction != null) {
       formAttrs['action'] = dataAction;
     }
@@ -1832,7 +1832,7 @@ class InBodyPhase extends Phase {
     var prompt = token.data['prompt'];
     prompt ??= 'This is a searchable index. Enter search keywords: ';
     processCharacters(CharactersToken(prompt));
-    var attributes = LinkedHashMap<dynamic, String>.from(token.data);
+    final attributes = LinkedHashMap<dynamic, String>.from(token.data);
     attributes.remove('action');
     attributes.remove('prompt');
     attributes['name'] = 'isindex';
@@ -1889,7 +1889,7 @@ class InBodyPhase extends Phase {
   void startTagRpRt(StartTagToken token) {
     if (tree.elementInScope('ruby')) {
       tree.generateImpliedEndTags();
-      var last = tree.openElements.last;
+      final last = tree.openElements.last;
       if (last.localName != 'ruby') {
         parser.parseError(last.sourceSpan, 'undefined-error');
       }
@@ -2006,7 +2006,7 @@ class InBodyPhase extends Phase {
     if (token.name == 'pre') {
       dropNewline = false;
     }
-    var inScope = tree.elementInScope(token.name);
+    final inScope = tree.elementInScope(token.name);
     if (inScope) {
       tree.generateImpliedEndTags();
     }
@@ -2019,7 +2019,7 @@ class InBodyPhase extends Phase {
   }
 
   void endTagForm(EndTagToken token) {
-    var node = tree.formPointer;
+    final node = tree.formPointer;
     tree.formPointer = null;
     if (node == null || !tree.elementInScope(node)) {
       parser.parseError(token.span, 'unexpected-end-tag', {'name': 'form'});
@@ -2090,7 +2090,7 @@ class InBodyPhase extends Phase {
       outerLoopCounter += 1;
 
       // Step 1 paragraph 1
-      var formattingElement =
+      final formattingElement =
           tree.elementInActiveFormattingElements(token.name);
       if (formattingElement == null ||
           (tree.openElements.contains(formattingElement) &&
@@ -2114,7 +2114,7 @@ class InBodyPhase extends Phase {
 
       // Step 2
       // Start of the adoption agency algorithm proper
-      var afeIndex = tree.openElements.indexOf(formattingElement);
+      final afeIndex = tree.openElements.indexOf(formattingElement);
       Element furthestBlock;
       for (var element in slice(tree.openElements, afeIndex)) {
         if (specialElements.contains(getElementNameTuple(element))) {
@@ -2135,7 +2135,7 @@ class InBodyPhase extends Phase {
         return;
       }
 
-      var commonAncestor = tree.openElements[afeIndex - 1];
+      final commonAncestor = tree.openElements[afeIndex - 1];
 
       // Step 5
       // The bookmark is supposed to help us identify where to reinsert
@@ -2170,7 +2170,7 @@ class InBodyPhase extends Phase {
         }
         // Step 6.5
         //cite = node.parent
-        var clone = node.clone(false);
+        final clone = node.clone(false);
         // Replace node with clone
         tree.activeFormattingElements[
             tree.activeFormattingElements.indexOf(node)] = clone;
@@ -2198,14 +2198,14 @@ class InBodyPhase extends Phase {
 
       if (const ['table', 'tbody', 'tfoot', 'thead', 'tr']
           .contains(commonAncestor.localName)) {
-        var nodePos = tree.getTableMisnestedNodePosition();
+        final nodePos = tree.getTableMisnestedNodePosition();
         nodePos[0].insertBefore(lastNode, nodePos[1]);
       } else {
         commonAncestor.nodes.add(lastNode);
       }
 
       // Step 8
-      var clone = formattingElement.clone(false);
+      final clone = formattingElement.clone(false);
 
       // Step 9
       furthestBlock.reparentChildren(clone);
@@ -2299,7 +2299,7 @@ class TextPhase extends Phase {
 
   @override
   bool processEOF() {
-    var last = tree.openElements.last;
+    final last = tree.openElements.last;
     parser.parseError(last.sourceSpan, 'expected-named-closing-tag-but-got-eof',
         {'name': last.localName});
     tree.openElements.removeLast();
@@ -2308,7 +2308,7 @@ class TextPhase extends Phase {
   }
 
   void endTagScript(EndTagToken token) {
-    var node = tree.openElements.removeLast();
+    final node = tree.openElements.removeLast();
     assert(node.localName == 'script');
     parser.phase = parser.originalPhase;
     //The rest of this method is all stuff that only happens if
@@ -2404,7 +2404,7 @@ class InTablePhase extends Phase {
   // processing methods
   @override
   bool processEOF() {
-    var last = tree.openElements.last;
+    final last = tree.openElements.last;
     if (last.localName != 'html') {
       parser.parseError(last.sourceSpan, 'eof-in-table');
     } else {
@@ -2416,7 +2416,7 @@ class InTablePhase extends Phase {
 
   @override
   Token processSpaceCharacters(SpaceCharactersToken token) {
-    var originalPhase = parser.phase;
+    final originalPhase = parser.phase;
     parser.phase = parser._inTableTextPhase;
     parser._inTableTextPhase.originalPhase = originalPhase;
     parser.phase.processSpaceCharacters(token);
@@ -2425,7 +2425,7 @@ class InTablePhase extends Phase {
 
   @override
   Token processCharacters(CharactersToken token) {
-    var originalPhase = parser.phase;
+    final originalPhase = parser.phase;
     parser.phase = parser._inTableTextPhase;
     parser._inTableTextPhase.originalPhase = originalPhase;
     parser.phase.processCharacters(token);
@@ -2517,7 +2517,7 @@ class InTablePhase extends Phase {
   void endTagTable(EndTagToken token) {
     if (tree.elementInScope('table', variant: 'table')) {
       tree.generateImpliedEndTags();
-      var last = tree.openElements.last;
+      final last = tree.openElements.last;
       if (last.localName != 'table') {
         parser.parseError(token.span, 'end-tag-too-early-named',
             {'gotName': 'table', 'expectedName': last.localName});
@@ -2525,7 +2525,7 @@ class InTablePhase extends Phase {
       while (tree.openElements.last.localName != 'table') {
         tree.openElements.removeLast();
       }
-      var node = tree.openElements.removeLast();
+      final node = tree.openElements.removeLast();
       node.endSourceSpan = token.span;
       parser.resetInsertionMode();
     } else {
@@ -2561,7 +2561,7 @@ class InTableTextPhase extends Phase {
     if (characterTokens.isEmpty) return;
 
     // TODO(sigmund,jmesserly): remove '' (dartbug.com/8480)
-    var data = characterTokens.map((t) => t.data).join('');
+    final data = characterTokens.map((t) => t.data).join('');
     FileSpan span;
 
     if (parser.generateSpans) {
@@ -2689,7 +2689,7 @@ class InCaptionPhase extends Phase {
   Token startTagTableElement(StartTagToken token) {
     parser.parseError(token.span, 'undefined-error');
     //XXX Have to duplicate logic here to find out if the tag is ignored
-    var ignoreEndTag = ignoreEndTagCaption();
+    final ignoreEndTag = ignoreEndTagCaption();
     parser.phase.processEndTag(EndTagToken('caption'));
     if (!ignoreEndTag) {
       return token;
@@ -2714,7 +2714,7 @@ class InCaptionPhase extends Phase {
       while (tree.openElements.last.localName != 'caption') {
         tree.openElements.removeLast();
       }
-      var node = tree.openElements.removeLast();
+      final node = tree.openElements.removeLast();
       node.endSourceSpan = token.span;
       tree.clearActiveFormattingElements();
       parser.phase = parser._inTablePhase;
@@ -2727,7 +2727,7 @@ class InCaptionPhase extends Phase {
 
   Token endTagTable(EndTagToken token) {
     parser.parseError(token.span, 'undefined-error');
-    var ignoreEndTag = ignoreEndTagCaption();
+    final ignoreEndTag = ignoreEndTagCaption();
     parser.phase.processEndTag(EndTagToken('caption'));
     if (!ignoreEndTag) {
       return token;
@@ -2781,7 +2781,7 @@ class InColumnGroupPhase extends Phase {
 
   @override
   bool processEOF() {
-    var ignoreEndTag = ignoreEndTagColgroup();
+    final ignoreEndTag = ignoreEndTagColgroup();
     if (ignoreEndTag) {
       assert(parser.innerHTMLMode);
       return false;
@@ -2793,7 +2793,7 @@ class InColumnGroupPhase extends Phase {
 
   @override
   Token processCharacters(CharactersToken token) {
-    var ignoreEndTag = ignoreEndTagColgroup();
+    final ignoreEndTag = ignoreEndTagColgroup();
     endTagColgroup(EndTagToken('colgroup'));
     return ignoreEndTag ? null : token;
   }
@@ -2804,7 +2804,7 @@ class InColumnGroupPhase extends Phase {
   }
 
   Token startTagOther(StartTagToken token) {
-    var ignoreEndTag = ignoreEndTagColgroup();
+    final ignoreEndTag = ignoreEndTagColgroup();
     endTagColgroup(EndTagToken('colgroup'));
     return ignoreEndTag ? null : token;
   }
@@ -2815,7 +2815,7 @@ class InColumnGroupPhase extends Phase {
       assert(parser.innerHTMLMode);
       parser.parseError(token.span, 'undefined-error');
     } else {
-      var node = tree.openElements.removeLast();
+      final node = tree.openElements.removeLast();
       node.endSourceSpan = token.span;
       parser.phase = parser._inTablePhase;
     }
@@ -2826,7 +2826,7 @@ class InColumnGroupPhase extends Phase {
   }
 
   Token endTagOther(EndTagToken token) {
-    var ignoreEndTag = ignoreEndTagColgroup();
+    final ignoreEndTag = ignoreEndTagColgroup();
     endTagColgroup(EndTagToken('colgroup'));
     return ignoreEndTag ? null : token;
   }
@@ -2886,7 +2886,7 @@ class InTableBodyPhase extends Phase {
 
   // helper methods
   void clearStackToTableBodyContext() {
-    var tableTags = const ['tbody', 'tfoot', 'thead', 'html'];
+    final tableTags = const ['tbody', 'tfoot', 'thead', 'html'];
     while (!tableTags.contains(tree.openElements.last.localName)) {
       //XXX parser.parseError(token.span, "unexpected-implied-end-tag-in-table",
       //  {"name": tree.openElements.last.name})
@@ -2936,7 +2936,7 @@ class InTableBodyPhase extends Phase {
   void endTagTableRowGroup(EndTagToken token) {
     if (tree.elementInScope(token.name, variant: 'table')) {
       clearStackToTableBodyContext();
-      var node = tree.openElements.removeLast();
+      final node = tree.openElements.removeLast();
       node.endSourceSpan = token.span;
       parser.phase = parser._inTablePhase;
     } else {
@@ -3026,7 +3026,7 @@ class InRowPhase extends Phase {
   // helper methods (XXX unify this with other table helper methods)
   void clearStackToTableRowContext() {
     while (true) {
-      var last = tree.openElements.last;
+      final last = tree.openElements.last;
       if (last.localName == 'tr' || last.localName == 'html') break;
 
       parser.parseError(
@@ -3066,7 +3066,7 @@ class InRowPhase extends Phase {
   }
 
   Token startTagTableOther(StartTagToken token) {
-    var ignoreEndTag = ignoreEndTagTr();
+    final ignoreEndTag = ignoreEndTagTr();
     endTagTr(EndTagToken('tr'));
     // XXX how are we sure it's always ignored in the innerHTML case?
     return ignoreEndTag ? null : token;
@@ -3079,7 +3079,7 @@ class InRowPhase extends Phase {
   void endTagTr(EndTagToken token) {
     if (!ignoreEndTagTr()) {
       clearStackToTableRowContext();
-      var node = tree.openElements.removeLast();
+      final node = tree.openElements.removeLast();
       node.endSourceSpan = token.span;
       parser.phase = parser._inTableBodyPhase;
     } else {
@@ -3090,7 +3090,7 @@ class InRowPhase extends Phase {
   }
 
   Token endTagTable(EndTagToken token) {
-    var ignoreEndTag = ignoreEndTagTr();
+    final ignoreEndTag = ignoreEndTagTr();
     endTagTr(EndTagToken('tr'));
     // Reprocess the current tag if the tr end tag was not ignored
     // XXX how are we sure it's always ignored in the innerHTML case?
@@ -3212,7 +3212,7 @@ class InCellPhase extends Phase {
             token.span, 'unexpected-cell-end-tag', {'name': token.name});
         popOpenElementsUntil(token);
       } else {
-        var node = tree.openElements.removeLast();
+        final node = tree.openElements.removeLast();
         node.endSourceSpan = token.span;
       }
       tree.clearActiveFormattingElements();
@@ -3291,7 +3291,7 @@ class InSelectPhase extends Phase {
   // http://www.whatwg.org/specs/web-apps/current-work///in-select
   @override
   bool processEOF() {
-    var last = tree.openElements.last;
+    final last = tree.openElements.last;
     if (last.localName != 'html') {
       parser.parseError(last.sourceSpan, 'eof-in-select');
     } else {
@@ -3355,7 +3355,7 @@ class InSelectPhase extends Phase {
 
   void endTagOption(EndTagToken token) {
     if (tree.openElements.last.localName == 'option') {
-      var node = tree.openElements.removeLast();
+      final node = tree.openElements.removeLast();
       node.endSourceSpan = token.span;
     } else {
       parser.parseError(
@@ -3372,7 +3372,7 @@ class InSelectPhase extends Phase {
     }
     // It also closes </optgroup>
     if (tree.openElements.last.localName == 'optgroup') {
-      var node = tree.openElements.removeLast();
+      final node = tree.openElements.removeLast();
       node.endSourceSpan = token.span;
       // But nothing else
     } else {
@@ -3567,7 +3567,7 @@ class InForeignContentPhase extends Phase {
       'textpath': 'textPath'
     };
 
-    var replace = replacements[token.name];
+    final replace = replacements[token.name];
     if (replace != null) {
       token.name = replace;
     }
@@ -3585,7 +3585,7 @@ class InForeignContentPhase extends Phase {
 
   @override
   Token processStartTag(StartTagToken token) {
-    var currentNode = tree.openElements.last;
+    final currentNode = tree.openElements.last;
     if (breakoutElements.contains(token.name) ||
         (token.name == 'font' &&
             (token.data.containsKey('color') ||
@@ -3761,7 +3761,7 @@ class InFramesetPhase extends Phase {
 
   @override
   bool processEOF() {
-    var last = tree.openElements.last;
+    final last = tree.openElements.last;
     if (last.localName != 'html') {
       parser.parseError(last.sourceSpan, 'eof-in-frameset');
     } else {
@@ -3801,7 +3801,7 @@ class InFramesetPhase extends Phase {
       parser.parseError(
           token.span, 'unexpected-frameset-in-frameset-innerhtml');
     } else {
-      var node = tree.openElements.removeLast();
+      final node = tree.openElements.removeLast();
       node.endSourceSpan = token.span;
     }
     if (!parser.innerHTMLMode &&
@@ -4009,13 +4009,13 @@ class ParseError implements SourceSpanException {
 
   @override
   String toString({color}) {
-    var res = span.message(message, color: color);
+    final res = span.message(message, color: color);
     return span.sourceUrl == null ? 'ParserError on $res' : 'On $res';
   }
 }
 
 /// Convenience function to get the pair of namespace and localName.
 Pair<String, String> getElementNameTuple(Element e) {
-  var ns = e.namespaceUri ?? Namespaces.html;
+  final ns = e.namespaceUri ?? Namespaces.html;
   return Pair(ns, e.localName);
 }

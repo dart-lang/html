@@ -16,11 +16,11 @@ class ElementCssClassSet extends _CssClassSetImpl {
 
   @override
   Set<String> readClasses() {
-    var s = LinkedHashSet<String>();
-    var classname = _element.className;
+    final s = LinkedHashSet<String>();
+    final classname = _element.className;
 
     for (var name in classname.split(' ')) {
-      var trimmed = name.trim();
+      final trimmed = name.trim();
       if (trimmed.isNotEmpty) {
         s.add(trimmed);
       }
@@ -112,7 +112,7 @@ abstract class _CssClassSetImpl extends SetBase<String> implements CssClassSet {
   /// [shouldAdd] is false then we always remove [value] from the element.
   @override
   bool toggle(String value, [bool shouldAdd]) {
-    var s = readClasses();
+    final s = readClasses();
     var result = false;
     shouldAdd ??= !s.contains(value);
     if (shouldAdd) {
@@ -170,8 +170,8 @@ abstract class _CssClassSetImpl extends SetBase<String> implements CssClassSet {
   @override
   bool remove(Object value) {
     if (value is! String) return false;
-    var s = readClasses();
-    var result = s.remove(value);
+    final s = readClasses();
+    final result = s.remove(value);
     writeClasses(s);
     return result;
   }
@@ -197,8 +197,8 @@ abstract class _CssClassSetImpl extends SetBase<String> implements CssClassSet {
   ///   After f returns, the modified set is written to the
   ///       className property of this element.
   bool _modify(bool Function(Set<String>) f) {
-    var s = readClasses();
-    var ret = f(s);
+    final s = readClasses();
+    final ret = f(s);
     writeClasses(s);
     return ret;
   }

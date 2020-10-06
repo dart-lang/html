@@ -203,13 +203,13 @@ abstract class Node {
 
   // http://domparsing.spec.whatwg.org/#extensions-to-the-element-interface
   String get _outerHtml {
-    var str = StringBuffer();
+    final str = StringBuffer();
     _addOuterHtml(str);
     return str.toString();
   }
 
   String get _innerHtml {
-    var str = StringBuffer();
+    final str = StringBuffer();
     _addInnerHtml(str);
     return str.toString();
   }
@@ -284,16 +284,16 @@ abstract class Node {
 
     if (sourceSpan == null) return;
 
-    var tokenizer = HtmlTokenizer(sourceSpan.text,
+    final tokenizer = HtmlTokenizer(sourceSpan.text,
         generateSpans: true, attributeSpans: true);
 
     tokenizer.moveNext();
-    var token = tokenizer.current as StartTagToken;
+    final token = tokenizer.current as StartTagToken;
 
     if (token.attributeSpans == null) return; // no attributes
 
     for (var attr in token.attributeSpans) {
-      var offset = sourceSpan.start.offset;
+      final offset = sourceSpan.start.offset;
       _attributeSpans[attr.name] =
           sourceSpan.file.span(offset + attr.start, offset + attr.end);
       if (attr.startValue != null) {
@@ -400,8 +400,8 @@ class DocumentType extends Node {
     if (publicId != null || systemId != null) {
       // TODO(jmesserly): the html5 serialization spec does not add these. But
       // it seems useful, and the parser can handle it, so for now keeping it.
-      var pid = publicId ?? '';
-      var sid = systemId ?? '';
+      final pid = publicId ?? '';
+      final sid = systemId ?? '';
       return '<!DOCTYPE $name "$pid" "$sid">';
     } else {
       return '<!DOCTYPE $name>';
@@ -516,7 +516,7 @@ class Element extends Node with _ParentNode, _ElementAndDocument {
       }
     }
 
-    var fragment = parseFragment(html, container: parentTag);
+    final fragment = parseFragment(html, container: parentTag);
     Element element;
     if (fragment.children.length == 1) {
       element = fragment.children[0];
@@ -537,9 +537,9 @@ class Element extends Node with _ParentNode, _ElementAndDocument {
   // TODO(jmesserly): we can make this faster
   Element get previousElementSibling {
     if (parentNode == null) return null;
-    var siblings = parentNode.nodes;
+    final siblings = parentNode.nodes;
     for (var i = siblings.indexOf(this) - 1; i >= 0; i--) {
-      var s = siblings[i];
+      final s = siblings[i];
       if (s is Element) return s;
     }
     return null;
@@ -547,9 +547,9 @@ class Element extends Node with _ParentNode, _ElementAndDocument {
 
   Element get nextElementSibling {
     if (parentNode == null) return null;
-    var siblings = parentNode.nodes;
+    final siblings = parentNode.nodes;
     for (var i = siblings.indexOf(this) + 1; i < siblings.length; i++) {
-      var s = siblings[i];
+      final s = siblings[i];
       if (s is Element) return s;
     }
     return null;
@@ -557,7 +557,7 @@ class Element extends Node with _ParentNode, _ElementAndDocument {
 
   @override
   String toString() {
-    var prefix = Namespaces.getPrefix(namespaceUri);
+    final prefix = Namespaces.getPrefix(namespaceUri);
     return "<${prefix == null ? '' : '$prefix '}$localName>";
   }
 
@@ -632,7 +632,7 @@ class Element extends Node with _ParentNode, _ElementAndDocument {
         uri == Namespaces.svg) {
       return '';
     }
-    var prefix = Namespaces.getPrefix(uri);
+    final prefix = Namespaces.getPrefix(uri);
     // TODO(jmesserly): the spec doesn't define "qualified name".
     // I'm not sure if this is correct, but it should parse reasonably.
     return prefix == null ? '' : '$prefix:';
@@ -640,14 +640,14 @@ class Element extends Node with _ParentNode, _ElementAndDocument {
 
   @override
   Element clone(bool deep) {
-    var result = Element._(localName, namespaceUri)
+    final result = Element._(localName, namespaceUri)
       ..attributes = LinkedHashMap.from(attributes);
     return _clone(result, deep);
   }
 
   // http://dom.spec.whatwg.org/#dom-element-id
   String get id {
-    var result = attributes['id'];
+    final result = attributes['id'];
     return result ?? '';
   }
 
@@ -657,7 +657,7 @@ class Element extends Node with _ParentNode, _ElementAndDocument {
 
   // http://dom.spec.whatwg.org/#dom-element-classname
   String get className {
-    var result = attributes['class'];
+    final result = attributes['class'];
     return result ?? '';
   }
 
@@ -741,7 +741,7 @@ class NodeList extends ListProxy<Node> {
     //   2. we should update parent pointers in reverse order. That way they
     //      are removed from the original NodeList (if any) from the end, which
     //      is faster.
-    var list = _flattenDocFragments(collection);
+    final list = _flattenDocFragments(collection);
     for (var node in list.reversed) {
       _setParent(node);
     }
@@ -832,7 +832,7 @@ class NodeList extends ListProxy<Node> {
   @override
   void insertAll(int index, Iterable<Node> collection) {
     // Note: we need to be careful how we copy nodes. See note in addAll.
-    var list = _flattenDocFragments(collection);
+    final list = _flattenDocFragments(collection);
     for (var node in list.reversed) {
       _setParent(node);
     }
@@ -843,7 +843,7 @@ class NodeList extends ListProxy<Node> {
     // Note: this function serves two purposes:
     //  * it flattens document fragments
     //  * it creates a copy of [collections] when `collection is NodeList`.
-    var result = <Node>[];
+    final result = <Node>[];
     for (var node in collection) {
       if (node is DocumentFragment) {
         result.addAll(node.nodes);
@@ -994,7 +994,7 @@ class FilteredElementList extends IterableBase<Element>
   bool remove(Object element) {
     if (element is! Element) return false;
     for (var i = 0; i < length; i++) {
-      var indexElement = this[i];
+      final indexElement = this[i];
       if (identical(indexElement, element)) {
         indexElement.remove();
         return true;

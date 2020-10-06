@@ -442,13 +442,13 @@ bool isLetterOrDigit(String char) => isLetter(char) || isDigit(char);
 // Note: this is intentially ASCII only
 bool isLetter(String char) {
   if (char == null) return false;
-  var cc = char.codeUnitAt(0);
+  final cc = char.codeUnitAt(0);
   return cc >= LOWER_A && cc <= LOWER_Z || cc >= UPPER_A && cc <= UPPER_Z;
 }
 
 bool isDigit(String char) {
   if (char == null) return false;
-  var cc = char.codeUnitAt(0);
+  final cc = char.codeUnitAt(0);
   return cc >= ZERO && cc < ZERO + 10;
 }
 
@@ -486,7 +486,7 @@ bool isHexDigit(String char) {
 // ASCII chars to.toLowerCase() case, unlike Dart's toLowerCase function.
 String asciiUpper2Lower(String text) {
   if (text == null) return null;
-  var result = List<int>(text.length);
+  final result = List<int>(text.length);
   for (var i = 0; i < text.length; i++) {
     var c = text.codeUnitAt(i);
     if (c >= UPPER_A && c <= UPPER_Z) {

@@ -193,7 +193,7 @@ class HtmlInputStream {
 
   /// Report the encoding declared by the meta element.
   String detectEncodingMeta() {
-    var parser = EncodingParser(slice(_rawBytes, 0, numBytesMeta));
+    final parser = EncodingParser(slice(_rawBytes, 0, numBytesMeta));
     var encoding = parser.getEncoding();
 
     if (const ['utf-16', 'utf-16-be', 'utf-16-le'].contains(encoding)) {
@@ -239,7 +239,7 @@ class HtmlInputStream {
   /// Returns a string of characters from the stream up to but not
   /// including any character in 'characters' or EOF.
   String charsUntil(String characters, [bool opposite = false]) {
-    var start = _offset;
+    final start = _offset;
     String c;
     while ((c = peekChar()) != null && characters.contains(c) == opposite) {
       _offset += c.codeUnits.length;
@@ -314,7 +314,7 @@ String codecName(String encoding) {
       '[\u0009-\u000D\u0020-\u002F\u003A-\u0040\u005B-\u0060\u007B-\u007E]');
 
   if (encoding == null) return null;
-  var canonicalName = encoding.replaceAll(asciiPunctuation, '').toLowerCase();
+  final canonicalName = encoding.replaceAll(asciiPunctuation, '').toLowerCase();
   return encodings[canonicalName];
 }
 
@@ -322,7 +322,7 @@ String codecName(String encoding) {
 /// Since UTF-8 doesn't have byte order, it's somewhat of a misnomer, but it is
 /// used in HTML to detect the UTF-
 bool _hasUtf8Bom(List<int> bytes, [int offset = 0, int length]) {
-  var end = length != null ? offset + length : bytes.length;
+  final end = length != null ? offset + length : bytes.length;
   return (offset + 3) <= end &&
       bytes[offset] == 0xEF &&
       bytes[offset + 1] == 0xBB &&
