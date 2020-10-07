@@ -231,10 +231,13 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
       ''');
       final n = doc.querySelector('desc');
       final keys = n.attributes.keys.toList();
-      expect(keys[0], const TypeMatcher<AttributeName>());
-      expect(keys[0].prefix, 'xlink');
-      expect(keys[0].namespace, 'http://www.w3.org/1999/xlink');
-      expect(keys[0].name, 'type');
+      expect(
+          keys.first,
+          isA<AttributeName>()
+              .having((n) => n.prefix, 'prefix', 'xlink')
+              .having((n) => n.namespace, 'namespace',
+                  'http://www.w3.org/1999/xlink')
+              .having((n) => n.name, 'name', 'type'));
 
       expect(
           n.outerHtml,

@@ -826,7 +826,7 @@ class BeforeHtmlPhase extends Phase {
   // helper methods
   void insertHtmlElement() {
     tree.insertRoot(
-        StartTagToken('html', data: LinkedHashMap<dynamic, String>()));
+        StartTagToken('html', data: LinkedHashMap<Object, String>()));
     parser.phase = parser._beforeHeadPhase;
   }
 
@@ -913,7 +913,7 @@ class BeforeHeadPhase extends Phase {
 
   @override
   bool processEOF() {
-    startTagHead(StartTagToken('head', data: LinkedHashMap<dynamic, String>()));
+    startTagHead(StartTagToken('head', data: LinkedHashMap<Object, String>()));
     return true;
   }
 
@@ -924,7 +924,7 @@ class BeforeHeadPhase extends Phase {
 
   @override
   Token processCharacters(CharactersToken token) {
-    startTagHead(StartTagToken('head', data: LinkedHashMap<dynamic, String>()));
+    startTagHead(StartTagToken('head', data: LinkedHashMap<Object, String>()));
     return token;
   }
 
@@ -940,12 +940,12 @@ class BeforeHeadPhase extends Phase {
   }
 
   Token startTagOther(StartTagToken token) {
-    startTagHead(StartTagToken('head', data: LinkedHashMap<dynamic, String>()));
+    startTagHead(StartTagToken('head', data: LinkedHashMap<Object, String>()));
     return token;
   }
 
   Token endTagImplyHead(EndTagToken token) {
-    startTagHead(StartTagToken('head', data: LinkedHashMap<dynamic, String>()));
+    startTagHead(StartTagToken('head', data: LinkedHashMap<Object, String>()));
     return token;
   }
 
@@ -1209,7 +1209,7 @@ class AfterHeadPhase extends Phase {
 
   void anythingElse() {
     tree.insertElement(
-        StartTagToken('body', data: LinkedHashMap<dynamic, String>()));
+        StartTagToken('body', data: LinkedHashMap<Object, String>()));
     parser.phase = parser._inBodyPhase;
     parser.framesetOK = true;
   }
@@ -1813,29 +1813,27 @@ class InBodyPhase extends Phase {
     if (tree.formPointer != null) {
       return;
     }
-    final formAttrs = LinkedHashMap<dynamic, String>();
+    final formAttrs = LinkedHashMap<Object, String>();
     final dataAction = token.data['action'];
     if (dataAction != null) {
       formAttrs['action'] = dataAction;
     }
     processStartTag(StartTagToken('form', data: formAttrs));
+    processStartTag(StartTagToken('hr', data: LinkedHashMap<Object, String>()));
     processStartTag(
-        StartTagToken('hr', data: LinkedHashMap<dynamic, String>()));
-    processStartTag(
-        StartTagToken('label', data: LinkedHashMap<dynamic, String>()));
+        StartTagToken('label', data: LinkedHashMap<Object, String>()));
     // XXX Localization ...
     var prompt = token.data['prompt'];
     prompt ??= 'This is a searchable index. Enter search keywords: ';
     processCharacters(CharactersToken(prompt));
-    final attributes = LinkedHashMap<dynamic, String>.from(token.data);
+    final attributes = LinkedHashMap<Object, String>.from(token.data);
     attributes.remove('action');
     attributes.remove('prompt');
     attributes['name'] = 'isindex';
     processStartTag(StartTagToken('input',
         data: attributes, selfClosing: token.selfClosing));
     processEndTag(EndTagToken('label'));
-    processStartTag(
-        StartTagToken('hr', data: LinkedHashMap<dynamic, String>()));
+    processStartTag(StartTagToken('hr', data: LinkedHashMap<Object, String>()));
     processEndTag(EndTagToken('form'));
   }
 
@@ -1938,8 +1936,7 @@ class InBodyPhase extends Phase {
 
   void endTagP(EndTagToken token) {
     if (!tree.elementInScope('p', variant: 'button')) {
-      startTagCloseP(
-          StartTagToken('p', data: LinkedHashMap<dynamic, String>()));
+      startTagCloseP(StartTagToken('p', data: LinkedHashMap<Object, String>()));
       parser.parseError(token.span, 'unexpected-end-tag', {'name': 'p'});
       endTagP(EndTagToken('p'));
     } else {
@@ -2238,7 +2235,7 @@ class InBodyPhase extends Phase {
         {'originalName': 'br', 'newName': 'br element'});
     tree.reconstructActiveFormattingElements();
     tree.insertElement(
-        StartTagToken('br', data: LinkedHashMap<dynamic, String>()));
+        StartTagToken('br', data: LinkedHashMap<Object, String>()));
     tree.openElements.removeLast();
   }
 
@@ -2450,7 +2447,7 @@ class InTablePhase extends Phase {
 
   Token startTagCol(StartTagToken token) {
     startTagColgroup(
-        StartTagToken('colgroup', data: LinkedHashMap<dynamic, String>()));
+        StartTagToken('colgroup', data: LinkedHashMap<Object, String>()));
     return token;
   }
 
@@ -2462,7 +2459,7 @@ class InTablePhase extends Phase {
 
   Token startTagImplyTbody(StartTagToken token) {
     startTagRowGroup(
-        StartTagToken('tbody', data: LinkedHashMap<dynamic, String>()));
+        StartTagToken('tbody', data: LinkedHashMap<Object, String>()));
     return token;
   }
 
@@ -2918,7 +2915,7 @@ class InTableBodyPhase extends Phase {
   Token startTagTableCell(StartTagToken token) {
     parser.parseError(
         token.span, 'unexpected-cell-in-table-body', {'name': token.name});
-    startTagTr(StartTagToken('tr', data: LinkedHashMap<dynamic, String>()));
+    startTagTr(StartTagToken('tr', data: LinkedHashMap<Object, String>()));
     return token;
   }
 
