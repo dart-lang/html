@@ -39,8 +39,6 @@ class HtmlInputStream {
 
   SourceFile fileInfo;
 
-  List<int> _lineStarts;
-
   List<int> _chars;
 
   int _offset;
@@ -88,7 +86,6 @@ class HtmlInputStream {
     errors = Queue<String>();
 
     _offset = 0;
-    _lineStarts = <int>[0];
     _chars = <int>[];
 
     _rawChars ??= _decodeBytes(charEncodingName, _rawBytes);
@@ -120,7 +117,6 @@ class HtmlInputStream {
       }
 
       _chars.add(c);
-      if (c == NEWLINE) _lineStarts.add(_chars.length);
     }
 
     // Free decoded characters if they aren't needed anymore.
