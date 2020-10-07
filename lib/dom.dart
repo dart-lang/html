@@ -55,7 +55,7 @@ class AttributeName implements Comparable<Object> {
   }
 
   @override
-  int compareTo(dynamic other) {
+  int compareTo(Object other) {
     // Not sure about this sort order
     if (other is! AttributeName) return 1;
     final otherAttributeName = other as AttributeName;
@@ -152,7 +152,7 @@ abstract class Node {
   ///
   /// Note that attribute order needs to be stable for serialization, so we use
   /// a LinkedHashMap. Each key is a [String] or [AttributeName].
-  LinkedHashMap<dynamic, String> attributes = LinkedHashMap();
+  LinkedHashMap<Object, String> attributes = LinkedHashMap();
 
   /// A list of child nodes of the current node. This must
   /// include all elements but not necessarily other node types.
@@ -166,8 +166,8 @@ abstract class Node {
   FileSpan sourceSpan;
 
   /// The attribute spans if requested. Otherwise null.
-  LinkedHashMap<dynamic, FileSpan> _attributeSpans;
-  LinkedHashMap<dynamic, FileSpan> _attributeValueSpans;
+  LinkedHashMap<Object, FileSpan> _attributeSpans;
+  LinkedHashMap<Object, FileSpan> _attributeValueSpans;
 
   Node._() {
     nodes._parent = this;
@@ -177,7 +177,7 @@ abstract class Node {
   /// The span of an attribute is the entire attribute, including the name and
   /// quotes (if any). For example, the span of "attr" in `<a attr="value">`
   /// would be the text `attr="value"`.
-  LinkedHashMap<dynamic, FileSpan> get attributeSpans {
+  LinkedHashMap<Object, FileSpan> get attributeSpans {
     _ensureAttributeSpans();
     return _attributeSpans;
   }
@@ -186,7 +186,7 @@ abstract class Node {
   /// value. Unlike [attributeSpans], this span will inlcude only the value.
   /// For example, the value span of "attr" in `<a attr="value">` would be the
   /// text `value`.
-  LinkedHashMap<dynamic, FileSpan> get attributeValueSpans {
+  LinkedHashMap<Object, FileSpan> get attributeValueSpans {
     _ensureAttributeSpans();
     return _attributeValueSpans;
   }
@@ -279,8 +279,8 @@ abstract class Node {
   void _ensureAttributeSpans() {
     if (_attributeSpans != null) return;
 
-    _attributeSpans = LinkedHashMap<dynamic, FileSpan>();
-    _attributeValueSpans = LinkedHashMap<dynamic, FileSpan>();
+    _attributeSpans = LinkedHashMap<Object, FileSpan>();
+    _attributeValueSpans = LinkedHashMap<Object, FileSpan>();
 
     if (sourceSpan == null) return;
 
@@ -421,7 +421,7 @@ class Text extends Node {
   /// The text node's data, stored as either a String or StringBuffer.
   /// We support storing a StringBuffer here to support fast [appendData].
   /// It will flatten back to a String on read.
-  dynamic _data;
+  Object _data;
 
   Text(String data)
       : _data = data ?? '',
