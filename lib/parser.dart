@@ -1819,8 +1819,7 @@ class InBodyPhase extends Phase {
       formAttrs['action'] = dataAction;
     }
     processStartTag(StartTagToken('form', data: formAttrs));
-    processStartTag(
-        StartTagToken('hr', data: LinkedHashMap<Object, String>()));
+    processStartTag(StartTagToken('hr', data: LinkedHashMap<Object, String>()));
     processStartTag(
         StartTagToken('label', data: LinkedHashMap<Object, String>()));
     // XXX Localization ...
@@ -1834,8 +1833,7 @@ class InBodyPhase extends Phase {
     processStartTag(StartTagToken('input',
         data: attributes, selfClosing: token.selfClosing));
     processEndTag(EndTagToken('label'));
-    processStartTag(
-        StartTagToken('hr', data: LinkedHashMap<Object, String>()));
+    processStartTag(StartTagToken('hr', data: LinkedHashMap<Object, String>()));
     processEndTag(EndTagToken('form'));
   }
 
@@ -1938,8 +1936,7 @@ class InBodyPhase extends Phase {
 
   void endTagP(EndTagToken token) {
     if (!tree.elementInScope('p', variant: 'button')) {
-      startTagCloseP(
-          StartTagToken('p', data: LinkedHashMap<Object, String>()));
+      startTagCloseP(StartTagToken('p', data: LinkedHashMap<Object, String>()));
       parser.parseError(token.span, 'unexpected-end-tag', {'name': 'p'});
       endTagP(EndTagToken('p'));
     } else {
