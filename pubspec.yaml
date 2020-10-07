@@ -5,7 +5,7 @@ description: APIs for parsing and manipulating HTML content outside the browser.
 homepage: https://github.com/dart-lang/html
 
 environment:
-  sdk: '>=2.3.0 <3.0.0'
+  sdk: '>=2.8.0 <3.0.0'
 
 dependencies:
   csslib: '>=0.13.2 <0.17.0'

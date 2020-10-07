@@ -370,7 +370,7 @@ class HtmlTokenizer implements Iterator<Token> {
     // Add token to the queue to be yielded
     if (token is TagToken) {
       if (lowercaseElementName) {
-        token.name = asciiUpper2Lower(token.name);
+        token.name = token.name?.toAsciiLowerCase();
       }
       if (token is EndTagToken) {
         if (_attributes != null) {
@@ -1074,7 +1074,7 @@ class HtmlTokenizer implements Iterator<Token> {
       // to attributes, but we do want to report the parse error in time.
       var attrName = _attributeName.toString();
       if (lowercaseAttrName) {
-        attrName = asciiUpper2Lower(attrName);
+        attrName = attrName.toAsciiLowerCase();
       }
       _attributes.last.name = attrName;
       _attributeNames ??= {};
@@ -1515,10 +1515,10 @@ class HtmlTokenizer implements Iterator<Token> {
   bool doctypeNameState() {
     final data = stream.char();
     if (isWhitespace(data)) {
-      currentDoctypeToken.name = asciiUpper2Lower(currentDoctypeToken.name);
+      currentDoctypeToken.name = currentDoctypeToken.name?.toAsciiLowerCase();
       state = afterDoctypeNameState;
     } else if (data == '>') {
-      currentDoctypeToken.name = asciiUpper2Lower(currentDoctypeToken.name);
+      currentDoctypeToken.name = currentDoctypeToken.name?.toAsciiLowerCase();
       _addToken(currentToken);
       state = dataState;
     } else if (data == '\u0000') {
@@ -1528,7 +1528,7 @@ class HtmlTokenizer implements Iterator<Token> {
     } else if (data == eof) {
       _addToken(ParseErrorToken('eof-in-doctype-name'));
       currentDoctypeToken.correct = false;
-      currentDoctypeToken.name = asciiUpper2Lower(currentDoctypeToken.name);
+      currentDoctypeToken.name = currentDoctypeToken.name?.toAsciiLowerCase();
       _addToken(currentToken);
       state = dataState;
     } else {
