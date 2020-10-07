@@ -482,19 +482,15 @@ bool isHexDigit(String char) {
   return false;
 }
 
-// Note: based on the original Python code, I assume we only want to convert
-// ASCII chars to.toLowerCase() case, unlike Dart's toLowerCase function.
-String asciiUpper2Lower(String text) {
-  if (text == null) return null;
-  final result = List<int>(text.length);
-  for (var i = 0; i < text.length; i++) {
-    var c = text.codeUnitAt(i);
-    if (c >= UPPER_A && c <= UPPER_Z) {
-      c += LOWER_A - UPPER_A;
-    }
-    result[i] = c;
-  }
-  return String.fromCharCodes(result);
+extension AsciiUpperToLower on String {
+  /// Converts ASCII characters to lowercase.
+  ///
+  /// Unlike [String.toLowerCase] does not touch non-ASCII characters.
+  String toAsciiLowerCase() =>
+      String.fromCharCodes(codeUnits.map(_asciiToLower));
+
+  static int _asciiToLower(int c) =>
+      (c >= UPPER_A && c <= UPPER_Z) ? c + LOWER_A - UPPER_A : c;
 }
 
 // Heading elements need to be ordered

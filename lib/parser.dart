@@ -260,8 +260,7 @@ class HtmlParser {
   bool isHTMLIntegrationPoint(Element element) {
     if (element.localName == 'annotation-xml' &&
         element.namespaceUri == Namespaces.mathml) {
-      var enc = element.attributes['encoding'];
-      if (enc != null) enc = asciiUpper2Lower(enc);
+      final enc = element.attributes['encoding']?.toAsciiLowerCase();
       return enc == 'text/html' || enc == 'application/xhtml+xml';
     } else {
       return htmlIntegrationPointElements
@@ -683,7 +682,7 @@ class InitialPhase extends Phase {
   @override
   Token processDoctype(DoctypeToken token) {
     final name = token.name;
-    var publicId = token.publicId;
+    var publicId = token.publicId?.toAsciiLowerCase();
     final systemId = token.systemId;
     final correct = token.correct;
 
@@ -696,10 +695,6 @@ class InitialPhase extends Phase {
     publicId ??= '';
 
     tree.insertDoctype(token);
-
-    if (publicId != '') {
-      publicId = asciiUpper2Lower(publicId);
-    }
 
     if (!correct ||
         token.name != 'html' ||
@@ -1783,7 +1778,7 @@ class InBodyPhase extends Phase {
   void startTagInput(StartTagToken token) {
     final savedFramesetOK = parser.framesetOK;
     startTagVoidFormatting(token);
-    if (asciiUpper2Lower(token.data['type']) == 'hidden') {
+    if (token.data['type']?.toAsciiLowerCase() == 'hidden') {
       //input type=hidden doesn't change framesetOK
       parser.framesetOK = savedFramesetOK;
     }
@@ -2486,7 +2481,7 @@ class InTablePhase extends Phase {
   }
 
   void startTagInput(StartTagToken token) {
-    if (asciiUpper2Lower(token.data['type']) == 'hidden') {
+    if (token.data['type']?.toAsciiLowerCase() == 'hidden') {
       parser.parseError(token.span, 'unexpected-hidden-input-in-table');
       tree.insertElement(token);
       // XXX associate with form
@@ -3621,13 +3616,13 @@ class InForeignContentPhase extends Phase {
   Token processEndTag(EndTagToken token) {
     var nodeIndex = tree.openElements.length - 1;
     var node = tree.openElements.last;
-    if (asciiUpper2Lower(node.localName) != token.name) {
+    if (node.localName?.toAsciiLowerCase() != token.name) {
       parser.parseError(token.span, 'unexpected-end-tag', {'name': token.name});
     }
 
     Token newToken;
     while (true) {
-      if (asciiUpper2Lower(node.localName) == token.name) {
+      if (node.localName?.toAsciiLowerCase() == token.name) {
         //XXX this isn't in the spec but it seems necessary
         if (parser.phase == parser._inTableTextPhase) {
           final inTableText = parser.phase as InTableTextPhase;
