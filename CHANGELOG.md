@@ -1,4 +1,4 @@
-## 0.15.0-dev
+## 0.15.0-nullsafety-dev
 
 - Drop `HtmlParser.lastPhase` and `HtmlParser.beforeRcDataPhase`. These fields
   never had a value other than `null`.

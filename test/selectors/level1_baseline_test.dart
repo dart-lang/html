@@ -64,7 +64,7 @@ void main() {
   //doc = frame.contentDocument;                 // Document Node tests
   doc = getTestContentDocument();
 
-  final element = doc.getElementById('root'); // In-document Element Node tests
+  final element = doc.getElementById('root')!; // In-document Element Node tests
 
   //Setup the namespace tests
   setupSpecialElements(element);

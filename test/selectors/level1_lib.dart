@@ -12,7 +12,7 @@ library html.test.selectors.level1_lib;
 import 'package:html/dom.dart';
 import 'package:test/test.dart' as unittest;
 
-Document doc;
+late Document doc;
 
 /*
  * Create and append special elements that cannot be created correctly with HTML markup alone.
@@ -182,7 +182,7 @@ void runSpecialSelectorTests(String type, root) {
 /// Tests containing this string fail for an unknown reason
 final _failureName = 'matching custom data-* attribute with';
 
-String _getSkip(String name) {
+String? _getSkip(String name) {
   if (name.contains(_failureName)) {
     return 'Tests related to `$_failureName` fail for an unknown reason.';
   }
@@ -193,10 +193,10 @@ String _getSkip(String name) {
  * Execute queries with the specified valid selectors for both querySelector() and querySelectorAll()
  * Only run these tests when results are expected. Don't run for syntax error tests.
  */
-void runValidSelectorTest(String type, root,
+void runValidSelectorTest(String type, Node root,
     List<Map<String, dynamic>> selectors, testType, docType) {
   var nodeType = '';
-  switch ((root as Node).nodeType) {
+  switch (root.nodeType) {
     case Node.DOCUMENT_NODE:
       nodeType = 'document';
       break;
@@ -215,20 +215,20 @@ void runValidSelectorTest(String type, root,
     final n = s['name'] as String;
     final skip = _getSkip(n);
     final q = s['selector'] as String;
-    final e = s['expect'] as List;
+    final e = s['expect'] as List?;
 
     if ((s['exclude'] is! List ||
             (s['exclude'].indexOf(nodeType) == -1 &&
                 s['exclude'].indexOf(docType) == -1)) &&
         (s['testType'] & testType != 0)) {
       //console.log("Running tests " + nodeType + ": " + s["testType"] + "&" + testType + "=" + (s["testType"] & testType) + ": " + JSON.stringify(s))
-      List<Element> foundall;
-      Element found;
+      late List<Element> foundall;
+      Element? found;
 
       runTest(() {
-        foundall = root.querySelectorAll(q) as List<Element>;
+        foundall = (root as dynamic).querySelectorAll(q) as List<Element>;
         assertNotEquals(foundall, null, 'The method should not return null.');
-        assertEquals(foundall.length, e.length,
+        assertEquals(foundall.length, e!.length,
             'The method should return the expected number of matches.');
 
         for (var i = 0; i < e.length; i++) {
@@ -242,15 +242,15 @@ void runValidSelectorTest(String type, root,
       }, type + '.querySelectorAll: ' + n + ': ' + q, skip: skip);
 
       runTest(() {
-        found = root.querySelector(q) as Element;
+        found = (root as dynamic).querySelector(q) as Element?;
 
-        if (e.isNotEmpty) {
+        if (e!.isNotEmpty) {
           assertNotEquals(found, null, 'The method should return a match.');
-          assertEquals(found.attributes['id'], e[0],
+          assertEquals(found!.attributes['id'], e[0],
               'The method should return the first match.');
           assertEquals(found, foundall[0],
               'The result should match the first item from querySelectorAll.');
-          assertFalse(found.attributes.containsKey('data-clone'),
+          assertFalse(found!.attributes.containsKey('data-clone'),
               'This should not be annotated as a cloned element.');
         } else {
           assertEquals(found, null, 'The method should not match anything.');
@@ -298,7 +298,7 @@ void traverse(Node elem, void Function(Node) fn) {
   }
 }
 
-void runTest(dynamic Function() body, String name, {String skip}) =>
+void runTest(dynamic Function() body, String name, {String? skip}) =>
     unittest.test(name, body, skip: skip);
 
 void assertTrue(bool value, String reason) =>
@@ -312,5 +312,5 @@ void assertEquals(x, y, String reason) => unittest.expect(x, y, reason: reason);
 void assertNotEquals(x, y, String reason) =>
     unittest.expect(x, unittest.isNot(y), reason: reason);
 
-void assertThrows(exception, void Function() body, [String reason]) =>
+void assertThrows(exception, void Function() body, [String? reason]) =>
     unittest.expect(body, unittest.throwsA(exception), reason: reason);

@@ -8,7 +8,7 @@ abstract class ListProxy<E> extends ListBase<E> {
   final List<E> _list = <E>[];
 
   @override
-  bool remove(Object item) => _list.remove(item);
+  bool remove(Object? item) => _list.remove(item);
 
   @override
   int get length => _list.length;

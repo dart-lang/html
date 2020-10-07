@@ -111,7 +111,7 @@ class CodeMarkupVisitor extends TreeVisitor {
 
   @override
   void visitComment(Comment node) {
-    final data = htmlSerializeEscape(node.data);
+    final data = htmlSerializeEscape(node.data!);
     _str.write('<code class="markup comment">&lt;!--$data--></code>');
   }
 }
@@ -136,10 +136,10 @@ class CodeMarkupVisitor extends TreeVisitor {
 String htmlSerializeEscape(String text, {bool attributeMode = false}) {
   // TODO(jmesserly): is it faster to build up a list of codepoints?
   // StringBuffer seems cleaner assuming Dart can unbox 1-char strings.
-  StringBuffer result;
+  StringBuffer? result;
   for (var i = 0; i < text.length; i++) {
     final ch = text[i];
-    String replace;
+    String? replace;
     switch (ch) {
       case '&':
         replace = '&amp;';
@@ -172,7 +172,7 @@ String htmlSerializeEscape(String text, {bool attributeMode = false}) {
 /// This method is useful to a pretty printer, because void elements must not
 /// have an end tag.
 /// See also: <http://dev.w3.org/html5/markup/syntax.html#void-elements>.
-bool isVoidElement(String tagName) {
+bool isVoidElement(String? tagName) {
   switch (tagName) {
     case 'area':
     case 'base':
