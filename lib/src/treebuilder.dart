@@ -16,7 +16,7 @@ import 'utils.dart';
 /// entering some elements.
 ///
 /// https://html.spec.whatwg.org/multipage/parsing.html#list-of-active-formatting-elements
-class ActiveFormattingElements extends ListProxy<Element/*?*/> {
+class ActiveFormattingElements extends ListProxy<Element /*?*/ > {
   /// Push an element into the active formatting elements.
   ///
   /// Prevents equivalent elements from appearing more than 3 times following
