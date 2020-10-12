@@ -10,29 +10,33 @@ import 'list_proxy.dart';
 import 'token.dart';
 import 'utils.dart';
 
-// The scope markers are inserted when entering object elements,
-// marquees, table cells, and table captions, and are used to prevent formatting
-// from "leaking" into tables, object elements, and marquees.
-const Element Marker = null;
-
-// TODO(jmesserly): this should extend ListBase<Element>, but my simple attempt
-// didn't work.
-class ActiveFormattingElements extends ListProxy<Element> {
-  // Override the "add" method.
-  // TODO(jmesserly): I'd rather not override this; can we do this in the
-  // calling code instead?
+/// Open elements in the formatting category, most recent element last.
+///
+/// `null` is used as the "marker" entry to prevent style from leaking when
+/// entering some elements.
+///
+/// https://html.spec.whatwg.org/multipage/parsing.html#list-of-active-formatting-elements
+class ActiveFormattingElements extends ListProxy<Element /*?*/ > {
+  /// Push an element into the active formatting elements.
+  ///
+  /// Prevents equivalent elements from appearing more than 3 times following
+  /// the last `null` marker. If adding [node] would cause there to be more than
+  /// 3 equivalent elements the earliest identical element is removed.
+  // TODO - Earliest equivalent following a marker, as opposed to earliest
+  // identical regardless of marker position, should be removed.
   @override
   void add(Element node) {
     var equalCount = 0;
-    if (node != Marker) {
+    if (node != null) {
       for (var element in reversed) {
-        if (element == Marker) {
+        if (element == null) {
           break;
         }
         if (_nodesEqual(element, node)) {
           equalCount += 1;
         }
         if (equalCount == 3) {
+          // TODO - https://github.com/dart-lang/html/issues/135
           remove(element);
           break;
         }
@@ -165,12 +169,12 @@ class TreeBuilder {
     // Step 2 and step 3: we start with the last element. So i is -1.
     var i = activeFormattingElements.length - 1;
     var entry = activeFormattingElements[i];
-    if (entry == Marker || openElements.contains(entry)) {
+    if (entry == null || openElements.contains(entry)) {
       return;
     }
 
     // Step 6
-    while (entry != Marker && !openElements.contains(entry)) {
+    while (entry != null && !openElements.contains(entry)) {
       if (i == 0) {
         //This will be reset to 0 below
         i = -1;
@@ -209,7 +213,7 @@ class TreeBuilder {
 
   void clearActiveFormattingElements() {
     var entry = activeFormattingElements.removeLast();
-    while (activeFormattingElements.isNotEmpty && entry != Marker) {
+    while (activeFormattingElements.isNotEmpty && entry != null) {
       entry = activeFormattingElements.removeLast();
     }
   }
@@ -221,7 +225,7 @@ class TreeBuilder {
     for (var item in activeFormattingElements.reversed) {
       // Check for Marker first because if it's a Marker it doesn't have a
       // name attribute.
-      if (item == Marker) {
+      if (item == null) {
         break;
       } else if (item.localName == name) {
         return item;
