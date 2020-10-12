@@ -1504,7 +1504,7 @@ class InBodyPhase extends Phase {
 
     final matchingElements = [];
     for (Node node in tree.activeFormattingElements.reversed) {
-      if (node == Marker) {
+      if (node == null) {
         break;
       } else if (isMatchingFormattingElement(node as Element, element)) {
         matchingElements.add(node);
@@ -1743,7 +1743,7 @@ class InBodyPhase extends Phase {
   void startTagAppletMarqueeObject(StartTagToken token) {
     tree.reconstructActiveFormattingElements();
     tree.insertElement(token);
-    tree.activeFormattingElements.add(Marker);
+    tree.activeFormattingElements.add(null);
     parser.framesetOK = false;
   }
 
@@ -2434,7 +2434,7 @@ class InTablePhase extends Phase {
 
   void startTagCaption(StartTagToken token) {
     clearStackToTableContext();
-    tree.activeFormattingElements.add(Marker);
+    tree.activeFormattingElements.add(null);
     tree.insertElement(token);
     parser.phase = parser._inCaptionPhase;
   }
@@ -3054,7 +3054,7 @@ class InRowPhase extends Phase {
     clearStackToTableRowContext();
     tree.insertElement(token);
     parser.phase = parser._inCellPhase;
-    tree.activeFormattingElements.add(Marker);
+    tree.activeFormattingElements.add(null);
   }
 
   Token startTagTableOther(StartTagToken token) {
