@@ -1,5 +1,8 @@
 ## 0.15.0-dev
 
+- Drop `HtmlParser.lastPhase` and `HtmlParser.beforeRcDataPhase`. These fields
+  never had a value other than `null`.
+
 ## 0.14.0+4
 
 - Fix a bug parsing bad HTML where a 'button' end tag needs to close other
