@@ -93,11 +93,7 @@ class HtmlParser {
 
   Phase phase;
 
-  Phase lastPhase;
-
   Phase originalPhase;
-
-  Phase beforeRCDataPhase;
 
   bool framesetOK;
 
@@ -252,8 +248,6 @@ class HtmlParser {
       phase = _initialPhase;
     }
 
-    lastPhase = null;
-    beforeRCDataPhase = null;
     framesetOK = true;
   }
 
