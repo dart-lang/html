@@ -110,12 +110,7 @@ class TestSerializer extends TreeVisitor {
 
   set indent(int value) {
     if (_indent == value) return;
-
-    final arr = List<int>(value);
-    for (var i = 0; i < value; i++) {
-      arr[i] = 32;
-    }
-    _spaces = String.fromCharCodes(arr);
+    _spaces = ' ' * value;
     _indent = value;
   }
 
