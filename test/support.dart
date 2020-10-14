@@ -110,7 +110,7 @@ class TestSerializer extends TreeVisitor {
 
   set indent(int value) {
     if (_indent == value) return;
-    _spaces = ' '*value;
+    _spaces = ' ' * value;
     _indent = value;
   }
 
