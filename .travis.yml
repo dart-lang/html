@@ -3,10 +3,6 @@ language: dart
 dart:
   - dev
 
-dart_task:
-  - test: -p vm
-  - test: -p chrome
-
 matrix:
   include:
     - script: pub run --enable-experiment=non-nullable test -p vm,chrome
