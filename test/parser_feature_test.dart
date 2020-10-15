@@ -134,8 +134,8 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
     final doc = parse(text, generateSpans: true);
     final elem = doc.querySelector('foo')!;
 
-    expect(
-        elem.attributeSpans!['template']!.start.offset, text.indexOf('template'));
+    expect(elem.attributeSpans!['template']!.start.offset,
+        text.indexOf('template'));
     expect(elem.attributeValueSpans!.containsKey('template'), false);
   });
 

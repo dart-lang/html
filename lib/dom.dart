@@ -85,7 +85,8 @@ abstract class _ParentNode implements Node {
   /// are implemented. For example, nth-child does not implement An+B syntax
   /// and *-of-type is not implemented. If a selector is not implemented this
   /// method will throw [UniplmentedError].
-  Element? querySelector(String selector) => query.querySelector(this, selector);
+  Element? querySelector(String selector) =>
+      query.querySelector(this, selector);
 
   /// Returns all descendant nodes matching the given selectors, using a
   /// preorder traversal.
@@ -1018,7 +1019,8 @@ class FilteredElementList extends IterableBase<Element>
   @override
   Set<Element> toSet() => Set<Element>.from(this);
   @override
-  Element firstWhere(bool Function(Element) test, {Element Function()? orElse}) {
+  Element firstWhere(bool Function(Element) test,
+      {Element Function()? orElse}) {
     return _filtered.firstWhere(test, orElse: orElse);
   }
 
