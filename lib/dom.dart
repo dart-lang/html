@@ -430,8 +430,8 @@ class Text extends Node {
   int get nodeType => Node.TEXT_NODE;
 
   String get data => _data = _data.toString();
-  set data(String? value) {
-    _data = value ?? '';
+  set data(String value) {
+    _data = identical(value, null) ? '' : value;
   }
 
   @override
@@ -453,7 +453,7 @@ class Text extends Node {
   String get text => data;
   @override
   set text(String? value) {
-    data = value;
+    data = value ?? '';
   }
 }
 
@@ -545,8 +545,9 @@ class Element extends Node with _ParentNode, _ElementAndDocument {
   }
 
   Element? get nextElementSibling {
+    final parentNode = this.parentNode;
     if (parentNode == null) return null;
-    final siblings = parentNode!.nodes;
+    final siblings = parentNode.nodes;
     for (var i = siblings.indexOf(this) + 1; i < siblings.length; i++) {
       final s = siblings[i];
       if (s is Element) return s;
@@ -579,7 +580,7 @@ class Element extends Node with _ParentNode, _ElementAndDocument {
     nodes.clear();
     // TODO(jmesserly): should be able to get the same effect by adding the
     // fragment directly.
-    nodes.addAll(parseFragment(value, container: localName).nodes);
+    nodes.addAll(parseFragment(value, container: localName!).nodes);
   }
 
   @override

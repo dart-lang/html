@@ -56,7 +56,7 @@ Document parse(input,
 /// additionally pass [sourceUrl] to indicate where the [input] was extracted
 /// from.
 DocumentFragment parseFragment(input,
-    {String? container = 'div',
+    {String container = 'div',
     String? encoding,
     bool generateSpans = false,
     String? sourceUrl}) {
@@ -79,8 +79,6 @@ class HtmlParser {
   final TreeBuilder tree;
 
   final List<ParseError> errors = <ParseError>[];
-
-  String? container;
 
   bool firstStartTag = false;
 
@@ -177,8 +175,8 @@ class HtmlParser {
   /// Parse an html5 document fragment into a tree.
   /// Pass a [container] to change the type of the containing element.
   /// After parsing, [errors] will be populated with parse errors, if any.
-  DocumentFragment parseFragment([String? container = 'div']) {
-    if (container == null) throw ArgumentError('container');
+  DocumentFragment parseFragment([String container = 'div']) {
+    ArgumentError.checkNotNull(container, 'container');
     innerHTML = container.toLowerCase();
     _parse();
     return tree.getFragment();
@@ -345,11 +343,9 @@ class HtmlParser {
 
   /// The last span available. Used for EOF errors if we don't have something
   /// better.
-  SourceSpan? get _lastSpan {
-    if (tokenizer.stream.fileInfo == null) return null;
-    final pos = tokenizer.stream.position;
-    return tokenizer.stream.fileInfo!.location(pos).pointSpan();
-  }
+  SourceSpan? get _lastSpan => tokenizer.stream.fileInfo
+      ?.location(tokenizer.stream.position)
+      .pointSpan();
 
   void parseError(SourceSpan? span, String errorcode,
       [Map? datavars = const {}]) {
