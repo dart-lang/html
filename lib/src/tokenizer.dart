@@ -1869,11 +1869,11 @@ class HtmlTokenizer implements Iterator<Token> {
   }
 
   bool cdataSectionState() {
-    final data = <String?>[];
+    final data = <String>[];
     var matchedEnd = 0;
     while (true) {
       var ch = stream.char();
-      if (ch == eof) {
+      if (ch == null) {
         break;
       }
       // Deal with null here rather than in the parser
