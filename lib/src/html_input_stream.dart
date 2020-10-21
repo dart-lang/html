@@ -248,7 +248,7 @@ class HtmlInputStream {
     // Only one character is allowed to be ungotten at once - it must
     // be consumed again before any further call to unget
     if (ch != null) {
-      _offset -= ch.codeUnits.length;
+      _offset -= ch.length;
       assert(peekChar() == ch);
     }
   }
