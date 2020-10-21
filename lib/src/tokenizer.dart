@@ -77,9 +77,9 @@ class HtmlTokenizer implements Iterator<Token> {
     reset();
   }
 
-  TagToken? get currentTagToken => currentToken as TagToken?;
-  DoctypeToken? get currentDoctypeToken => currentToken as DoctypeToken?;
-  StringToken? get currentStringToken => currentToken as StringToken?;
+  TagToken get currentTagToken => currentToken as TagToken;
+  DoctypeToken get currentDoctypeToken => currentToken as DoctypeToken;
+  StringToken get currentStringToken => currentToken as StringToken;
 
   Token? _current;
   @override
@@ -578,9 +578,9 @@ class HtmlTokenizer implements Iterator<Token> {
       state = selfClosingStartTagState;
     } else if (data == '\u0000') {
       _addToken(ParseErrorToken('invalid-codepoint'));
-      currentTagToken!.name = '${currentTagToken!.name}\uFFFD';
+      currentTagToken.name = '${currentTagToken.name}\uFFFD';
     } else {
-      currentTagToken!.name = '${currentTagToken!.name}$data';
+      currentTagToken.name = '${currentTagToken.name}$data';
       // (Don't use charsUntil here, because tag names are
       // very short and it's faster to not do anything fancy)
     }
@@ -616,7 +616,7 @@ class HtmlTokenizer implements Iterator<Token> {
   bool _tokenIsAppropriate() {
     // TODO(jmesserly): this should use case insensitive compare instead.
     return currentToken is TagToken &&
-        currentTagToken!.name!.toLowerCase() == '$_buffer'.toLowerCase();
+        currentTagToken.name!.toLowerCase() == '$_buffer'.toLowerCase();
   }
 
   bool rcdataEndTagNameState() {
@@ -1256,7 +1256,7 @@ class HtmlTokenizer implements Iterator<Token> {
   bool selfClosingStartTagState() {
     final data = stream.char();
     if (data == '>') {
-      currentTagToken!.selfClosing = true;
+      currentTagToken.selfClosing = true;
       emitCurrentToken();
     } else if (data == eof) {
       _addToken(ParseErrorToken('unexpected-EOF-after-solidus-in-tag'));
@@ -1343,7 +1343,7 @@ class HtmlTokenizer implements Iterator<Token> {
       state = commentStartDashState;
     } else if (data == '\u0000') {
       _addToken(ParseErrorToken('invalid-codepoint'));
-      currentStringToken!.add('\uFFFD');
+      currentStringToken.add('\uFFFD');
     } else if (data == '>') {
       _addToken(ParseErrorToken('incorrect-comment'));
       _addToken(currentToken);
@@ -1353,7 +1353,7 @@ class HtmlTokenizer implements Iterator<Token> {
       _addToken(currentToken);
       state = dataState;
     } else {
-      currentStringToken!.add(data!);
+      currentStringToken.add(data!);
       state = commentState;
     }
     return true;
@@ -1365,7 +1365,7 @@ class HtmlTokenizer implements Iterator<Token> {
       state = commentEndState;
     } else if (data == '\u0000') {
       _addToken(ParseErrorToken('invalid-codepoint'));
-      currentStringToken!.add('-\uFFFD');
+      currentStringToken.add('-\uFFFD');
     } else if (data == '>') {
       _addToken(ParseErrorToken('incorrect-comment'));
       _addToken(currentToken);
@@ -1375,7 +1375,7 @@ class HtmlTokenizer implements Iterator<Token> {
       _addToken(currentToken);
       state = dataState;
     } else {
-      currentStringToken!.add('-').add(data!);
+      currentStringToken.add('-').add(data!);
       state = commentState;
     }
     return true;
@@ -1387,13 +1387,13 @@ class HtmlTokenizer implements Iterator<Token> {
       state = commentEndDashState;
     } else if (data == '\u0000') {
       _addToken(ParseErrorToken('invalid-codepoint'));
-      currentStringToken!.add('\uFFFD');
+      currentStringToken.add('\uFFFD');
     } else if (data == eof) {
       _addToken(ParseErrorToken('eof-in-comment'));
       _addToken(currentToken);
       state = dataState;
     } else {
-      currentStringToken!.add(data!).add(stream.charsUntil('-\u0000'));
+      currentStringToken.add(data!).add(stream.charsUntil('-\u0000'));
     }
     return true;
   }
@@ -1404,14 +1404,14 @@ class HtmlTokenizer implements Iterator<Token> {
       state = commentEndState;
     } else if (data == '\u0000') {
       _addToken(ParseErrorToken('invalid-codepoint'));
-      currentStringToken!.add('-\uFFFD');
+      currentStringToken.add('-\uFFFD');
       state = commentState;
     } else if (data == eof) {
       _addToken(ParseErrorToken('eof-in-comment-end-dash'));
       _addToken(currentToken);
       state = dataState;
     } else {
-      currentStringToken!.add('-').add(data!);
+      currentStringToken.add('-').add(data!);
       state = commentState;
     }
     return true;
@@ -1424,7 +1424,7 @@ class HtmlTokenizer implements Iterator<Token> {
       state = dataState;
     } else if (data == '\u0000') {
       _addToken(ParseErrorToken('invalid-codepoint'));
-      currentStringToken!.add('--\uFFFD');
+      currentStringToken.add('--\uFFFD');
       state = commentState;
     } else if (data == '!') {
       _addToken(
@@ -1433,7 +1433,7 @@ class HtmlTokenizer implements Iterator<Token> {
     } else if (data == '-') {
       _addToken(
           ParseErrorToken('unexpected-dash-after-double-dash-in-comment'));
-      currentStringToken!.add(data!);
+      currentStringToken.add(data!);
     } else if (data == eof) {
       _addToken(ParseErrorToken('eof-in-comment-double-dash'));
       _addToken(currentToken);
@@ -1441,7 +1441,7 @@ class HtmlTokenizer implements Iterator<Token> {
     } else {
       // XXX
       _addToken(ParseErrorToken('unexpected-char-in-comment'));
-      currentStringToken!.add('--').add(data!);
+      currentStringToken.add('--').add(data!);
       state = commentState;
     }
     return true;
@@ -1453,18 +1453,18 @@ class HtmlTokenizer implements Iterator<Token> {
       _addToken(currentToken);
       state = dataState;
     } else if (data == '-') {
-      currentStringToken!.add('--!');
+      currentStringToken.add('--!');
       state = commentEndDashState;
     } else if (data == '\u0000') {
       _addToken(ParseErrorToken('invalid-codepoint'));
-      currentStringToken!.add('--!\uFFFD');
+      currentStringToken.add('--!\uFFFD');
       state = commentState;
     } else if (data == eof) {
       _addToken(ParseErrorToken('eof-in-comment-end-bang-state'));
       _addToken(currentToken);
       state = dataState;
     } else {
-      currentStringToken!.add('--!').add(data!);
+      currentStringToken.add('--!').add(data!);
       state = commentState;
     }
     return true;
@@ -1476,7 +1476,7 @@ class HtmlTokenizer implements Iterator<Token> {
       state = beforeDoctypeNameState;
     } else if (data == eof) {
       _addToken(ParseErrorToken('expected-doctype-name-but-got-eof'));
-      currentDoctypeToken!.correct = false;
+      currentDoctypeToken.correct = false;
       _addToken(currentToken);
       state = dataState;
     } else {
@@ -1493,20 +1493,20 @@ class HtmlTokenizer implements Iterator<Token> {
       return true;
     } else if (data == '>') {
       _addToken(ParseErrorToken('expected-doctype-name-but-got-right-bracket'));
-      currentDoctypeToken!.correct = false;
+      currentDoctypeToken.correct = false;
       _addToken(currentToken);
       state = dataState;
     } else if (data == '\u0000') {
       _addToken(ParseErrorToken('invalid-codepoint'));
-      currentDoctypeToken!.name = '\uFFFD';
+      currentDoctypeToken.name = '\uFFFD';
       state = doctypeNameState;
     } else if (data == eof) {
       _addToken(ParseErrorToken('expected-doctype-name-but-got-eof'));
-      currentDoctypeToken!.correct = false;
+      currentDoctypeToken.correct = false;
       _addToken(currentToken);
       state = dataState;
     } else {
-      currentDoctypeToken!.name = data;
+      currentDoctypeToken.name = data;
       state = doctypeNameState;
     }
     return true;
@@ -1515,24 +1515,24 @@ class HtmlTokenizer implements Iterator<Token> {
   bool doctypeNameState() {
     final data = stream.char();
     if (isWhitespace(data)) {
-      currentDoctypeToken!.name = currentDoctypeToken!.name?.toAsciiLowerCase();
+      currentDoctypeToken.name = currentDoctypeToken.name?.toAsciiLowerCase();
       state = afterDoctypeNameState;
     } else if (data == '>') {
-      currentDoctypeToken!.name = currentDoctypeToken!.name?.toAsciiLowerCase();
+      currentDoctypeToken.name = currentDoctypeToken.name?.toAsciiLowerCase();
       _addToken(currentToken);
       state = dataState;
     } else if (data == '\u0000') {
       _addToken(ParseErrorToken('invalid-codepoint'));
-      currentDoctypeToken!.name = '${currentDoctypeToken!.name}\uFFFD';
+      currentDoctypeToken.name = '${currentDoctypeToken.name}\uFFFD';
       state = doctypeNameState;
     } else if (data == eof) {
       _addToken(ParseErrorToken('eof-in-doctype-name'));
-      currentDoctypeToken!.correct = false;
-      currentDoctypeToken!.name = currentDoctypeToken!.name?.toAsciiLowerCase();
+      currentDoctypeToken.correct = false;
+      currentDoctypeToken.name = currentDoctypeToken.name?.toAsciiLowerCase();
       _addToken(currentToken);
       state = dataState;
     } else {
-      currentDoctypeToken!.name = '${currentDoctypeToken!.name}$data';
+      currentDoctypeToken.name = '${currentDoctypeToken.name}$data';
     }
     return true;
   }
@@ -1545,7 +1545,7 @@ class HtmlTokenizer implements Iterator<Token> {
       _addToken(currentToken);
       state = dataState;
     } else if (data == eof) {
-      currentDoctypeToken!.correct = false;
+      currentDoctypeToken.correct = false;
       stream.unget(data);
       _addToken(ParseErrorToken('eof-in-doctype'));
       _addToken(currentToken);
@@ -1587,7 +1587,7 @@ class HtmlTokenizer implements Iterator<Token> {
       stream.unget(data);
       _addToken(ParseErrorToken('expected-space-or-right-bracket-in-doctype',
           messageParams: {'data': data}));
-      currentDoctypeToken!.correct = false;
+      currentDoctypeToken.correct = false;
       state = bogusDoctypeState;
     }
     return true;
@@ -1603,7 +1603,7 @@ class HtmlTokenizer implements Iterator<Token> {
       state = beforeDoctypePublicIdentifierState;
     } else if (data == eof) {
       _addToken(ParseErrorToken('eof-in-doctype'));
-      currentDoctypeToken!.correct = false;
+      currentDoctypeToken.correct = false;
       _addToken(currentToken);
       state = dataState;
     } else {
@@ -1618,24 +1618,24 @@ class HtmlTokenizer implements Iterator<Token> {
     if (isWhitespace(data)) {
       return true;
     } else if (data == '"') {
-      currentDoctypeToken!.publicId = '';
+      currentDoctypeToken.publicId = '';
       state = doctypePublicIdentifierDoubleQuotedState;
     } else if (data == "'") {
-      currentDoctypeToken!.publicId = '';
+      currentDoctypeToken.publicId = '';
       state = doctypePublicIdentifierSingleQuotedState;
     } else if (data == '>') {
       _addToken(ParseErrorToken('unexpected-end-of-doctype'));
-      currentDoctypeToken!.correct = false;
+      currentDoctypeToken.correct = false;
       _addToken(currentToken);
       state = dataState;
     } else if (data == eof) {
       _addToken(ParseErrorToken('eof-in-doctype'));
-      currentDoctypeToken!.correct = false;
+      currentDoctypeToken.correct = false;
       _addToken(currentToken);
       state = dataState;
     } else {
       _addToken(ParseErrorToken('unexpected-char-in-doctype'));
-      currentDoctypeToken!.correct = false;
+      currentDoctypeToken.correct = false;
       state = bogusDoctypeState;
     }
     return true;
@@ -1647,19 +1647,19 @@ class HtmlTokenizer implements Iterator<Token> {
       state = afterDoctypePublicIdentifierState;
     } else if (data == '\u0000') {
       _addToken(ParseErrorToken('invalid-codepoint'));
-      currentDoctypeToken!.publicId = '${currentDoctypeToken!.publicId}\uFFFD';
+      currentDoctypeToken.publicId = '${currentDoctypeToken.publicId}\uFFFD';
     } else if (data == '>') {
       _addToken(ParseErrorToken('unexpected-end-of-doctype'));
-      currentDoctypeToken!.correct = false;
+      currentDoctypeToken.correct = false;
       _addToken(currentToken);
       state = dataState;
     } else if (data == eof) {
       _addToken(ParseErrorToken('eof-in-doctype'));
-      currentDoctypeToken!.correct = false;
+      currentDoctypeToken.correct = false;
       _addToken(currentToken);
       state = dataState;
     } else {
-      currentDoctypeToken!.publicId = '${currentDoctypeToken!.publicId}$data';
+      currentDoctypeToken.publicId = '${currentDoctypeToken.publicId}$data';
     }
     return true;
   }
@@ -1670,19 +1670,19 @@ class HtmlTokenizer implements Iterator<Token> {
       state = afterDoctypePublicIdentifierState;
     } else if (data == '\u0000') {
       _addToken(ParseErrorToken('invalid-codepoint'));
-      currentDoctypeToken!.publicId = '${currentDoctypeToken!.publicId}\uFFFD';
+      currentDoctypeToken.publicId = '${currentDoctypeToken.publicId}\uFFFD';
     } else if (data == '>') {
       _addToken(ParseErrorToken('unexpected-end-of-doctype'));
-      currentDoctypeToken!.correct = false;
+      currentDoctypeToken.correct = false;
       _addToken(currentToken);
       state = dataState;
     } else if (data == eof) {
       _addToken(ParseErrorToken('eof-in-doctype'));
-      currentDoctypeToken!.correct = false;
+      currentDoctypeToken.correct = false;
       _addToken(currentToken);
       state = dataState;
     } else {
-      currentDoctypeToken!.publicId = '${currentDoctypeToken!.publicId}$data';
+      currentDoctypeToken.publicId = '${currentDoctypeToken.publicId}$data';
     }
     return true;
   }
@@ -1696,20 +1696,20 @@ class HtmlTokenizer implements Iterator<Token> {
       state = dataState;
     } else if (data == '"') {
       _addToken(ParseErrorToken('unexpected-char-in-doctype'));
-      currentDoctypeToken!.systemId = '';
+      currentDoctypeToken.systemId = '';
       state = doctypeSystemIdentifierDoubleQuotedState;
     } else if (data == "'") {
       _addToken(ParseErrorToken('unexpected-char-in-doctype'));
-      currentDoctypeToken!.systemId = '';
+      currentDoctypeToken.systemId = '';
       state = doctypeSystemIdentifierSingleQuotedState;
     } else if (data == eof) {
       _addToken(ParseErrorToken('eof-in-doctype'));
-      currentDoctypeToken!.correct = false;
+      currentDoctypeToken.correct = false;
       _addToken(currentToken);
       state = dataState;
     } else {
       _addToken(ParseErrorToken('unexpected-char-in-doctype'));
-      currentDoctypeToken!.correct = false;
+      currentDoctypeToken.correct = false;
       state = bogusDoctypeState;
     }
     return true;
@@ -1723,19 +1723,19 @@ class HtmlTokenizer implements Iterator<Token> {
       _addToken(currentToken);
       state = dataState;
     } else if (data == '"') {
-      currentDoctypeToken!.systemId = '';
+      currentDoctypeToken.systemId = '';
       state = doctypeSystemIdentifierDoubleQuotedState;
     } else if (data == "'") {
-      currentDoctypeToken!.systemId = '';
+      currentDoctypeToken.systemId = '';
       state = doctypeSystemIdentifierSingleQuotedState;
     } else if (data == eof) {
       _addToken(ParseErrorToken('eof-in-doctype'));
-      currentDoctypeToken!.correct = false;
+      currentDoctypeToken.correct = false;
       _addToken(currentToken);
       state = dataState;
     } else {
       _addToken(ParseErrorToken('unexpected-char-in-doctype'));
-      currentDoctypeToken!.correct = false;
+      currentDoctypeToken.correct = false;
       state = bogusDoctypeState;
     }
     return true;
@@ -1751,7 +1751,7 @@ class HtmlTokenizer implements Iterator<Token> {
       state = beforeDoctypeSystemIdentifierState;
     } else if (data == eof) {
       _addToken(ParseErrorToken('eof-in-doctype'));
-      currentDoctypeToken!.correct = false;
+      currentDoctypeToken.correct = false;
       _addToken(currentToken);
       state = dataState;
     } else {
@@ -1766,24 +1766,24 @@ class HtmlTokenizer implements Iterator<Token> {
     if (isWhitespace(data)) {
       return true;
     } else if (data == '"') {
-      currentDoctypeToken!.systemId = '';
+      currentDoctypeToken.systemId = '';
       state = doctypeSystemIdentifierDoubleQuotedState;
     } else if (data == "'") {
-      currentDoctypeToken!.systemId = '';
+      currentDoctypeToken.systemId = '';
       state = doctypeSystemIdentifierSingleQuotedState;
     } else if (data == '>') {
       _addToken(ParseErrorToken('unexpected-char-in-doctype'));
-      currentDoctypeToken!.correct = false;
+      currentDoctypeToken.correct = false;
       _addToken(currentToken);
       state = dataState;
     } else if (data == eof) {
       _addToken(ParseErrorToken('eof-in-doctype'));
-      currentDoctypeToken!.correct = false;
+      currentDoctypeToken.correct = false;
       _addToken(currentToken);
       state = dataState;
     } else {
       _addToken(ParseErrorToken('unexpected-char-in-doctype'));
-      currentDoctypeToken!.correct = false;
+      currentDoctypeToken.correct = false;
       state = bogusDoctypeState;
     }
     return true;
@@ -1795,19 +1795,19 @@ class HtmlTokenizer implements Iterator<Token> {
       state = afterDoctypeSystemIdentifierState;
     } else if (data == '\u0000') {
       _addToken(ParseErrorToken('invalid-codepoint'));
-      currentDoctypeToken!.systemId = '${currentDoctypeToken!.systemId}\uFFFD';
+      currentDoctypeToken.systemId = '${currentDoctypeToken.systemId}\uFFFD';
     } else if (data == '>') {
       _addToken(ParseErrorToken('unexpected-end-of-doctype'));
-      currentDoctypeToken!.correct = false;
+      currentDoctypeToken.correct = false;
       _addToken(currentToken);
       state = dataState;
     } else if (data == eof) {
       _addToken(ParseErrorToken('eof-in-doctype'));
-      currentDoctypeToken!.correct = false;
+      currentDoctypeToken.correct = false;
       _addToken(currentToken);
       state = dataState;
     } else {
-      currentDoctypeToken!.systemId = '${currentDoctypeToken!.systemId}$data';
+      currentDoctypeToken.systemId = '${currentDoctypeToken.systemId}$data';
     }
     return true;
   }
@@ -1818,19 +1818,19 @@ class HtmlTokenizer implements Iterator<Token> {
       state = afterDoctypeSystemIdentifierState;
     } else if (data == '\u0000') {
       _addToken(ParseErrorToken('invalid-codepoint'));
-      currentDoctypeToken!.systemId = '${currentDoctypeToken!.systemId}\uFFFD';
+      currentDoctypeToken.systemId = '${currentDoctypeToken.systemId}\uFFFD';
     } else if (data == '>') {
       _addToken(ParseErrorToken('unexpected-end-of-doctype'));
-      currentDoctypeToken!.correct = false;
+      currentDoctypeToken.correct = false;
       _addToken(currentToken);
       state = dataState;
     } else if (data == eof) {
       _addToken(ParseErrorToken('eof-in-doctype'));
-      currentDoctypeToken!.correct = false;
+      currentDoctypeToken.correct = false;
       _addToken(currentToken);
       state = dataState;
     } else {
-      currentDoctypeToken!.systemId = '${currentDoctypeToken!.systemId}$data';
+      currentDoctypeToken.systemId = '${currentDoctypeToken.systemId}$data';
     }
     return true;
   }
@@ -1844,7 +1844,7 @@ class HtmlTokenizer implements Iterator<Token> {
       state = dataState;
     } else if (data == eof) {
       _addToken(ParseErrorToken('eof-in-doctype'));
-      currentDoctypeToken!.correct = false;
+      currentDoctypeToken.correct = false;
       _addToken(currentToken);
       state = dataState;
     } else {
