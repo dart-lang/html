@@ -65,7 +65,7 @@ String formatStr(String format, Map? data) {
       while (isDigit(format[digits])) {
         digits++;
       }
-      int? numberSize;
+      var numberSize = 0;
       if (digits > match) {
         numberSize = int.parse(format.substring(match, digits));
         match = digits;
@@ -77,11 +77,11 @@ String formatStr(String format, Map? data) {
           break;
         case 'd':
           final number = value.toString();
-          result.write(padWithZeros(number, numberSize!));
+          result.write(padWithZeros(number, numberSize));
           break;
         case 'x':
           final number = (value as int).toRadixString(16);
-          result.write(padWithZeros(number, numberSize!));
+          result.write(padWithZeros(number, numberSize));
           break;
         default:
           throw UnsupportedError('formatStr does not support format '
