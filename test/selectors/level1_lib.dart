@@ -96,7 +96,7 @@ void interfaceCheck(String type, obj) {
 void verifyStaticList(String type, dynamic root) {
   List pre;
   List post;
-  int preLength;
+  late int preLength;
 
   runTest(() {
     pre = root.querySelectorAll('div') as List;
