@@ -183,7 +183,7 @@ abstract class Node {
   }
 
   /// If [sourceSpan] is available, this contains the spans of each attribute's
-  /// value. Unlike [attributeSpans], this span will inlcude only the value.
+  /// value. Unlike [attributeSpans], this span will include only the value.
   /// For example, the value span of "attr" in `<a attr="value">` would be the
   /// text `value`.
   LinkedHashMap<Object, FileSpan> get attributeValueSpans {
@@ -506,7 +506,7 @@ class Element extends Node with _ParentNode, _ElementAndDocument {
     //    creating them every call.
     // 2) Verify that the html does not contain leading or trailing text nodes.
     // 3) Verify that the html does not contain both <head> and <body> tags.
-    // 4) Detatch the created element from its dummy parent.
+    // 4) Detach the created element from its dummy parent.
     var parentTag = 'div';
     String tag;
     final match = _startTagRegexp.firstMatch(html);
