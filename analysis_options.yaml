@@ -17,7 +17,7 @@ linter:
     - await_only_futures
     - camel_case_types
     - cancel_subscriptions
-    #- comment_references
+    - comment_references
     # See https://github.com/dart-lang/logging/issues/43
     #- constant_identifier_names
     - control_flow_in_finally

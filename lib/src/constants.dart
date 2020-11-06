@@ -15,9 +15,11 @@ class ReparseException implements Exception {
 
 // TODO(jmesserly): assuming the programmatic name is not important, it would be
 // good to make these "static const" fields on an ErrorMessage class.
-/// These are error messages emitted by [HtmlParser]. The values use Python
-/// style string formatting, as implemented by [formatStr]. That function only
-/// supports the subset of format functionality used here.
+/// Error messages emitted by `HtmlParser`.
+///
+/// The values use Python style string formatting, as implemented by
+/// [formatStr]. That function only supports the subset of format functionality
+/// used here.
 const Map<String, String> errorMessages = {
   'null-character': 'Null character in input stream, replaced with U+FFFD.',
   'invalid-codepoint': 'Invalid codepoint in stream.',

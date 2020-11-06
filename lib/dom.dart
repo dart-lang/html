@@ -84,7 +84,7 @@ abstract class _ParentNode implements Node {
   /// [selectors level 4](http://dev.w3.org/csswg/selectors-4/)
   /// are implemented. For example, nth-child does not implement An+B syntax
   /// and *-of-type is not implemented. If a selector is not implemented this
-  /// method will throw [UniplmentedError].
+  /// method will throw [UnimplementedError].
   Element querySelector(String selector) => query.querySelector(this, selector);
 
   /// Returns all descendant nodes matching the given selectors, using a
@@ -94,7 +94,7 @@ abstract class _ParentNode implements Node {
   /// [selectors level 4](http://dev.w3.org/csswg/selectors-4/)
   /// are implemented. For example, nth-child does not implement An+B syntax
   /// and *-of-type is not implemented. If a selector is not implemented this
-  /// method will throw [UniplmentedError].
+  /// method will throw [UnimplementedError].
   List<Element> querySelectorAll(String selector) =>
       query.querySelectorAll(this, selector);
 }
@@ -183,7 +183,7 @@ abstract class Node {
   }
 
   /// If [sourceSpan] is available, this contains the spans of each attribute's
-  /// value. Unlike [attributeSpans], this span will inlcude only the value.
+  /// value. Unlike [attributeSpans], this span will include only the value.
   /// For example, the value span of "attr" in `<a attr="value">` would be the
   /// text `value`.
   LinkedHashMap<Object, FileSpan> get attributeValueSpans {
@@ -239,9 +239,10 @@ abstract class Node {
   }
 
   /// Insert [node] as a child of the current node, before [refNode] in the
-  /// list of child nodes. Raises [UnsupportedOperationException] if [refNode]
-  /// is not a child of the current node. If refNode is null, this adds to the
-  /// end of the list.
+  /// list of child nodes.
+  ///
+  /// [refNode] must be a hild of the current node or null. If [refNode] is null
+  /// [node] will be added to the end of the list.
   void insertBefore(Node node, Node refNode) {
     if (refNode == null) {
       nodes.add(node);
@@ -505,7 +506,7 @@ class Element extends Node with _ParentNode, _ElementAndDocument {
     //    creating them every call.
     // 2) Verify that the html does not contain leading or trailing text nodes.
     // 3) Verify that the html does not contain both <head> and <body> tags.
-    // 4) Detatch the created element from its dummy parent.
+    // 4) Detach the created element from its dummy parent.
     var parentTag = 'div';
     String tag;
     final match = _startTagRegexp.firstMatch(html);
