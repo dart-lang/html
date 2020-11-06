@@ -157,7 +157,7 @@ abstract class Node {
 
   /// A list of child nodes of the current node. This must
   /// include all elements but not necessarily other node types.
-  final NodeList nodes = NodeList._();
+  late final nodes = NodeList._(this);
 
   List<Element>? _elements;
 
@@ -170,9 +170,7 @@ abstract class Node {
   LinkedHashMap<Object, FileSpan>? _attributeSpans;
   LinkedHashMap<Object, FileSpan>? _attributeValueSpans;
 
-  Node._() {
-    nodes._parent = this;
-  }
+  Node._();
 
   /// If [sourceSpan] is available, this contains the spans of each attribute.
   /// The span of an attribute is the entire attribute, including the name and
@@ -709,11 +707,9 @@ class Comment extends Node {
 // (The requirement to remove the node from the old node list makes it tricky.)
 // TODO(jmesserly): is there any way to share code with the _NodeListImpl?
 class NodeList extends ListProxy<Node> {
-  // Note: this is conceptually final, but because of circular reference
-  // between Node and NodeList we initialize it after construction.
-  Node? _parent;
+  final Node _parent;
 
-  NodeList._();
+  NodeList._(this._parent);
 
   Node _setParent(Node node) {
     // Note: we need to remove the node from its previous parent node, if any,
