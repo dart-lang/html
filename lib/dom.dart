@@ -167,8 +167,8 @@ abstract class Node {
   FileSpan? sourceSpan;
 
   /// The attribute spans if requested. Otherwise null.
-  LinkedHashMap<Object?, FileSpan>? _attributeSpans;
-  LinkedHashMap<Object?, FileSpan>? _attributeValueSpans;
+  LinkedHashMap<Object, FileSpan>? _attributeSpans;
+  LinkedHashMap<Object, FileSpan>? _attributeValueSpans;
 
   Node._() {
     nodes._parent = this;
@@ -178,7 +178,7 @@ abstract class Node {
   /// The span of an attribute is the entire attribute, including the name and
   /// quotes (if any). For example, the span of "attr" in `<a attr="value">`
   /// would be the text `attr="value"`.
-  LinkedHashMap<Object?, FileSpan>? get attributeSpans {
+  LinkedHashMap<Object, FileSpan>? get attributeSpans {
     _ensureAttributeSpans();
     return _attributeSpans;
   }
@@ -187,7 +187,7 @@ abstract class Node {
   /// value. Unlike [attributeSpans], this span will inlcude only the value.
   /// For example, the value span of "attr" in `<a attr="value">` would be the
   /// text `value`.
-  LinkedHashMap<Object?, FileSpan>? get attributeValueSpans {
+  LinkedHashMap<Object, FileSpan>? get attributeValueSpans {
     _ensureAttributeSpans();
     return _attributeValueSpans;
   }
@@ -278,8 +278,9 @@ abstract class Node {
   void _ensureAttributeSpans() {
     if (_attributeSpans != null) return;
 
-    _attributeSpans = LinkedHashMap<Object?, FileSpan>();
-    _attributeValueSpans = LinkedHashMap<Object?, FileSpan>();
+    final attributeSpans = _attributeSpans = LinkedHashMap<Object, FileSpan>();
+    final attributeValueSpans =
+        _attributeValueSpans = LinkedHashMap<Object, FileSpan>();
 
     if (sourceSpan == null) return;
 
@@ -293,10 +294,11 @@ abstract class Node {
 
     for (var attr in token.attributeSpans!) {
       final offset = sourceSpan!.start.offset;
-      _attributeSpans![attr.name] =
+      final name = attr.name!;
+      attributeSpans[name] =
           sourceSpan!.file.span(offset + attr.start, offset + attr.end);
       if (attr.startValue != null) {
-        _attributeValueSpans![attr.name] = sourceSpan!.file
+        attributeValueSpans[name] = sourceSpan!.file
             .span(offset + attr.startValue!, offset + attr.endValue);
       }
     }
