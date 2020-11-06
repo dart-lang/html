@@ -5,10 +5,10 @@ dart:
 
 matrix:
   include:
-    - script: pub run --enable-experiment=non-nullable test -p vm,chrome
+    - script: pub run test -p vm,chrome
     - dart_task: dartfmt
     - dart_task:
-        dartanalyzer: --enable-experiment=non-nullable --fatal-warnings --fatal-infos .
+        dartanalyzer: --fatal-warnings --fatal-infos .
 
 # Only building master means that we don't run two builds for each pull request.
 branches:

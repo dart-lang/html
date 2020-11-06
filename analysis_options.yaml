@@ -9,8 +9,6 @@ analyzer:
     unused_import: error
     unused_local_variable: error
     dead_code: error
-  enable-experiment:
-  - non-nullable
 linter:
   rules:
     - avoid_function_literals_in_foreach_calls
