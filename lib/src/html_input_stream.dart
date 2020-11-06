@@ -43,13 +43,13 @@ class HtmlInputStream {
 
   int _offset;
 
-  /// Initialises the HtmlInputStream.
+  /// Initialise an HtmlInputStream.
   ///
   /// HtmlInputStream(source, [encoding]) -> Normalized stream from source
   /// for use by html5lib.
   ///
   /// [source] can be either a [String] or a [List<int>] containing the raw
-  /// bytes, or a file if [consoleSupport] is initialized.
+  /// bytes.
   ///
   /// The optional encoding parameter must be a string that indicates
   /// the encoding.  If specified, that encoding will be used,
