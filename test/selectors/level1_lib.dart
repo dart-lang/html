@@ -72,13 +72,13 @@ void setupSpecialElements(parent) {
 void interfaceCheck(String type, obj) {
   runTest(() {
     final q = obj.querySelector is Function;
-    assertTrue(q, type + ' supports querySelector.');
-  }, type + ' supports querySelector');
+    assertTrue(q, '$type supports querySelector.');
+  }, '$type supports querySelector');
 
   runTest(() {
     final qa = obj.querySelectorAll is Function;
-    assertTrue(qa, type + ' supports querySelectorAll.');
-  }, type + ' supports querySelectorAll');
+    assertTrue(qa, '$type supports querySelectorAll.');
+  }, '$type supports querySelectorAll');
 
   runTest(() {
     final list = obj.querySelectorAll('div');
@@ -86,18 +86,20 @@ void interfaceCheck(String type, obj) {
     // ElementList which has extra properties. Needed for dart:html compat.
     assertTrue(list is List<Element>,
         'The result should be an instance of a NodeList');
-  }, type + '.querySelectorAll returns NodeList instance');
+  }, '$type.querySelectorAll returns NodeList instance');
 }
 
 /*
  * Verify that the NodeList returned by querySelectorAll is static and and that a new list is created after
  * each call. A static list should not be affected by subsequent changes to the DOM.
  */
-void verifyStaticList(String type, root) {
-  var pre, post, preLength;
+void verifyStaticList(String type, dynamic root) {
+  List pre;
+  List post;
+  int preLength;
 
   runTest(() {
-    pre = root.querySelectorAll('div');
+    pre = root.querySelectorAll('div') as List;
     preLength = pre.length;
 
     final div = doc.createElement('div');
@@ -105,13 +107,13 @@ void verifyStaticList(String type, root) {
 
     assertEquals(
         pre.length, preLength, 'The length of the NodeList should not change.');
-  }, type + ': static NodeList');
+  }, '$type: static NodeList');
 
   runTest(() {
-    post = root.querySelectorAll('div');
+    post = root.querySelectorAll('div') as List;
     assertEquals(post.length, preLength + 1,
         'The length of the new NodeList should be 1 more than the previous list.');
-  }, type + ': new NodeList');
+  }, '$type: new NodeList');
 }
 
 /*
@@ -125,20 +127,20 @@ void runSpecialSelectorTests(String type, root) {
     // 1
     assertEquals(root.querySelectorAll('null').length, 1,
         "This should find one element with the tag name 'NULL'.");
-  }, type + '.querySelectorAll null');
+  }, '$type.querySelectorAll null');
 
   runTest(() {
     // 2
     assertEquals(root.querySelectorAll('undefined').length, 1,
         "This should find one element with the tag name 'UNDEFINED'.");
-  }, type + '.querySelectorAll undefined');
+  }, '$type.querySelectorAll undefined');
 
   runTest(() {
     // 3
     assertThrows((e) => e is NoSuchMethodError, () {
       root.querySelectorAll();
     }, 'This should throw a TypeError.');
-  }, type + '.querySelectorAll no parameter');
+  }, '$type.querySelectorAll no parameter');
 
   runTest(() {
     // 4
@@ -147,7 +149,7 @@ void runSpecialSelectorTests(String type, root) {
     // TODO(jmesserly): change "localName" back to "tagName" once implemented.
     assertEquals(
         elm.localName.toUpperCase(), 'NULL', "The tag name should be 'NULL'.");
-  }, type + '.querySelector null');
+  }, '$type.querySelector null');
 
   runTest(() {
     // 5
@@ -156,14 +158,14 @@ void runSpecialSelectorTests(String type, root) {
     // TODO(jmesserly): change "localName" back to "tagName" once implemented.
     assertEquals(elm.localName.toUpperCase(), 'UNDEFINED',
         "The tag name should be 'UNDEFINED'.");
-  }, type + '.querySelector undefined');
+  }, '$type.querySelector undefined');
 
   runTest(() {
     // 6
     assertThrows((e) => e is NoSuchMethodError, () {
       root.querySelector();
     }, 'This should throw a TypeError.');
-  }, type + '.querySelector no parameter');
+  }, '$type.querySelector no parameter');
 
   runTest(() {
     // 7
@@ -176,7 +178,7 @@ void runSpecialSelectorTests(String type, root) {
         i++;
       }
     });
-  }, type + '.querySelectorAll tree order');
+  }, '$type.querySelectorAll tree order');
 }
 
 /// Tests containing this string fail for an unknown reason
@@ -239,7 +241,7 @@ void runValidSelectorTest(String type, Node root,
           assertFalse(foundall[i].attributes.containsKey('data-clone'),
               'This should not be a cloned element.');
         }
-      }, type + '.querySelectorAll: ' + n + ': ' + q, skip: skip);
+      }, '$type.querySelectorAll: $n:$q', skip: skip);
 
       runTest(() {
         found = (root as dynamic).querySelector(q) as Element?;
@@ -255,7 +257,7 @@ void runValidSelectorTest(String type, Node root,
         } else {
           assertEquals(found, null, 'The method should not match anything.');
         }
-      }, type + '.querySelector: ' + n + ': ' + q, skip: skip);
+      }, '$type.querySelector: $n : $q', skip: skip);
     } else {
       //console.log("Excluding for " + nodeType + ": " + s["testType"] + "&" + testType + "=" + (s["testType"] & testType) + ": " + JSON.stringify(s))
     }
@@ -277,13 +279,13 @@ void runInvalidSelectorTest(String type, root, List selectors) {
       assertThrows((e) => e is FormatException, () {
         root.querySelector(q);
       });
-    }, type + '.querySelector: ' + n + ': ' + q);
+    }, '$type.querySelector: $n:$q');
 
     runTest(() {
       assertThrows((e) => e is FormatException, () {
         root.querySelectorAll(q);
       });
-    }, type + '.querySelectorAll: ' + n + ': ' + q);
+    }, '$type.querySelectorAll: $n:$q');
   }
 }
 

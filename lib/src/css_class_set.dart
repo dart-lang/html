@@ -186,7 +186,9 @@ abstract class _CssClassSetImpl extends SetBase<String> implements CssClassSet {
   /// [iterable] from the element.
   @override
   void toggleAll(Iterable<String> iterable, [bool? shouldAdd]) {
-    iterable.forEach((e) => toggle(e, shouldAdd));
+    for (var e in iterable) {
+      toggle(e, shouldAdd);
+    }
   }
 
   /// Helper method used to modify the set of css classes on this element.
