@@ -7,7 +7,7 @@ homepage: https://github.com/dart-lang/html
 publish_to: none
 
 environment:
-  sdk: ">=2.11.0-0 <3.0.0"
+  sdk: ">=2.12.0-0 <3.0.0"
 
 dependencies:
   csslib: ^0.17.0
