@@ -1,9 +1,4 @@
-/// Misc things that were useful when porting the code from Python.
-library utils;
-
 import 'constants.dart';
-
-typedef Predicate = bool Function();
 
 class Pair<F, S> {
   final F first;
@@ -11,41 +6,19 @@ class Pair<F, S> {
 
   const Pair(this.first, this.second);
 
+  @override
   int get hashCode => 37 * first.hashCode + second.hashCode;
 
+  @override
   bool operator ==(other) => other.first == first && other.second == second;
 }
 
-int parseIntRadix(String str, [int radix = 10]) {
-  int val = 0;
-  for (int i = 0; i < str.length; i++) {
-    var digit = str.codeUnitAt(i);
-    if (digit >= LOWER_A) {
-      digit += 10 - LOWER_A;
-    } else if (digit >= UPPER_A) {
-      digit += 10 - UPPER_A;
-    } else {
-      digit -= ZERO;
-    }
-    val = val * radix + digit;
-  }
-  return val;
-}
-
-bool any(List<bool> iterable) => iterable.any((f) => f);
-
-bool startsWithAny(String str, List<String> prefixes) {
-  for (var prefix in prefixes) {
-    if (str.startsWith(prefix)) {
-      return true;
-    }
-  }
-  return false;
-}
+bool startsWithAny(String str, List<String> prefixes) =>
+    prefixes.any(str.startsWith);
 
 // Like the python [:] operator.
 List<T> slice<T>(List<T> list, int start, [int end]) {
-  if (end == null) end = list.length;
+  end ??= list.length;
   if (end < 0) end += list.length;
 
   // Ensure the indexes are in bounds.
@@ -55,7 +28,7 @@ List<T> slice<T>(List<T> list, int start, [int end]) {
 }
 
 bool allWhitespace(String str) {
-  for (int i = 0; i < str.length; i++) {
+  for (var i = 0; i < str.length; i++) {
     if (!isWhitespaceCC(str.codeUnitAt(i))) return false;
   }
   return true;
@@ -63,9 +36,11 @@ bool allWhitespace(String str) {
 
 String padWithZeros(String str, int size) {
   if (str.length == size) return str;
-  var result = StringBuffer();
+  final result = StringBuffer();
   size -= str.length;
-  for (int i = 0; i < size; i++) result.write('0');
+  for (var i = 0; i < size; i++) {
+    result.write('0');
+  }
   result.write(str);
   return result.toString();
 }
@@ -78,16 +53,14 @@ String padWithZeros(String str, int size) {
 String formatStr(String format, Map data) {
   if (data == null) return format;
   data.forEach((key, value) {
-    var result = StringBuffer();
-    var search = '%($key)';
+    final result = StringBuffer();
+    final search = '%($key)';
     int last = 0, match;
-    // This is a bug in the linter
-    // ignore: prefer_contains
     while ((match = format.indexOf(search, last)) >= 0) {
       result.write(format.substring(last, match));
       match += search.length;
 
-      int digits = match;
+      var digits = match;
       while (isDigit(format[digits])) {
         digits++;
       }
@@ -102,16 +75,16 @@ String formatStr(String format, Map data) {
           result.write(value);
           break;
         case 'd':
-          var number = value.toString();
+          final number = value.toString();
           result.write(padWithZeros(number, numberSize));
           break;
         case 'x':
-          var number = value.toRadixString(16);
+          final number = (value as int).toRadixString(16);
           result.write(padWithZeros(number, numberSize));
           break;
         default:
-          throw UnsupportedError("formatStr does not support format "
-              "character ${format[match]}");
+          throw UnsupportedError('formatStr does not support format '
+              'character ${format[match]}');
       }
 
       last = match + 1;

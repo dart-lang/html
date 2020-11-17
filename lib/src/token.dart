@@ -21,8 +21,8 @@ abstract class TagToken extends Token {
 
 class StartTagToken extends TagToken {
   /// The tag's attributes. A map from the name to the value, where the name
-  /// can be a [String] or [AttributeName].
-  LinkedHashMap<dynamic, String> data;
+  /// can be a [String] or `AttributeName`.
+  LinkedHashMap<Object, String> data;
 
   /// The attribute spans if requested. Otherwise null.
   List<TagAttribute> attributeSpans;
@@ -39,6 +39,7 @@ class StartTagToken extends TagToken {
       this.namespace})
       : super(name, selfClosing);
 
+  @override
   int get kind => TokenKind.startTag;
 }
 
@@ -46,6 +47,7 @@ class EndTagToken extends TagToken {
   EndTagToken(String name, {bool selfClosing = false})
       : super(name, selfClosing);
 
+  @override
   int get kind => TokenKind.endTag;
 }
 
@@ -61,9 +63,7 @@ abstract class StringToken extends Token {
     return _string;
   }
 
-  StringToken(string)
-      : _string = string,
-        _buffer = string == null ? StringBuffer() : null;
+  StringToken(this._string) : _buffer = _string == null ? StringBuffer() : null;
 
   StringToken add(String data) {
     _buffer.write(data);
@@ -77,12 +77,14 @@ class ParseErrorToken extends StringToken {
 
   ParseErrorToken(String data, {this.messageParams}) : super(data);
 
+  @override
   int get kind => TokenKind.parseError;
 }
 
 class CharactersToken extends StringToken {
   CharactersToken([String data]) : super(data);
 
+  @override
   int get kind => TokenKind.characters;
 
   /// Replaces the token's [data]. This should only be used to wholly replace
@@ -96,23 +98,26 @@ class CharactersToken extends StringToken {
 class SpaceCharactersToken extends StringToken {
   SpaceCharactersToken([String data]) : super(data);
 
+  @override
   int get kind => TokenKind.spaceCharacters;
 }
 
 class CommentToken extends StringToken {
   CommentToken([String data]) : super(data);
 
+  @override
   int get kind => TokenKind.comment;
 }
 
 class DoctypeToken extends Token {
   String publicId;
   String systemId;
-  String name = "";
+  String name = '';
   bool correct;
 
   DoctypeToken({this.publicId, this.systemId, this.correct = false});
 
+  @override
   int get kind => TokenKind.doctype;
 }
 

@@ -1,3 +1,22 @@
+## 0.15.0-dev
+
+- Drop `HtmlParser.lastPhase` and `HtmlParser.beforeRcDataPhase`. These fields
+  never had a value other than `null`.
+
+## 0.14.0+4
+
+- Fix a bug parsing bad HTML where a 'button' end tag needs to close other
+  elements.
+
+## 0.14.0+3
+
+- Fix spans generated for HTML with higher-plane unicode characters
+  (eg. emojis).
+
+## 0.14.0+2
+
+- Support `package:css` `>=0.13.2 <0.17.0`.
+
 ## 0.14.0+1
 
 - Support `package:css` `>=0.13.2 <0.16.0`.
@@ -65,7 +84,7 @@
 
 #### Pub version 0.12.2+2
   * Support `csslib` versions `0.13.x`.
-  
+
 #### Pub version 0.12.2+1
   * Exclude `.packages` file from the published package.
 

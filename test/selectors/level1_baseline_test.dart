@@ -18,14 +18,15 @@ import 'level1_lib.dart';
 import 'selectors.dart';
 
 Document getTestContentDocument() {
-  var testPath = p.join(testDir, 'selectors', 'level1-content.html');
+  final testPath = p.join(testDir, 'selectors', 'level1-content.html');
   return parse(File(testPath).readAsStringSync());
 }
+
 
 var testType = testQsaBaseline | testQsaAdditional; // Only run baseline tests.
 var docType = "html"; // Only run tests suitable for HTML
 
-main() {
+void main() {
   /*
    * This test suite tests Selectors API methods in 4 different contexts:
    * 1. Document node
@@ -64,12 +65,12 @@ main() {
   //doc = frame.contentDocument;                 // Document Node tests
   doc = getTestContentDocument();
 
-  var element = doc.getElementById("root"); // In-document Element Node tests
+  final element = doc.getElementById('root'); // In-document Element Node tests
 
   //Setup the namespace tests
   setupSpecialElements(element);
 
-  var outOfScope = element
+  final outOfScope = element
       .clone(true); // Append this to the body before running the in-document
   // Element tests, but after running the Document tests. This
   // tests that no elements that are not descendants of element
@@ -77,51 +78,49 @@ main() {
 
   traverse(outOfScope, (elem) {
     // Annotate each element as being a clone; used for verifying
-    elem.attributes["data-clone"] =
-        ""; // that none of these elements ever match.
+    elem.attributes['data-clone'] =
+        ''; // that none of these elements ever match.
   });
 
-  var detached = element.clone(true); // Detached Element Node tests
+  final detached = element.clone(true); // Detached Element Node tests
 
-  var fragment = doc.createDocumentFragment(); // Fragment Node tests
+  final fragment = doc.createDocumentFragment(); // Fragment Node tests
   fragment.append(element.clone(true));
 
   // Setup Tests
-  interfaceCheck("Document", doc);
-  interfaceCheck("Detached Element", detached);
-  interfaceCheck("Fragment", fragment);
-  interfaceCheck("In-document Element", element);
+  interfaceCheck('Document', doc);
+  interfaceCheck('Detached Element', detached);
+  interfaceCheck('Fragment', fragment);
+  interfaceCheck('In-document Element', element);
 
-  runSpecialSelectorTests("Document", doc);
-  runSpecialSelectorTests("Detached Element", detached);
-  runSpecialSelectorTests("Fragment", fragment);
-  runSpecialSelectorTests("In-document Element", element);
+  runSpecialSelectorTests('Document', doc);
+  runSpecialSelectorTests('Detached Element', detached);
+  runSpecialSelectorTests('Fragment', fragment);
+  runSpecialSelectorTests('In-document Element', element);
 
-  verifyStaticList("Document", doc);
-  verifyStaticList("Detached Element", detached);
-  verifyStaticList("Fragment", fragment);
-  verifyStaticList("In-document Element", element);
+  verifyStaticList('Document', doc);
+  verifyStaticList('Detached Element', detached);
+  verifyStaticList('Fragment', fragment);
+  verifyStaticList('In-document Element', element);
 
   // TODO(jmesserly): fix negative tests
-  //runInvalidSelectorTest("Document", doc, invalidSelectors);
-  //runInvalidSelectorTest("Detached Element", detached, invalidSelectors);
-  //runInvalidSelectorTest("Fragment", fragment, invalidSelectors);
-  //runInvalidSelectorTest("In-document Element", element, invalidSelectors);
+  //runInvalidSelectorTest('Document', doc, invalidSelectors);
+  //runInvalidSelectorTest('Detached Element', detached, invalidSelectors);
+  //runInvalidSelectorTest('Fragment', fragment, invalidSelectors);
+  //runInvalidSelectorTest('In-document Element', element, invalidSelectors);
 
-  runValidSelectorTest("Document", doc, validSelectors, testType, docType);
+  runValidSelectorTest('Document', doc, validSelectors, testType, docType);
   runValidSelectorTest(
-      "Detached Element", detached, validSelectors, testType, docType);
-  runValidSelectorTest("Fragment", fragment, validSelectors, testType, docType);
+      'Detached Element', detached, validSelectors, testType, docType);
+  runValidSelectorTest('Fragment', fragment, validSelectors, testType, docType);
 
   group('out of scope', () {
     setUp(() {
       doc.body.append(outOfScope); // Append before in-document Element tests.
       // None of these elements should match
     });
-    tearDown(() {
-      outOfScope.remove();
-    });
+    tearDown(outOfScope.remove);
     runValidSelectorTest(
-        "In-document Element", element, validSelectors, testType, docType);
+        'In-document Element', element, validSelectors, testType, docType);
   });
 }

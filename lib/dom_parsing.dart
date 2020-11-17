@@ -7,47 +7,49 @@ import 'src/constants.dart' show rcdataElements;
 
 /// A simple tree visitor for the DOM nodes.
 class TreeVisitor {
-  visit(Node node) {
+  void visit(Node node) {
     switch (node.nodeType) {
       case Node.ELEMENT_NODE:
-        return visitElement(node);
+        return visitElement(node as Element);
       case Node.TEXT_NODE:
-        return visitText(node);
+        return visitText(node as Text);
       case Node.COMMENT_NODE:
-        return visitComment(node);
+        return visitComment(node as Comment);
       case Node.DOCUMENT_FRAGMENT_NODE:
-        return visitDocumentFragment(node);
+        return visitDocumentFragment(node as DocumentFragment);
       case Node.DOCUMENT_NODE:
-        return visitDocument(node);
+        return visitDocument(node as Document);
       case Node.DOCUMENT_TYPE_NODE:
-        return visitDocumentType(node);
+        return visitDocumentType(node as DocumentType);
       default:
         throw UnsupportedError('DOM node type ${node.nodeType}');
     }
   }
 
-  visitChildren(Node node) {
+  void visitChildren(Node node) {
     // Allow for mutations (remove works) while iterating.
-    for (var child in node.nodes.toList()) visit(child);
+    for (var child in node.nodes.toList()) {
+      visit(child);
+    }
   }
 
   /// The fallback handler if the more specific visit method hasn't been
   /// overriden. Only use this from a subclass of [TreeVisitor], otherwise
   /// call [visit] instead.
-  visitNodeFallback(Node node) => visitChildren(node);
+  void visitNodeFallback(Node node) => visitChildren(node);
 
-  visitDocument(Document node) => visitNodeFallback(node);
+  void visitDocument(Document node) => visitNodeFallback(node);
 
-  visitDocumentType(DocumentType node) => visitNodeFallback(node);
+  void visitDocumentType(DocumentType node) => visitNodeFallback(node);
 
-  visitText(Text node) => visitNodeFallback(node);
+  void visitText(Text node) => visitNodeFallback(node);
 
   // TODO(jmesserly): visit attributes.
-  visitElement(Element node) => visitNodeFallback(node);
+  void visitElement(Element node) => visitNodeFallback(node);
 
-  visitComment(Comment node) => visitNodeFallback(node);
+  void visitComment(Comment node) => visitNodeFallback(node);
 
-  visitDocumentFragment(DocumentFragment node) => visitNodeFallback(node);
+  void visitDocumentFragment(DocumentFragment node) => visitNodeFallback(node);
 }
 
 /// Converts the DOM tree into an HTML string with code markup suitable for
@@ -65,24 +67,29 @@ class CodeMarkupVisitor extends TreeVisitor {
 
   CodeMarkupVisitor() : _str = StringBuffer();
 
+  @override
   String toString() => _str.toString();
 
-  visitDocument(Document node) {
-    _str.write("<pre>");
+  @override
+  void visitDocument(Document node) {
+    _str.write('<pre>');
     visitChildren(node);
-    _str.write("</pre>");
+    _str.write('</pre>');
   }
 
-  visitDocumentType(DocumentType node) {
+  @override
+  void visitDocumentType(DocumentType node) {
     _str.write('<code class="markup doctype">&lt;!DOCTYPE ${node.name}>'
         '</code>');
   }
 
-  visitText(Text node) {
+  @override
+  void visitText(Text node) {
     writeTextNodeAsHtml(_str, node);
   }
 
-  visitElement(Element node) {
+  @override
+  void visitElement(Element node) {
     final tag = node.localName;
     _str.write('&lt;<code class="markup element-name">$tag</code>');
     if (node.attributes.isNotEmpty) {
@@ -93,17 +100,18 @@ class CodeMarkupVisitor extends TreeVisitor {
       });
     }
     if (node.nodes.isNotEmpty) {
-      _str.write(">");
+      _str.write('>');
       visitChildren(node);
     } else if (isVoidElement(tag)) {
-      _str.write(">");
+      _str.write('>');
       return;
     }
     _str.write('&lt;/<code class="markup element-name">$tag</code>>');
   }
 
-  visitComment(Comment node) {
-    var data = htmlSerializeEscape(node.data);
+  @override
+  void visitComment(Comment node) {
+    final data = htmlSerializeEscape(node.data);
     _str.write('<code class="markup comment">&lt;!--$data--></code>');
   }
 }
@@ -129,8 +137,8 @@ String htmlSerializeEscape(String text, {bool attributeMode = false}) {
   // TODO(jmesserly): is it faster to build up a list of codepoints?
   // StringBuffer seems cleaner assuming Dart can unbox 1-char strings.
   StringBuffer result;
-  for (int i = 0; i < text.length; i++) {
-    var ch = text[i];
+  for (var i = 0; i < text.length; i++) {
+    final ch = text[i];
     String replace;
     switch (ch) {
       case '&':
@@ -150,7 +158,7 @@ String htmlSerializeEscape(String text, {bool attributeMode = false}) {
         break;
     }
     if (replace != null) {
-      if (result == null) result = StringBuffer(text.substring(0, i));
+      result ??= StringBuffer(text.substring(0, i));
       result.write(replace);
     } else if (result != null) {
       result.write(ch);
@@ -166,22 +174,22 @@ String htmlSerializeEscape(String text, {bool attributeMode = false}) {
 /// See also: <http://dev.w3.org/html5/markup/syntax.html#void-elements>.
 bool isVoidElement(String tagName) {
   switch (tagName) {
-    case "area":
-    case "base":
-    case "br":
-    case "col":
-    case "command":
-    case "embed":
-    case "hr":
-    case "img":
-    case "input":
-    case "keygen":
-    case "link":
-    case "meta":
-    case "param":
-    case "source":
-    case "track":
-    case "wbr":
+    case 'area':
+    case 'base':
+    case 'br':
+    case 'col':
+    case 'command':
+    case 'embed':
+    case 'hr':
+    case 'img':
+    case 'input':
+    case 'keygen':
+    case 'link':
+    case 'meta':
+    case 'param':
+    case 'source':
+    case 'track':
+    case 'wbr':
       return true;
   }
   return false;
@@ -193,7 +201,7 @@ void writeTextNodeAsHtml(StringBuffer str, Text node) {
   // Don't escape text for certain elements, notably <script>.
   final parent = node.parentNode;
   if (parent is Element) {
-    var tag = parent.localName;
+    final tag = parent.localName;
     if (rcdataElements.contains(tag) || tag == 'plaintext') {
       str.write(node.data);
       return;

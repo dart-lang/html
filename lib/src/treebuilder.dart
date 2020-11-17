@@ -10,28 +10,33 @@ import 'list_proxy.dart';
 import 'token.dart';
 import 'utils.dart';
 
-// The scope markers are inserted when entering object elements,
-// marquees, table cells, and table captions, and are used to prevent formatting
-// from "leaking" into tables, object elements, and marquees.
-const Node Marker = null;
-
-// TODO(jmesserly): this should extend ListBase<Element>, but my simple attempt
-// didn't work.
-class ActiveFormattingElements extends ListProxy<Element> {
-  // Override the "add" method.
-  // TODO(jmesserly): I'd rather not override this; can we do this in the
-  // calling code instead?
+/// Open elements in the formatting category, most recent element last.
+///
+/// `null` is used as the "marker" entry to prevent style from leaking when
+/// entering some elements.
+///
+/// https://html.spec.whatwg.org/multipage/parsing.html#list-of-active-formatting-elements
+class ActiveFormattingElements extends ListProxy<Element /*?*/ > {
+  /// Push an element into the active formatting elements.
+  ///
+  /// Prevents equivalent elements from appearing more than 3 times following
+  /// the last `null` marker. If adding [node] would cause there to be more than
+  /// 3 equivalent elements the earliest identical element is removed.
+  // TODO - Earliest equivalent following a marker, as opposed to earliest
+  // identical regardless of marker position, should be removed.
+  @override
   void add(Element node) {
-    int equalCount = 0;
-    if (node != Marker) {
+    var equalCount = 0;
+    if (node != null) {
       for (var element in reversed) {
-        if (element == Marker) {
+        if (element == null) {
           break;
         }
         if (_nodesEqual(element, node)) {
           equalCount += 1;
         }
         if (equalCount == 3) {
+          // TODO - https://github.com/dart-lang/html/issues/135
           remove(element);
           break;
         }
@@ -47,7 +52,7 @@ bool _mapEquals(Map a, Map b) {
   if (a.isEmpty) return true;
 
   for (var keyA in a.keys) {
-    var valB = b[keyA];
+    final valB = b[keyA];
     if (valB == null && !b.containsKey(keyA)) {
       return false;
     }
@@ -103,32 +108,32 @@ class TreeBuilder {
   bool elementInScope(target, {String variant}) {
     //If we pass a node in we match that. if we pass a string
     //match any node with that name
-    bool exactNode = target is Node;
+    final exactNode = target is Node;
 
-    List listElements1 = scopingElements;
-    List listElements2 = const [];
-    bool invert = false;
+    var listElements1 = scopingElements;
+    var listElements2 = const [];
+    var invert = false;
     if (variant != null) {
       switch (variant) {
-        case "button":
-          listElements2 = const [Pair(Namespaces.html, "button")];
+        case 'button':
+          listElements2 = const [Pair(Namespaces.html, 'button')];
           break;
-        case "list":
+        case 'list':
           listElements2 = const [
-            Pair(Namespaces.html, "ol"),
-            Pair(Namespaces.html, "ul")
+            Pair(Namespaces.html, 'ol'),
+            Pair(Namespaces.html, 'ul')
           ];
           break;
-        case "table":
+        case 'table':
           listElements1 = const [
-            Pair(Namespaces.html, "html"),
-            Pair(Namespaces.html, "table")
+            Pair(Namespaces.html, 'html'),
+            Pair(Namespaces.html, 'table')
           ];
           break;
-        case "select":
+        case 'select':
           listElements1 = const [
-            Pair(Namespaces.html, "optgroup"),
-            Pair(Namespaces.html, "option")
+            Pair(Namespaces.html, 'optgroup'),
+            Pair(Namespaces.html, 'option')
           ];
           invert = true;
           break;
@@ -162,14 +167,14 @@ class TreeBuilder {
     }
 
     // Step 2 and step 3: we start with the last element. So i is -1.
-    int i = activeFormattingElements.length - 1;
+    var i = activeFormattingElements.length - 1;
     var entry = activeFormattingElements[i];
-    if (entry == Marker || openElements.contains(entry)) {
+    if (entry == null || openElements.contains(entry)) {
       return;
     }
 
     // Step 6
-    while (entry != Marker && !openElements.contains(entry)) {
+    while (entry != null && !openElements.contains(entry)) {
       if (i == 0) {
         //This will be reset to 0 below
         i = -1;
@@ -188,13 +193,13 @@ class TreeBuilder {
       entry = activeFormattingElements[i];
 
       // TODO(jmesserly): optimize this. No need to create a token.
-      var cloneToken = StartTagToken(entry.localName,
+      final cloneToken = StartTagToken(entry.localName,
           namespace: entry.namespaceUri,
           data: LinkedHashMap.from(entry.attributes))
         ..span = entry.sourceSpan;
 
       // Step 9
-      var element = insertElement(cloneToken);
+      final element = insertElement(cloneToken);
 
       // Step 10
       activeFormattingElements[i] = element;
@@ -208,7 +213,7 @@ class TreeBuilder {
 
   void clearActiveFormattingElements() {
     var entry = activeFormattingElements.removeLast();
-    while (activeFormattingElements.isNotEmpty && entry != Marker) {
+    while (activeFormattingElements.isNotEmpty && entry != null) {
       entry = activeFormattingElements.removeLast();
     }
   }
@@ -220,7 +225,7 @@ class TreeBuilder {
     for (var item in activeFormattingElements.reversed) {
       // Check for Marker first because if it's a Marker it doesn't have a
       // name attribute.
-      if (item == Marker) {
+      if (item == null) {
         break;
       } else if (item.localName == name) {
         return item;
@@ -229,31 +234,28 @@ class TreeBuilder {
     return null;
   }
 
-  void insertRoot(Token token) {
-    var element = createElement(token);
+  void insertRoot(StartTagToken token) {
+    final element = createElement(token);
     openElements.add(element);
     document.nodes.add(element);
   }
 
   void insertDoctype(DoctypeToken token) {
-    var doctype = DocumentType(token.name, token.publicId, token.systemId)
+    final doctype = DocumentType(token.name, token.publicId, token.systemId)
       ..sourceSpan = token.span;
     document.nodes.add(doctype);
   }
 
   void insertComment(StringToken token, [Node parent]) {
-    if (parent == null) {
-      parent = openElements.last;
-    }
+    parent ??= openElements.last;
     parent.nodes.add(Comment(token.data)..sourceSpan = token.span);
   }
 
   /// Create an element but don't insert it anywhere
   Element createElement(StartTagToken token) {
-    var name = token.name;
-    var namespace = token.namespace;
-    if (namespace == null) namespace = defaultNamespace;
-    var element = document.createElementNS(namespace, name)
+    final name = token.name;
+    final namespace = token.namespace ?? defaultNamespace;
+    final element = document.createElementNS(namespace, name)
       ..attributes = token.data
       ..sourceSpan = token.span;
     return element;
@@ -265,10 +267,9 @@ class TreeBuilder {
   }
 
   Element insertElementNormal(StartTagToken token) {
-    var name = token.name;
-    var namespace = token.namespace;
-    if (namespace == null) namespace = defaultNamespace;
-    var element = document.createElementNS(namespace, name)
+    final name = token.name;
+    final namespace = token.namespace ?? defaultNamespace;
+    final element = document.createElementNS(namespace, name)
       ..attributes = token.data
       ..sourceSpan = token.span;
     openElements.last.nodes.add(element);
@@ -276,15 +277,15 @@ class TreeBuilder {
     return element;
   }
 
-  Element insertElementTable(token) {
+  Element insertElementTable(StartTagToken token) {
     /// Create an element and insert it into the tree
-    var element = createElement(token);
+    final element = createElement(token);
     if (!tableInsertModeElements.contains(openElements.last.localName)) {
       return insertElementNormal(token);
     } else {
       // We should be in the InTable mode. This means we want to do
       // special magic element rearranging
-      var nodePos = getTableMisnestedNodePosition();
+      final nodePos = getTableMisnestedNodePosition();
       if (nodePos[1] == null) {
         // TODO(jmesserly): I don't think this is reachable. If insertFromTable
         // is true, there will be a <table> element open, and it always has a
@@ -300,7 +301,7 @@ class TreeBuilder {
 
   /// Insert text data.
   void insertText(String data, FileSpan span) {
-    var parent = openElements.last;
+    final parent = openElements.last;
 
     if (!insertFromTable ||
         insertFromTable &&
@@ -309,8 +310,8 @@ class TreeBuilder {
     } else {
       // We should be in the InTable mode. This means we want to do
       // special magic element rearranging
-      var nodePos = getTableMisnestedNodePosition();
-      _insertText(nodePos[0], data, span, nodePos[1]);
+      final nodePos = getTableMisnestedNodePosition();
+      _insertText(nodePos[0], data, span, nodePos[1] as Element);
     }
   }
 
@@ -318,10 +319,10 @@ class TreeBuilder {
   /// start of node [refNode] or to the end of the node's text.
   static void _insertText(Node parent, String data, FileSpan span,
       [Element refNode]) {
-    var nodes = parent.nodes;
+    final nodes = parent.nodes;
     if (refNode == null) {
       if (nodes.isNotEmpty && nodes.last is Text) {
-        Text last = nodes.last;
+        final last = nodes.last as Text;
         last.appendData(data);
 
         if (span != null) {
@@ -332,9 +333,9 @@ class TreeBuilder {
         nodes.add(Text(data)..sourceSpan = span);
       }
     } else {
-      int index = nodes.indexOf(refNode);
+      final index = nodes.indexOf(refNode);
       if (index > 0 && nodes[index - 1] is Text) {
-        Text last = nodes[index - 1];
+        final last = nodes[index - 1] as Text;
         last.appendData(data);
       } else {
         nodes.insert(index, Text(data)..sourceSpan = span);
@@ -348,11 +349,11 @@ class TreeBuilder {
     // The foster parent element is the one which comes before the most
     // recently opened table element
     // XXX - this is really inelegant
-    Node lastTable;
+    Element lastTable;
     Node fosterParent;
     Node insertBefore;
     for (var elm in openElements.reversed) {
-      if (elm.localName == "table") {
+      if (elm.localName == 'table') {
         lastTable = elm;
         break;
       }
@@ -373,10 +374,10 @@ class TreeBuilder {
   }
 
   void generateImpliedEndTags([String exclude]) {
-    var name = openElements.last.localName;
+    final name = openElements.last.localName;
     // XXX td, th and tr are not actually needed
     if (name != exclude &&
-        const ["dd", "dt", "li", "option", "optgroup", "p", "rp", "rt"]
+        const ['dd', 'dt', 'li', 'option', 'optgroup', 'p', 'rp', 'rt']
             .contains(name)) {
       openElements.removeLast();
       // XXX This is not entirely what the specification says. We should
@@ -391,7 +392,7 @@ class TreeBuilder {
   /// Return the final fragment.
   DocumentFragment getFragment() {
     //XXX assert innerHTML
-    var fragment = DocumentFragment();
+    final fragment = DocumentFragment();
     openElements[0].reparentChildren(fragment);
     return fragment;
   }
