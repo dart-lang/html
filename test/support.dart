@@ -22,8 +22,9 @@ Map<String, TreeBuilderFactory> get treeTypes {
 Future<String> get testDirectory async {
   final packageUriDir = p.dirname(p.fromUri(await Isolate.resolvePackageUri(
       Uri(scheme: 'package', path: 'html/html.dart'))));
-  // Assume pub layout - root is parent directory to package URI.
-  return p.join(p.dirname(packageUriDir), 'test');
+  // Assume pub layout - root is parent directory to package URI (`lib/`).
+  final rootPackageDir = p.dirname(packageUriDir);
+  return p.join(rootPackageDir, 'test');
 }
 
 Stream<String> dataFiles(String subdirectory) async* {
