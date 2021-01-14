@@ -17,15 +17,16 @@ import '../support.dart';
 import 'level1_lib.dart';
 import 'selectors.dart';
 
-Document getTestContentDocument() {
-  final testPath = p.join(testDir, 'selectors', 'level1-content.html');
+Future<Document> testContentDocument() async {
+  final testPath =
+      p.join(await testDirectory, 'selectors', 'level1-content.html');
   return parse(File(testPath).readAsStringSync());
 }
 
 var testType = testQsaBaseline; // Only run baseline tests.
 var docType = 'html'; // Only run tests suitable for HTML
 
-void main() {
+void main() async {
   /*
    * This test suite tests Selectors API methods in 4 different contexts:
    * 1. Document node
@@ -62,7 +63,7 @@ void main() {
 
   // Prepare the nodes for testing
   //doc = frame.contentDocument;                 // Document Node tests
-  doc = getTestContentDocument();
+  doc = await testContentDocument();
 
   final element = doc.getElementById('root'); // In-document Element Node tests
 

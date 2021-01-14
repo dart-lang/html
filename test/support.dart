@@ -3,6 +3,7 @@ library support;
 
 import 'dart:collection';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:path/path.dart' as p;
 import 'package:html/src/treebuilder.dart';
@@ -18,13 +19,20 @@ Map<String, TreeBuilderFactory> get treeTypes {
   return _treeTypes;
 }
 
-final testDir = p.join(p.dirname(p.fromUri(Platform.packageConfig)), 'test');
+Future<String> get testDirectory async {
+  final packageUriDir = p.dirname(p.fromUri(await Isolate.resolvePackageUri(
+      Uri(scheme: 'package', path: 'html/html.dart'))));
+  // Assume pub layout - root is parent directory to package URI (`lib/`).
+  final rootPackageDir = p.dirname(packageUriDir);
+  return p.join(rootPackageDir, 'test');
+}
 
-final testDataDir = p.join(testDir, 'data');
-
-Iterable<String> getDataFiles(String subdirectory) {
-  final dir = Directory(p.join(testDataDir, subdirectory));
-  return dir.listSync().whereType<File>().map((f) => f.path);
+Stream<String> dataFiles(String subdirectory) async* {
+  final dir = Directory(p.join(await testDirectory, 'data', subdirectory));
+  await for (final file in dir.list()) {
+    if (file is! File) continue;
+    yield file.path;
+  }
 }
 
 // TODO(jmesserly): make this class simpler. We could probably split on
