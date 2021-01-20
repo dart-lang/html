@@ -379,7 +379,7 @@ class DocumentFragment extends Node with _ParentNode, _NonElementParentNode {
   void _addOuterHtml(StringBuffer str) => _addInnerHtml(str);
 
   @override
-  String get text => _getText(this);
+  String? get text => _getText(this);
   @override
   set text(String? value) => _setText(this, value);
 }
@@ -452,8 +452,8 @@ class Text extends Node {
   @override
   String get text => data;
   @override
-  set text(String? value) {
-    data = value ?? '';
+  set text(covariant String value) {
+    data = value;
   }
 }
 
