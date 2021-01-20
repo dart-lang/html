@@ -139,7 +139,7 @@ class HtmlParser {
   /// Set [lowercaseElementName] or [lowercaseAttrName] to false to disable the
   /// automatic conversion of element and attribute names to lower case. Note
   /// that standard way to parse HTML is to lowercase, which is what the browser
-  /// DOM will do if you request [Node.outerHTML], for example.
+  /// DOM will do if you request `Element.outerHTML`, for example.
   HtmlParser(input,
       {String? encoding,
       bool parseMeta = true,
@@ -3951,12 +3951,10 @@ class ParseError implements SourceSpanException {
 
   int get column => span!.start.column;
 
-  /// Gets the human readable error message for this error. Use
-  /// [span.getLocationMessage] or [toString] to get a message including span
-  /// information. If there is a file associated with the span, both
-  /// [span.getLocationMessage] and [toString] are equivalent. Otherwise,
-  /// [span.getLocationMessage] will not show any source url information, but
-  /// [toString] will include 'ParserError:' as a prefix.
+  /// Returns the human readable error message for this error.
+  ///
+  /// Use [SourceSpan.message] or the [toString] from the [span] field to get a
+  /// message including span information
   @override
   String get message => formatStr(errorMessages[errorCode]!, data);
 

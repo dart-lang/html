@@ -69,8 +69,8 @@ void runParserTest(
   }
 }
 
-void main() {
-  for (var path in getDataFiles('tree-construction')) {
+void main() async {
+  await for (var path in dataFiles('tree-construction')) {
     if (!path.endsWith('.dat')) continue;
 
     final tests = TestData(path, 'data');

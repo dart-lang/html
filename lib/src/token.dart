@@ -21,7 +21,7 @@ abstract class TagToken extends Token {
 
 class StartTagToken extends TagToken {
   /// The tag's attributes. A map from the name to the value, where the name
-  /// can be a [String] or [AttributeName].
+  /// can be a [String] or `AttributeName`.
   LinkedHashMap<Object, String> data;
 
   /// The attribute spans if requested. Otherwise null.

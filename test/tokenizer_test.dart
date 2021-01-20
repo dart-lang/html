@@ -258,8 +258,8 @@ String camelCase(String s) {
   return result.toString();
 }
 
-void main() {
-  for (var path in getDataFiles('tokenizer')) {
+void main() async {
+  await for (var path in dataFiles('tokenizer')) {
     if (!path.endsWith('.test')) continue;
 
     final text = File(path).readAsStringSync();
