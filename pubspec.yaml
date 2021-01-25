@@ -1,5 +1,5 @@
 name: html
-version: 0.15.0-nullsafety-dev
+version: 0.15.0-nullsafety.0-dev
 
 description: APIs for parsing and manipulating HTML content outside the browser.
 homepage: https://github.com/dart-lang/html

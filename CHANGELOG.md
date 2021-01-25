@@ -1,5 +1,6 @@
-## 0.15.0-nullsafety-dev
+## 0.15.0-nullsafety.0-dev
 
+- Migrate to null safety.
 - Drop `lastPhase`, `beforeRcDataPhase`, and `container` fields from
   `HtmlParser` class. These fields never had a value other than `null`.
 
