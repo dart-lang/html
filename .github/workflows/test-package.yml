@@ -4,7 +4,7 @@ on:
   push:
     branches: [master]
   pull_request:
-    branches: [master, null_safety]
+    branches: [master]
   schedule:
     - cron: "0 0 * * 0"
 
