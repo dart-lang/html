@@ -10,14 +10,15 @@ class Pair<F, S> {
   int get hashCode => 37 * first.hashCode + second.hashCode;
 
   @override
-  bool operator ==(other) => other.first == first && other.second == second;
+  bool operator ==(Object other) =>
+      other is Pair && other.first == first && other.second == second;
 }
 
 bool startsWithAny(String str, List<String> prefixes) =>
     prefixes.any(str.startsWith);
 
 // Like the python [:] operator.
-List<T> slice<T>(List<T> list, int start, [int end]) {
+List<T> slice<T>(List<T> list, int start, [int? end]) {
   end ??= list.length;
   if (end < 0) end += list.length;
 
@@ -50,7 +51,7 @@ String padWithZeros(String str, int size) {
 /// Format a string like Python's % string format operator. Right now this only
 /// supports a [data] dictionary used with %s or %08x. Those were the only
 /// things needed for [errorMessages].
-String formatStr(String format, Map data) {
+String formatStr(String format, Map? data) {
   if (data == null) return format;
   data.forEach((key, value) {
     final result = StringBuffer();
@@ -64,7 +65,7 @@ String formatStr(String format, Map data) {
       while (isDigit(format[digits])) {
         digits++;
       }
-      int numberSize;
+      var numberSize = 0;
       if (digits > match) {
         numberSize = int.parse(format.substring(match, digits));
         match = digits;

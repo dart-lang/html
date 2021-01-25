@@ -6,13 +6,13 @@ import 'package:source_span/source_span.dart';
 
 /// An html5 token.
 abstract class Token {
-  FileSpan span;
+  FileSpan? span;
 
   int get kind;
 }
 
 abstract class TagToken extends Token {
-  String name;
+  String? name;
 
   bool selfClosing;
 
@@ -25,26 +25,27 @@ class StartTagToken extends TagToken {
   LinkedHashMap<Object, String> data;
 
   /// The attribute spans if requested. Otherwise null.
-  List<TagAttribute> attributeSpans;
+  List<TagAttribute>? attributeSpans;
 
   bool selfClosingAcknowledged;
 
   /// The namespace. This is filled in later during tree building.
-  String namespace;
+  String? namespace;
 
-  StartTagToken(String name,
-      {this.data,
+  StartTagToken(String? name,
+      {LinkedHashMap<Object, String>? data,
       bool selfClosing = false,
       this.selfClosingAcknowledged = false,
       this.namespace})
-      : super(name, selfClosing);
+      : data = data ?? LinkedHashMap(),
+        super(name, selfClosing);
 
   @override
   int get kind => TokenKind.startTag;
 }
 
 class EndTagToken extends TagToken {
-  EndTagToken(String name, {bool selfClosing = false})
+  EndTagToken(String? name, {bool selfClosing = false})
       : super(name, selfClosing);
 
   @override
@@ -52,28 +53,28 @@ class EndTagToken extends TagToken {
 }
 
 abstract class StringToken extends Token {
-  StringBuffer _buffer;
+  StringBuffer? _buffer;
 
-  String _string;
+  String? _string;
   String get data {
     if (_string == null) {
       _string = _buffer.toString();
       _buffer = null;
     }
-    return _string;
+    return _string!;
   }
 
   StringToken(this._string) : _buffer = _string == null ? StringBuffer() : null;
 
   StringToken add(String data) {
-    _buffer.write(data);
+    _buffer!.write(data);
     return this;
   }
 }
 
 class ParseErrorToken extends StringToken {
   /// Extra information that goes along with the error message.
-  Map messageParams;
+  Map? messageParams;
 
   ParseErrorToken(String data, {this.messageParams}) : super(data);
 
@@ -82,7 +83,7 @@ class ParseErrorToken extends StringToken {
 }
 
 class CharactersToken extends StringToken {
-  CharactersToken([String data]) : super(data);
+  CharactersToken([String? data]) : super(data);
 
   @override
   int get kind => TokenKind.characters;
@@ -96,23 +97,23 @@ class CharactersToken extends StringToken {
 }
 
 class SpaceCharactersToken extends StringToken {
-  SpaceCharactersToken([String data]) : super(data);
+  SpaceCharactersToken([String? data]) : super(data);
 
   @override
   int get kind => TokenKind.spaceCharacters;
 }
 
 class CommentToken extends StringToken {
-  CommentToken([String data]) : super(data);
+  CommentToken([String? data]) : super(data);
 
   @override
   int get kind => TokenKind.comment;
 }
 
 class DoctypeToken extends Token {
-  String publicId;
-  String systemId;
-  String name = '';
+  String? publicId;
+  String? systemId;
+  String? name = '';
   bool correct;
 
   DoctypeToken({this.publicId, this.systemId, this.correct = false});
@@ -125,15 +126,15 @@ class DoctypeToken extends Token {
 /// They're also used by [StartTagToken.attributeSpans] if attribute spans are
 /// requested.
 class TagAttribute {
-  String name;
-  String value;
+  String? name;
+  late String value;
 
   // The spans of the attribute. This is not used unless we are computing an
   // attribute span on demand.
-  int start;
-  int end;
-  int startValue;
-  int endValue;
+  late int start;
+  late int end;
+  int? startValue;
+  late int endValue;
 
   TagAttribute();
 }

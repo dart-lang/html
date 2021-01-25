@@ -10,7 +10,7 @@ import 'package:html/src/constants.dart' show isWhitespaceCC;
 bool matches(Element node, String selector) =>
     SelectorEvaluator().matches(node, _parseSelectorList(selector));
 
-Element querySelector(Node node, String selector) =>
+Element? querySelector(Node node, String selector) =>
     SelectorEvaluator().querySelector(node, _parseSelectorList(selector));
 
 List<Element> querySelectorAll(Node node, String selector) {
@@ -32,14 +32,14 @@ SelectorGroup _parseSelectorList(String selector) {
 
 class SelectorEvaluator extends Visitor {
   /// The current HTML element to match against.
-  Element _element;
+  Element? _element;
 
   bool matches(Element element, SelectorGroup selector) {
     _element = element;
     return visitSelectorGroup(selector);
   }
 
-  Element querySelector(Node root, SelectorGroup selector) {
+  Element? querySelector(Node root, SelectorGroup selector) {
     for (var element in root.nodes.whereType<Element>()) {
       if (matches(element, selector)) return element;
       final result = querySelector(element, selector);
@@ -66,7 +66,7 @@ class SelectorEvaluator extends Visitor {
     var result = true;
 
     // Note: evaluate selectors right-to-left as it's more efficient.
-    int combinator;
+    int? combinator;
     for (var s in selector.simpleSelectorSequences.reversed) {
       if (combinator == null) {
         result = s.simpleSelector.visit(this) as bool;
@@ -74,7 +74,7 @@ class SelectorEvaluator extends Visitor {
         // descendant combinator
         // http://dev.w3.org/csswg/selectors-4/#descendant-combinators
         do {
-          _element = _element.parent;
+          _element = _element!.parent;
         } while (_element != null && !(s.simpleSelector.visit(this) as bool));
 
         if (_element == null) result = false;
@@ -82,7 +82,7 @@ class SelectorEvaluator extends Visitor {
         // Following-sibling combinator
         // http://dev.w3.org/csswg/selectors-4/#general-sibling-combinators
         do {
-          _element = _element.previousElementSibling;
+          _element = _element!.previousElementSibling;
         } while (_element != null && !(s.simpleSelector.visit(this) as bool));
 
         if (_element == null) result = false;
@@ -94,12 +94,12 @@ class SelectorEvaluator extends Visitor {
         case TokenKind.COMBINATOR_PLUS:
           // Next-sibling combinator
           // http://dev.w3.org/csswg/selectors-4/#adjacent-sibling-combinators
-          _element = _element.previousElementSibling;
+          _element = _element!.previousElementSibling;
           break;
         case TokenKind.COMBINATOR_GREATER:
           // Child combinator
           // http://dev.w3.org/csswg/selectors-4/#child-combinators
-          _element = _element.parent;
+          _element = _element!.parent;
           break;
         case TokenKind.COMBINATOR_DESCENDANT:
         case TokenKind.COMBINATOR_TILDE:
@@ -139,34 +139,34 @@ class SelectorEvaluator extends Visitor {
       case 'root':
         // TODO(jmesserly): fix when we have a .ownerDocument pointer
         // return _element == _element.ownerDocument.rootElement;
-        return _element.localName == 'html' && _element.parentNode == null;
+        return _element!.localName == 'html' && _element!.parentNode == null;
 
       // http://dev.w3.org/csswg/selectors-4/#the-empty-pseudo
       case 'empty':
-        return _element.nodes
+        return _element!.nodes
             .any((n) => !(n is Element || n is Text && n.text.isNotEmpty));
 
       // http://dev.w3.org/csswg/selectors-4/#the-blank-pseudo
       case 'blank':
-        return _element.nodes.any((n) => !(n is Element ||
+        return _element!.nodes.any((n) => !(n is Element ||
             n is Text && n.text.runes.any((r) => !isWhitespaceCC(r))));
 
       // http://dev.w3.org/csswg/selectors-4/#the-first-child-pseudo
       case 'first-child':
-        return _element.previousElementSibling == null;
+        return _element!.previousElementSibling == null;
 
       // http://dev.w3.org/csswg/selectors-4/#the-last-child-pseudo
       case 'last-child':
-        return _element.nextElementSibling == null;
+        return _element!.nextElementSibling == null;
 
       // http://dev.w3.org/csswg/selectors-4/#the-only-child-pseudo
       case 'only-child':
-        return _element.previousElementSibling == null &&
-            _element.nextElementSibling == null;
+        return _element!.previousElementSibling == null &&
+            _element!.nextElementSibling == null;
 
       // http://dev.w3.org/csswg/selectors-4/#link
       case 'link':
-        return _element.attributes['href'] != null;
+        return _element!.attributes['href'] != null;
 
       case 'visited':
         // Always return false since we aren't a browser. This is allowed per:
@@ -215,7 +215,7 @@ class SelectorEvaluator extends Visitor {
         final exprs = selector.expression.expressions;
         if (exprs.length == 1 && exprs[0] is LiteralTerm) {
           final literal = exprs[0] as LiteralTerm;
-          final parent = _element.parentNode;
+          final parent = _element!.parentNode;
           return parent != null &&
               (literal.value as num) > 0 &&
               parent.nodes.indexOf(_element) == literal.value;
@@ -234,7 +234,7 @@ class SelectorEvaluator extends Visitor {
     throw _unimplemented(selector);
   }
 
-  static String _getInheritedLanguage(Node node) {
+  static String? _getInheritedLanguage(Node? node) {
     while (node != null) {
       final lang = node.attributes['lang'];
       if (lang != null) return lang;
@@ -246,37 +246,37 @@ class SelectorEvaluator extends Visitor {
   @override
   bool visitNamespaceSelector(NamespaceSelector selector) {
     // Match element tag name
-    if (!(selector.nameAsSimpleSelector.visit(this) as bool)) return false;
+    if (!(selector.nameAsSimpleSelector!.visit(this) as bool)) return false;
 
     if (selector.isNamespaceWildcard) return true;
 
-    if (selector.namespace == '') return _element.namespaceUri == null;
+    if (selector.namespace == '') return _element!.namespaceUri == null;
 
     throw _unimplemented(selector);
   }
 
   @override
   bool visitElementSelector(ElementSelector selector) =>
-      selector.isWildcard || _element.localName == selector.name.toLowerCase();
+      selector.isWildcard || _element!.localName == selector.name.toLowerCase();
 
   @override
-  bool visitIdSelector(IdSelector selector) => _element.id == selector.name;
+  bool visitIdSelector(IdSelector selector) => _element!.id == selector.name;
 
   @override
   bool visitClassSelector(ClassSelector selector) =>
-      _element.classes.contains(selector.name);
+      _element!.classes.contains(selector.name);
 
   // TODO(jmesserly): negation should support any selectors in level 4,
   // not just simple selectors.
   // http://dev.w3.org/csswg/selectors-4/#negation
   @override
   bool visitNegationSelector(NegationSelector selector) =>
-      !(selector.negationArg.visit(this) as bool);
+      !(selector.negationArg!.visit(this) as bool);
 
   @override
   bool visitAttributeSelector(AttributeSelector selector) {
     // Match name first
-    final value = _element.attributes[selector.name.toLowerCase()];
+    final value = _element!.attributes[selector.name.toLowerCase()];
     if (value == null) return false;
 
     if (selector.operatorKind == TokenKind.NO_MATCH) return true;

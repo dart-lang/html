@@ -32,10 +32,10 @@ String namespaceHtml(String expected) {
 
 void runParserTest(
     String groupName,
-    String innerHTML,
-    String input,
-    String expected,
-    List errors,
+    String? innerHTML,
+    String? input,
+    String? expected,
+    List? errors,
     TreeBuilderFactory treeCtor,
     bool namespaceHTMLElements) {
   // XXX - move this out into the setup function
@@ -53,7 +53,7 @@ void runParserTest(
   final output = testSerializer(document);
 
   if (namespaceHTMLElements) {
-    expected = namespaceHtml(expected);
+    expected = namespaceHtml(expected!);
   }
 
   expect(output, equals(expected),
@@ -61,7 +61,7 @@ void runParserTest(
           '\n\nInput:\n$input\n\nExpected:\n$expected\n\nReceived:\n$output');
 
   if (checkParseErrors) {
-    expect(parser.errors.length, equals(errors.length),
+    expect(parser.errors.length, equals(errors!.length),
         reason: '\n\nInput:\n$input\n\nExpected errors (${errors.length}):\n'
             "${errors.join('\n')}\n\n"
             'Actual errors (${parser.errors.length}):\n'
@@ -84,9 +84,9 @@ void main() async {
         final innerHTML = testData['document-fragment'];
         final expected = testData['document'];
 
-        for (var treeCtor in treeTypes.values) {
+        for (var treeCtor in treeTypes!.values) {
           for (var namespaceHTMLElements in const [false, true]) {
-            test(_nameFor(input), () {
+            test(_nameFor(input!), () {
               runParserTest(testName, innerHTML, input, expected, errors,
                   treeCtor, namespaceHTMLElements);
             });

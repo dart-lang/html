@@ -2,9 +2,9 @@ name: Dart CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
   schedule:
     - cron: "0 0 * * 0"
 
@@ -35,7 +35,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        sdk: [2.8.1, dev]
+        sdk: [dev]
     steps:
       - uses: actions/checkout@v2
       - uses: dart-lang/setup-dart@v0.3

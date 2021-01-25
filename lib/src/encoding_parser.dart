@@ -56,7 +56,7 @@ class EncodingBytes {
   String get _currentByte => _bytes[_position];
 
   /// Skip past a list of characters. Defaults to skipping [isWhitespace].
-  String _skipChars([_CharPredicate skipChars]) {
+  String? _skipChars([_CharPredicate? skipChars]) {
     skipChars ??= isWhitespace;
     var p = _position; // use property for the error-checking
     while (p < _length) {
@@ -71,7 +71,7 @@ class EncodingBytes {
     return null;
   }
 
-  String _skipUntil(_CharPredicate untilChars) {
+  String? _skipUntil(_CharPredicate untilChars) {
     var p = _position;
     while (p < _length) {
       final c = _bytes[p];
@@ -112,7 +112,7 @@ class EncodingBytes {
     }
   }
 
-  String _slice(int start, [int end]) {
+  String _slice(int start, [int? end]) {
     end ??= _length;
     if (end < 0) end += _length;
     return _bytes.substring(start, end);
@@ -131,14 +131,14 @@ class _DispatchEntry {
 /// Mini parser for detecting character encoding from meta elements.
 class EncodingParser {
   final EncodingBytes _data;
-  String _encoding;
+  String? _encoding;
 
   /// [bytes] - the data to work on for encoding detection.
   EncodingParser(List<int> bytes)
       // Note: this is intentionally interpreting bytes as codepoints.
       : _data = EncodingBytes(String.fromCharCodes(bytes).toLowerCase());
 
-  String getEncoding() {
+  String? getEncoding() {
     final methodDispatch = [
       _DispatchEntry('<!--', _handleComment),
       _DispatchEntry('<meta', _handleMeta),
@@ -239,7 +239,7 @@ class EncodingParser {
 
   /// Return a name,value pair for the next attribute in the stream,
   /// if one is found, or null
-  List<String> _getAttribute() {
+  List<String>? _getAttribute() {
     // Step 1 (skip chars)
     var c = _data._skipChars((x) => x == '/' || isWhitespace(x));
     // Step 2
@@ -312,8 +312,6 @@ class EncodingParser {
       c = _data._next();
       if (_isSpaceOrAngleBracket(c)) {
         return [attrName.join(), attrValue.join()];
-      } else if (c == null) {
-        return null;
       } else if (isLetter(c)) {
         attrValue.add(c.toLowerCase());
       } else {
@@ -328,7 +326,7 @@ class ContentAttrParser {
 
   ContentAttrParser(this.data);
 
-  String parse() {
+  String? parse() {
     try {
       // Check if the attr name is charset
       // otherwise return

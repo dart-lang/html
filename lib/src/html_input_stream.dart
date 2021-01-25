@@ -20,7 +20,7 @@ class HtmlInputStream {
   static const String defaultEncoding = 'utf-8';
 
   /// The name of the character encoding.
-  String charEncodingName;
+  String? charEncodingName;
 
   /// True if we are certain about [charEncodingName], false for tenative.
   bool charEncodingCertain = true;
@@ -28,20 +28,20 @@ class HtmlInputStream {
   final bool generateSpans;
 
   /// Location where the contents of the stream were found.
-  final String sourceUrl;
+  final String? sourceUrl;
 
-  List<int> _rawBytes;
+  List<int>? _rawBytes;
 
   /// Raw UTF-16 codes, used if a Dart String is passed in.
-  List<int> _rawChars;
+  List<int>? _rawChars;
 
-  Queue<String> errors;
+  var errors = Queue<String>();
 
-  SourceFile fileInfo;
+  SourceFile? fileInfo;
 
-  List<int> _chars;
+  var _chars = <int>[];
 
-  int _offset;
+  var _offset = 0;
 
   /// Initialise an HtmlInputStream.
   ///
@@ -58,7 +58,7 @@ class HtmlInputStream {
   ///
   /// [parseMeta] - Look for a <meta> element containing encoding information
   HtmlInputStream(source,
-      [String encoding,
+      [String? encoding,
       bool parseMeta = true,
       this.generateSpans = false,
       this.sourceUrl])
@@ -88,18 +88,18 @@ class HtmlInputStream {
     _offset = 0;
     _chars = <int>[];
 
-    _rawChars ??= _decodeBytes(charEncodingName, _rawBytes);
+    final rawChars = _rawChars ??= _decodeBytes(charEncodingName!, _rawBytes!);
 
     var skipNewline = false;
     var wasSurrogatePair = false;
-    for (var i = 0; i < _rawChars.length; i++) {
-      var c = _rawChars[i];
+    for (var i = 0; i < rawChars.length; i++) {
+      var c = rawChars[i];
       if (skipNewline) {
         skipNewline = false;
         if (c == NEWLINE) continue;
       }
 
-      final isSurrogatePair = _isSurrogatePair(_rawChars, i);
+      final isSurrogatePair = _isSurrogatePair(rawChars, i);
       if (!isSurrogatePair && !wasSurrogatePair) {
         if (_invalidUnicode(c)) {
           errors.add('invalid-codepoint');
@@ -146,12 +146,12 @@ class HtmlInputStream {
     }
 
     // Substitute for equivalent encodings:
-    if (charEncodingName.toLowerCase() == 'iso-8859-1') {
+    if (charEncodingName!.toLowerCase() == 'iso-8859-1') {
       charEncodingName = 'windows-1252';
     }
   }
 
-  void changeEncoding(String newEncoding) {
+  void changeEncoding(String? newEncoding) {
     if (_rawBytes == null) {
       // We should never get here -- if encoding is certain we won't try to
       // change it.
@@ -179,17 +179,17 @@ class HtmlInputStream {
   /// Attempts to detect at BOM at the start of the stream. If
   /// an encoding can be determined from the BOM return the name of the
   /// encoding otherwise return null.
-  String detectBOM() {
+  String? detectBOM() {
     // Try detecting the BOM using bytes from the string
-    if (_hasUtf8Bom(_rawBytes)) {
+    if (_hasUtf8Bom(_rawBytes!)) {
       return 'utf-8';
     }
     return null;
   }
 
   /// Report the encoding declared by the meta element.
-  String detectEncodingMeta() {
-    final parser = EncodingParser(slice(_rawBytes, 0, numBytesMeta));
+  String? detectEncodingMeta() {
+    final parser = EncodingParser(slice(_rawBytes!, 0, numBytesMeta));
     var encoding = parser.getEncoding();
 
     if (const ['utf-16', 'utf-16-be', 'utf-16-le'].contains(encoding)) {
@@ -205,14 +205,14 @@ class HtmlInputStream {
 
   /// Read one character from the stream or queue if available. Return
   /// EOF when EOF is reached.
-  String char() {
+  String? char() {
     if (_offset >= _chars.length) return eof;
     return _isSurrogatePair(_chars, _offset)
         ? String.fromCharCodes([_chars[_offset++], _chars[_offset++]])
         : String.fromCharCode(_chars[_offset++]);
   }
 
-  String peekChar() {
+  String? peekChar() {
     if (_offset >= _chars.length) return eof;
     return _isSurrogatePair(_chars, _offset)
         ? String.fromCharCodes([_chars[_offset], _chars[_offset + 1]])
@@ -236,15 +236,15 @@ class HtmlInputStream {
   /// including any character in 'characters' or EOF.
   String charsUntil(String characters, [bool opposite = false]) {
     final start = _offset;
-    String c;
-    while ((c = peekChar()) != null && characters.contains(c) == opposite) {
+    String? c;
+    while ((c = peekChar()) != null && characters.contains(c!) == opposite) {
       _offset += c.codeUnits.length;
     }
 
     return String.fromCharCodes(_chars.sublist(start, _offset));
   }
 
-  void unget(String ch) {
+  void unget(String? ch) {
     // Only one character is allowed to be ungotten at once - it must
     // be consumed again before any further call to unget
     if (ch != null) {
@@ -305,7 +305,7 @@ bool _invalidUnicode(int c) {
 
 /// Return the python codec name corresponding to an encoding or null if the
 /// string doesn't correspond to a valid encoding.
-String codecName(String encoding) {
+String? codecName(String? encoding) {
   final asciiPunctuation = RegExp(
       '[\u0009-\u000D\u0020-\u002F\u003A-\u0040\u005B-\u0060\u007B-\u007E]');
 
@@ -317,7 +317,7 @@ String codecName(String encoding) {
 /// Returns true if the [bytes] starts with a UTF-8 byte order mark.
 /// Since UTF-8 doesn't have byte order, it's somewhat of a misnomer, but it is
 /// used in HTML to detect the UTF-
-bool _hasUtf8Bom(List<int> bytes, [int offset = 0, int length]) {
+bool _hasUtf8Bom(List<int> bytes, [int offset = 0, int? length]) {
   final end = length != null ? offset + length : bytes.length;
   return (offset + 3) <= end &&
       bytes[offset] == 0xEF &&

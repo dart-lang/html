@@ -14,18 +14,18 @@ import 'package:test/test.dart';
 import 'support.dart';
 
 class TokenizerTestParser {
-  final String _state;
-  final String _lastStartTag;
+  final String? _state;
+  final String? _lastStartTag;
   final bool _generateSpans;
-  List outputTokens;
+  List? outputTokens;
 
-  TokenizerTestParser(String initialState,
-      [String lastStartTag, bool generateSpans = false])
+  TokenizerTestParser(String? initialState,
+      [String? lastStartTag, bool generateSpans = false])
       : _state = initialState,
         _lastStartTag = lastStartTag,
         _generateSpans = generateSpans;
 
-  List parse(String str) {
+  List? parse(String str) {
     // Note: we need to pass bytes to the tokenizer if we want it to handle BOM.
     final bytes = utf8.encode(str);
     final tokenizer =
@@ -36,7 +36,7 @@ class TokenizerTestParser {
     // create a new closure to invoke it via mirrors.
     final mtok = reflect(tokenizer);
     tokenizer.state =
-        () => mtok.invoke(Symbol(_state), const []).reflectee as bool;
+        () => mtok.invoke(Symbol(_state!), const []).reflectee as bool;
 
     if (_lastStartTag != null) {
       tokenizer.currentToken = StartTagToken(_lastStartTag);
@@ -108,10 +108,10 @@ class TokenizerTestParser {
   }
 
   void addOutputToken(Token token, List array) {
-    outputTokens.add([
+    outputTokens!.add([
       ...array,
-      if (token.span != null && _generateSpans) token.span.start.offset,
-      if (token.span != null && _generateSpans) token.span.end.offset,
+      if (token.span != null && _generateSpans) token.span!.start.offset,
+      if (token.span != null && _generateSpans) token.span!.end.offset,
     ]);
   }
 }
@@ -151,7 +151,7 @@ List normalizeTokens(List tokens) {
 /// positions of parse errors and non parse errors.
 void expectTokensMatch(
     List expectedTokens, List receivedTokens, bool ignoreErrorOrder,
-    [bool ignoreErrors = false, String message]) {
+    [bool ignoreErrors = false, String? message]) {
   // If the 'selfClosing' attribute is not included in the expected test tokens,
   // remove it from the received token.
   var removeSelfClosing = false;
@@ -201,10 +201,10 @@ void runTokenizerTest(Map<String, dynamic> testInfo) {
     testInfo['lastStartTag'] = null;
   }
   final parser = TokenizerTestParser(
-      testInfo['initialState'] as String,
-      testInfo['lastStartTag'] as String,
-      testInfo['generateSpans'] as bool /*?*/ ?? false);
-  var tokens = parser.parse(testInfo['input'] as String);
+      testInfo['initialState'] as String?,
+      testInfo['lastStartTag'] as String?,
+      testInfo['generateSpans'] as bool? ?? false);
+  var tokens = parser.parse(testInfo['input'] as String)!;
   tokens = concatenateCharacterTokens(tokens);
   final received = normalizeTokens(tokens);
   final errorMsg = [
@@ -217,7 +217,7 @@ void runTokenizerTest(Map<String, dynamic> testInfo) {
     '\nreceived:',
     tokens
   ].map((s) => '$s').join('\n');
-  final ignoreErrorOrder = testInfo['ignoreErrorOrder'] as bool /*?*/ ?? false;
+  final ignoreErrorOrder = testInfo['ignoreErrorOrder'] as bool? ?? false;
 
   expectTokensMatch(expected, received, ignoreErrorOrder, true, errorMsg);
 }
@@ -252,7 +252,7 @@ String camelCase(String s) {
   final result = StringBuffer();
   for (var match in RegExp(r'\W+(\w)(\w+)').allMatches(s)) {
     if (result.length == 0) result.write(s.substring(0, match.start));
-    result.write(match.group(1).toUpperCase());
+    result.write(match.group(1)!.toUpperCase());
     result.write(match.group(2));
   }
   return result.toString();
@@ -265,7 +265,7 @@ void main() async {
     final text = File(path).readAsStringSync();
     final tests = jsonDecode(text);
     final testName = pathos.basenameWithoutExtension(path);
-    final testList = tests['tests'] as List;
+    final testList = tests['tests'] as List?;
     if (testList == null) continue;
 
     group(testName, () {

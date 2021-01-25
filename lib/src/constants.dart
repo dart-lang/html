@@ -4,7 +4,7 @@ import 'utils.dart';
 // lookup than linear search "contains". In the Python code they were
 // frozensets.
 
-final String eof = null;
+final String? eof = null;
 
 class ReparseException implements Exception {
   final String message;
@@ -245,7 +245,7 @@ class Namespaces {
   static const xmlns = 'http://www.w3.org/2000/xmlns/';
   Namespaces._();
 
-  static String getPrefix(String url) {
+  static String? getPrefix(String? url) {
     switch (url) {
       case html:
         return 'html';
@@ -405,7 +405,7 @@ const spaceCharacters = ' \n\r\t\u000C';
 const int NEWLINE = 10;
 const int RETURN = 13;
 
-bool isWhitespace(String char) {
+bool isWhitespace(String? char) {
   if (char == null) return false;
   return isWhitespaceCC(char.codeUnitAt(0));
 }
@@ -439,22 +439,22 @@ const LOWER_Z = 122;
 const UPPER_A = 65;
 const UPPER_Z = 90;
 
-bool isLetterOrDigit(String char) => isLetter(char) || isDigit(char);
+bool isLetterOrDigit(String? char) => isLetter(char) || isDigit(char);
 
 // Note: this is intentially ASCII only
-bool isLetter(String char) {
+bool isLetter(String? char) {
   if (char == null) return false;
   final cc = char.codeUnitAt(0);
   return cc >= LOWER_A && cc <= LOWER_Z || cc >= UPPER_A && cc <= UPPER_Z;
 }
 
-bool isDigit(String char) {
+bool isDigit(String? char) {
   if (char == null) return false;
   final cc = char.codeUnitAt(0);
   return cc >= ZERO && cc < ZERO + 10;
 }
 
-bool isHexDigit(String char) {
+bool isHexDigit(String? char) {
   if (char == null) return false;
   switch (char.codeUnitAt(0)) {
     case 48:
