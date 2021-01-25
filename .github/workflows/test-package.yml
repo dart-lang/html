@@ -43,7 +43,7 @@ jobs:
           sdk: ${{ matrix.sdk }}
       - id: install
         name: Install dependencies
-        run: dart pub get
+        run: pub get
       - name: Run VM tests
         run: dart test --platform vm --test-randomize-ordering-seed=random
         if: steps.install.outcome == 'success'
