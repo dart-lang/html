@@ -73,7 +73,7 @@ bool _nodesEqual(Element node1, Element node2) {
 class TreeBuilder {
   final String? defaultNamespace;
 
-  var document = Document();
+  late Document document;
 
   final List<Element> openElements = <Element>[];
 
