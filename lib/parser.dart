@@ -80,8 +80,6 @@ class HtmlParser {
 
   final List<ParseError> errors = <ParseError>[];
 
-  String container;
-
   bool firstStartTag = false;
 
   // TODO(jmesserly): use enum?
