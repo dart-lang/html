@@ -427,6 +427,7 @@ class Text extends Node {
 
   String get data => _data = _data.toString();
   set data(String value) {
+    // Handle unsound null values.
     _data = identical(value, null) ? '' : value;
   }
 
@@ -448,6 +449,7 @@ class Text extends Node {
   @override
   String get text => data;
   @override
+  // Text has a non-nullable `text` field, while Node has a nullable field.
   set text(covariant String value) {
     data = value;
   }
