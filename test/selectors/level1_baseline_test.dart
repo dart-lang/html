@@ -116,7 +116,7 @@ void main() async {
 
   group('out of scope', () {
     setUp(() {
-      doc.body.append(outOfScope); // Append before in-document Element tests.
+      doc.body!.append(outOfScope); // Append before in-document Element tests.
       // None of these elements should match
     });
     tearDown(outOfScope.remove);

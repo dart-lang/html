@@ -20,7 +20,7 @@ void main() {
   test('line counter', () {
     // http://groups.google.com/group/html5lib-discuss/browse_frm/thread/f4f00e4a2f26d5c0
     final doc = parse('<pre>\nx\n&gt;\n</pre>');
-    expect(doc.body.innerHtml, '<pre>x\n&gt;\n</pre>');
+    expect(doc.body!.innerHtml, '<pre>x\n&gt;\n</pre>');
   });
 
   test('namespace html elements on', () {
@@ -43,7 +43,7 @@ void main() {
 </html>
 ''', generateSpans: true, sourceUrl: 'ParseError');
     final doc = parser.parse();
-    expect(doc.body.outerHtml, '<body>\n  \n  \n\n</body>');
+    expect(doc.body!.outerHtml, '<body>\n  \n  \n\n</body>');
     expect(parser.errors.length, 1);
     final error = parser.errors[0];
     expect(error.errorCode, 'unexpected-doctype');
@@ -73,7 +73,7 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
 </html>
 ''');
     final doc = parser.parse();
-    expect(doc.body.outerHtml, '<body>\n  \n  \n\n</body>');
+    expect(doc.body!.outerHtml, '<body>\n  \n  \n\n</body>');
     expect(parser.errors.length, 1);
     final error = parser.errors[0];
     expect(error.errorCode, 'unexpected-doctype');
@@ -86,7 +86,7 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
     final textContent = '\n  hello {{name}}';
     final html = '<body><div>$textContent</div>';
     final doc = parse(html, generateSpans: true);
-    final text = doc.body.nodes[0].nodes[0] as Text;
+    final text = doc.body!.nodes[0].nodes[0] as Text;
     expect(text, const TypeMatcher<Text>());
     expect(text.data, textContent);
     expect(text.sourceSpan!.start.offset, html.indexOf(textContent));
@@ -150,26 +150,26 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
 
   test('void element innerHTML', () {
     var doc = parse('<div></div>');
-    expect(doc.body.innerHtml, '<div></div>');
+    expect(doc.body!.innerHtml, '<div></div>');
     doc = parse('<body><script></script></body>');
-    expect(doc.body.innerHtml, '<script></script>');
+    expect(doc.body!.innerHtml, '<script></script>');
     doc = parse('<br>');
-    expect(doc.body.innerHtml, '<br>');
+    expect(doc.body!.innerHtml, '<br>');
     doc = parse('<br><foo><bar>');
-    expect(doc.body.innerHtml, '<br><foo><bar></bar></foo>');
+    expect(doc.body!.innerHtml, '<br><foo><bar></bar></foo>');
   });
 
   test('empty document has html, body, and head', () {
     final doc = parse('');
     final html = '<html><head></head><body></body></html>';
     expect(doc.outerHtml, html);
-    expect(doc.documentElement.outerHtml, html);
-    expect(doc.head.outerHtml, '<head></head>');
-    expect(doc.body.outerHtml, '<body></body>');
+    expect(doc.documentElement!.outerHtml, html);
+    expect(doc.head!.outerHtml, '<head></head>');
+    expect(doc.body!.outerHtml, '<body></body>');
   });
 
   test('strange table case', () {
-    final doc = parse('<table><tbody><foo>').body;
+    final doc = parse('<table><tbody><foo>').body!;
     expect(doc.innerHtml, '<foo></foo><table><tbody></tbody></table>');
   });
 
@@ -177,7 +177,7 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
     test('attribute order', () {
       // Note: the spec only requires a stable order.
       // However, we preserve the input order via LinkedHashMap
-      final body = parse('<foo d=1 a=2 c=3 b=4>').body;
+      final body = parse('<foo d=1 a=2 c=3 b=4>').body!;
       expect(body.innerHtml, '<foo d="1" a="2" c="3" b="4"></foo>');
       expect(body.querySelector('foo')!.attributes.remove('a'), '2');
       expect(body.innerHtml, '<foo d="1" c="3" b="4"></foo>');
@@ -249,7 +249,7 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
   test('error printing without spans', () {
     final parser = HtmlParser('foo');
     final doc = parser.parse();
-    expect(doc.body.innerHtml, 'foo');
+    expect(doc.body!.innerHtml, 'foo');
     expect(parser.errors.length, 1);
     expect(parser.errors[0].errorCode, 'expected-doctype-but-got-chars');
     expect(parser.errors[0].message,

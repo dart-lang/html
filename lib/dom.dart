@@ -317,9 +317,9 @@ class Document extends Node
   int get nodeType => Node.DOCUMENT_NODE;
 
   // TODO(jmesserly): optmize this if needed
-  Element get documentElement => querySelector('html')!;
-  Element get head => documentElement.querySelector('head')!;
-  Element get body => documentElement.querySelector('body')!;
+  Element? get documentElement => querySelector('html');
+  Element? get head => documentElement?.querySelector('head');
+  Element? get body => documentElement?.querySelector('body');
 
   /// Returns a fragment of HTML or XML that represents the element and its
   /// contents.
