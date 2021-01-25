@@ -45,8 +45,8 @@ jobs:
         name: Install dependencies
         run: pub get
       - name: Run VM tests
-        run: dart test --platform vm
+        run: pub run test --platform vm
         if: steps.install.outcome == 'success'
       - name: Run Chrome tests
-        run: dart test --platform chrome
+        run: pub run test --platform chrome
         if: steps.install.outcome == 'success'
