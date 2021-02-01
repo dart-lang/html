@@ -1,4 +1,4 @@
-## 0.15.0-nullsafety.0-dev
+## 0.15.0-nullsafety.0
 
 - Migrate to null safety.
 - Drop `lastPhase`, `beforeRcDataPhase`, and `container` fields from
