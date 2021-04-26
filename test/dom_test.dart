@@ -1,9 +1,9 @@
 /// Additional feature tests that aren't based on test data.
 library dom_test;
 
-import 'package:test/test.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart';
+import 'package:test/test.dart';
 
 void main() {
   group('Element', () {
