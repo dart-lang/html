@@ -95,8 +95,8 @@ abstract class _ParentNode implements Node {
   /// are implemented. For example, nth-child does not implement An+B syntax
   /// and *-of-type is not implemented. If a selector is not implemented this
   /// method will throw [UnimplementedError].
-  List<Element> querySelectorAll(String selector) =>
-      query.querySelectorAll(this, selector);
+  List<Element> querySelectorAll(String selector, {int? limit}) =>
+      query.querySelectorAll(this, selector, limit: limit);
 }
 
 // http://dom.spec.whatwg.org/#interface-nonelementparentnode

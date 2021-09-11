@@ -13,10 +13,14 @@ bool matches(Element node, String selector) =>
 Element? querySelector(Node node, String selector) =>
     SelectorEvaluator().querySelector(node, _parseSelectorList(selector));
 
-List<Element> querySelectorAll(Node node, String selector) {
+List<Element> querySelectorAll(Node node, String selector, {int? limit}) {
   final results = <Element>[];
-  SelectorEvaluator()
-      .querySelectorAll(node, _parseSelectorList(selector), results);
+  SelectorEvaluator().querySelectorAll(
+    node,
+    _parseSelectorList(selector),
+    results,
+    limit: limit,
+  );
   return results;
 }
 
@@ -49,10 +53,15 @@ class SelectorEvaluator extends Visitor {
   }
 
   void querySelectorAll(
-      Node root, SelectorGroup selector, List<Element> results) {
+    Node root,
+    SelectorGroup selector,
+    List<Element> results, {
+    int? limit,
+  }) {
     for (var element in root.nodes.whereType<Element>()) {
+      if (limit != null && results.length == limit) return;
       if (matches(element, selector)) results.add(element);
-      querySelectorAll(element, selector, results);
+      querySelectorAll(element, selector, results, limit: limit);
     }
   }
 
