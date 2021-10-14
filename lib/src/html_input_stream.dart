@@ -96,7 +96,7 @@ class HtmlInputStream {
       var c = rawChars[i];
       if (skipNewline) {
         skipNewline = false;
-        if (c == NEWLINE) continue;
+        if (c == newLine) continue;
       }
 
       final isSurrogatePair = _isSurrogatePair(rawChars, i);
@@ -111,9 +111,9 @@ class HtmlInputStream {
       }
       wasSurrogatePair = isSurrogatePair;
 
-      if (c == RETURN) {
+      if (c == returnCode) {
         skipNewline = true;
-        c = NEWLINE;
+        c = newLine;
       }
 
       _chars.add(c);

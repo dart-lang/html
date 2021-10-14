@@ -1200,7 +1200,7 @@ class HtmlTokenizer implements Iterator<Token> {
       state = dataState;
     } else {
       _attributeValue.write(data);
-      _attributeValue.write(stream.charsUntil("\'&"));
+      _attributeValue.write(stream.charsUntil("'&"));
     }
     return true;
   }
@@ -1228,7 +1228,7 @@ class HtmlTokenizer implements Iterator<Token> {
       _attributeValue.write('\uFFFD');
     } else {
       _attributeValue.write(data);
-      _attributeValue.write(stream.charsUntil("&>\"\'=<`$spaceCharacters"));
+      _attributeValue.write(stream.charsUntil("&>\"'=<`$spaceCharacters"));
     }
     return true;
   }

@@ -2,6 +2,8 @@
 /// with dart:html, but it is missing many types and APIs.
 library dom;
 
+// ignore_for_file: constant_identifier_names
+
 // TODO(jmesserly): lots to do here. Originally I wanted to generate this using
 // our Blink IDL generator, but another idea is to directly use the excellent
 // http://dom.spec.whatwg.org/ and http://html.spec.whatwg.org/ and just
@@ -66,10 +68,11 @@ class AttributeName implements Comparable<Object> {
   }
 
   @override
-  bool operator ==(x) {
-    if (x is! AttributeName) return false;
-    return prefix == x.prefix && name == x.name && namespace == x.namespace;
-  }
+  bool operator ==(Object other) =>
+      other is AttributeName &&
+      prefix == other.prefix &&
+      name == other.name &&
+      namespace == other.namespace;
 }
 
 // http://dom.spec.whatwg.org/#parentnode
@@ -214,6 +217,7 @@ abstract class Node {
 
   // Implemented per: http://dom.spec.whatwg.org/#dom-node-textcontent
   String? get text => null;
+
   set text(String? value) {}
 
   void append(Node node) => nodes.add(node);
@@ -311,6 +315,7 @@ abstract class Node {
 class Document extends Node
     with _ParentNode, _NonElementParentNode, _ElementAndDocument {
   Document() : super._();
+
   factory Document.html(String html) => parse(html);
 
   @override
@@ -318,7 +323,9 @@ class Document extends Node
 
   // TODO(jmesserly): optmize this if needed
   Element? get documentElement => querySelector('html');
+
   Element? get head => documentElement?.querySelector('head');
+
   Element? get body => documentElement?.querySelector('body');
 
   /// Returns a fragment of HTML or XML that represents the element and its
@@ -352,6 +359,7 @@ class Document extends Node
 
 class DocumentFragment extends Node with _ParentNode, _NonElementParentNode {
   DocumentFragment() : super._();
+
   factory DocumentFragment.html(String html) => parseFragment(html);
 
   @override
@@ -376,6 +384,7 @@ class DocumentFragment extends Node with _ParentNode, _NonElementParentNode {
 
   @override
   String? get text => _getText(this);
+
   @override
   set text(String? value) => _setText(this, value);
 }
@@ -426,6 +435,7 @@ class Text extends Node {
   int get nodeType => Node.TEXT_NODE;
 
   String get data => _data = _data.toString();
+
   set data(String value) {
     // Handle unsound null values.
     _data = identical(value, null) ? '' : value;
@@ -448,6 +458,7 @@ class Text extends Node {
 
   @override
   String get text => data;
+
   @override
   // Text has a non-nullable `text` field, while Node has a nullable field.
   set text(covariant String value) {
@@ -561,6 +572,7 @@ class Element extends Node with _ParentNode, _ElementAndDocument {
 
   @override
   String get text => _getText(this);
+
   @override
   set text(String? value) => _setText(this, value);
 
@@ -572,6 +584,7 @@ class Element extends Node with _ParentNode, _ElementAndDocument {
   /// Can be set, to replace the contents of the element with nodes parsed from
   /// the given string.
   String get innerHtml => _innerHtml;
+
   // TODO(jmesserly): deprecate in favor of:
   // <https://api.dartlang.org/apidocs/channels/stable/#dart-dom-html.Element@id_setInnerHtml>
   set innerHtml(String value) {
@@ -650,7 +663,7 @@ class Element extends Node with _ParentNode, _ElementAndDocument {
   }
 
   set id(String value) {
-    attributes['id'] = '$value';
+    attributes['id'] = value;
   }
 
   // http://dom.spec.whatwg.org/#dom-element-classname
@@ -660,7 +673,7 @@ class Element extends Node with _ParentNode, _ElementAndDocument {
   }
 
   set className(String value) {
-    attributes['class'] = '$value';
+    attributes['class'] = value;
   }
 
   /// The set of CSS classes applied to this element.
@@ -695,6 +708,7 @@ class Comment extends Node {
 
   @override
   String? get text => data;
+
   @override
   set text(String? value) {
     data = value;
@@ -718,18 +732,18 @@ class NodeList extends ListProxy<Node> {
   }
 
   @override
-  void add(Node value) {
-    if (value is DocumentFragment) {
-      addAll(value.nodes);
+  void add(Node element) {
+    if (element is DocumentFragment) {
+      addAll(element.nodes);
     } else {
-      super.add(_setParent(value));
+      super.add(_setParent(element));
     }
   }
 
   void addLast(Node value) => add(value);
 
   @override
-  void addAll(Iterable<Node> collection) {
+  void addAll(Iterable<Node> iterable) {
     // Note: we need to be careful if collection is another NodeList.
     // In particular:
     //   1. we need to copy the items before updating their parent pointers,
@@ -737,7 +751,7 @@ class NodeList extends ListProxy<Node> {
     //   2. we should update parent pointers in reverse order. That way they
     //      are removed from the original NodeList (if any) from the end, which
     //      is faster.
-    final list = _flattenDocFragments(collection);
+    final list = _flattenDocFragments(iterable);
     for (var node in list.reversed) {
       _setParent(node);
     }
@@ -745,11 +759,11 @@ class NodeList extends ListProxy<Node> {
   }
 
   @override
-  void insert(int index, Node value) {
-    if (value is DocumentFragment) {
-      insertAll(index, value.nodes);
+  void insert(int index, Node element) {
+    if (element is DocumentFragment) {
+      insertAll(index, element.nodes);
     } else {
-      super.insert(index, _setParent(value));
+      super.insert(index, _setParent(element));
     }
   }
 
@@ -757,7 +771,7 @@ class NodeList extends ListProxy<Node> {
   Node removeLast() => super.removeLast()..parentNode = null;
 
   @override
-  Node removeAt(int i) => super.removeAt(i)..parentNode = null;
+  Node removeAt(int index) => super.removeAt(index)..parentNode = null;
 
   @override
   void clear() {
@@ -781,17 +795,17 @@ class NodeList extends ListProxy<Node> {
   // TODO(jmesserly): These aren't implemented in DOM _NodeListImpl, see
   // http://code.google.com/p/dart/issues/detail?id=5371
   @override
-  void setRange(int start, int rangeLength, Iterable<Node> from,
-      [int startFrom = 0]) {
-    var fromVar = from as List<Node>;
+  void setRange(int start, int end, Iterable<Node> iterable,
+      [int skipCount = 0]) {
+    var fromVar = iterable as List<Node>;
     if (fromVar is NodeList) {
       // Note: this is presumed to make a copy
-      fromVar = fromVar.sublist(startFrom, startFrom + rangeLength);
+      fromVar = fromVar.sublist(skipCount, skipCount + end);
     }
     // Note: see comment in [addAll]. We need to be careful about the order of
     // operations if [from] is also a NodeList.
-    for (var i = rangeLength - 1; i >= 0; i--) {
-      this[start + i] = fromVar[startFrom + i];
+    for (var i = end - 1; i >= 0; i--) {
+      this[start + i] = fromVar[skipCount + i];
     }
   }
 
@@ -802,11 +816,11 @@ class NodeList extends ListProxy<Node> {
   }
 
   @override
-  void removeRange(int start, int rangeLength) {
-    for (var i = start; i < rangeLength; i++) {
+  void removeRange(int start, int end) {
+    for (var i = start; i < end; i++) {
       this[i].parentNode = null;
     }
-    super.removeRange(start, rangeLength);
+    super.removeRange(start, end);
   }
 
   @override
@@ -826,9 +840,9 @@ class NodeList extends ListProxy<Node> {
   }
 
   @override
-  void insertAll(int index, Iterable<Node> collection) {
+  void insertAll(int index, Iterable<Node> iterable) {
     // Note: we need to be careful how we copy nodes. See note in addAll.
-    final list = _flattenDocFragments(collection);
+    final list = _flattenDocFragments(iterable);
     for (var node in list.reversed) {
       _setParent(node);
     }
@@ -876,8 +890,8 @@ class FilteredElementList extends IterableBase<Element>
   List<Element> get _filtered => _childNodes.whereType<Element>().toList();
 
   @override
-  void forEach(void Function(Element) f) {
-    _filtered.forEach(f);
+  void forEach(void Function(Element) action) {
+    _filtered.forEach(action);
   }
 
   @override
@@ -901,8 +915,8 @@ class FilteredElementList extends IterableBase<Element>
   String join([String separator = '']) => _filtered.join(separator);
 
   @override
-  void add(Element value) {
-    _childNodes.add(value);
+  void add(Element element) {
+    _childNodes.add(element);
   }
 
   @override
@@ -932,12 +946,12 @@ class FilteredElementList extends IterableBase<Element>
   }
 
   @override
-  void fillRange(int start, int end, [Element? fillValue]) {
+  void fillRange(int start, int end, [Element? fill]) {
     throw UnimplementedError();
   }
 
   @override
-  void replaceRange(int start, int end, Iterable<Element> iterable) {
+  void replaceRange(int start, int end, Iterable<Element> newContents) {
     throw UnimplementedError();
   }
 
@@ -960,14 +974,16 @@ class FilteredElementList extends IterableBase<Element>
 
   @override
   Iterable<T> map<T>(T Function(Element) f) => _filtered.map(f);
+
   @override
-  Iterable<Element> where(bool Function(Element) f) => _filtered.where(f);
+  Iterable<Element> where(bool Function(Element) test) => _filtered.where(test);
+
   @override
   Iterable<T> expand<T>(Iterable<T> Function(Element) f) => _filtered.expand(f);
 
   @override
-  void insert(int index, Element value) {
-    _childNodes.insert(index, value);
+  void insert(int index, Element element) {
+    _childNodes.insert(index, element);
   }
 
   @override
@@ -1007,14 +1023,18 @@ class FilteredElementList extends IterableBase<Element>
   }
 
   @override
-  bool every(bool Function(Element) f) => _filtered.every(f);
+  bool every(bool Function(Element) test) => _filtered.every(test);
+
   @override
-  bool any(bool Function(Element) f) => _filtered.any(f);
+  bool any(bool Function(Element) test) => _filtered.any(test);
+
   @override
   List<Element> toList({bool growable = true}) =>
       List<Element>.from(this, growable: growable);
+
   @override
   Set<Element> toSet() => Set<Element>.from(this);
+
   @override
   Element firstWhere(bool Function(Element) test,
       {Element Function()? orElse}) {
@@ -1040,17 +1060,23 @@ class FilteredElementList extends IterableBase<Element>
 
   @override
   bool get isEmpty => _filtered.isEmpty;
+
   @override
   int get length => _filtered.length;
+
   @override
   Element operator [](int index) => _filtered[index];
+
   @override
   Iterator<Element> get iterator => _filtered.iterator;
+
   @override
   List<Element> sublist(int start, [int? end]) => _filtered.sublist(start, end);
+
   @override
   Iterable<Element> getRange(int start, int end) =>
       _filtered.getRange(start, end);
+
   @override
   int indexOf(Object? element, [int start = 0]) =>
       // Cast forced by ListMixin https://github.com/dart-lang/sdk/issues/31311
