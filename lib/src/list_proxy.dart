@@ -8,7 +8,7 @@ abstract class ListProxy<E> extends ListBase<E> {
   final List<E> _list = <E>[];
 
   @override
-  bool remove(Object? item) => _list.remove(item);
+  bool remove(Object? element) => _list.remove(element);
 
   @override
   int get length => _list.length;
@@ -32,16 +32,16 @@ abstract class ListProxy<E> extends ListBase<E> {
   }
 
   @override
-  void add(E value) {
-    _list.add(value);
+  void add(E element) {
+    _list.add(element);
   }
 
   @override
-  void insert(int index, E item) => _list.insert(index, item);
+  void insert(int index, E element) => _list.insert(index, element);
 
   @override
-  void addAll(Iterable<E> collection) {
-    _list.addAll(collection);
+  void addAll(Iterable<E> iterable) {
+    _list.addAll(iterable);
   }
 
   @override
@@ -53,7 +53,7 @@ abstract class ListProxy<E> extends ListBase<E> {
   E removeAt(int index) => _list.removeAt(index);
 
   @override
-  void removeRange(int start, int length) {
-    _list.removeRange(start, length);
+  void removeRange(int start, int end) {
+    _list.removeRange(start, end);
   }
 }

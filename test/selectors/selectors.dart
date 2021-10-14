@@ -255,7 +255,7 @@ var validSelectors = [
   // - value                     [att=val]
   {
     'name': 'Attribute value selector, matching align attribute with value',
-    'selector': '#attr-value [align=\"center\"]',
+    'selector': '#attr-value [align="center"]',
     'expect': ['attr-value-div1'],
     'level': 2,
     'testType': testQsaBaseline | testMatchBaseline
@@ -263,7 +263,7 @@ var validSelectors = [
   {
     'name':
         'Attribute value selector, matching align attribute with empty value',
-    'selector': '#attr-value [align=\"\"]',
+    'selector': '#attr-value [align=""]',
     'expect': ['attr-value-div2'],
     'level': 2,
     'testType': testQsaBaseline | testMatchBaseline
@@ -271,7 +271,7 @@ var validSelectors = [
   {
     'name':
         'Attribute value selector, not matching align attribute with partial value',
-    'selector': '#attr-value [align=\"c\"]',
+    'selector': '#attr-value [align="c"]',
     'expect': [] /*no matches*/,
     'level': 2,
     'testType': testQsaBaseline
@@ -279,7 +279,7 @@ var validSelectors = [
   {
     'name':
         'Attribute value selector, not matching align attribute with incorrect value',
-    'selector': '#attr-value [align=\"centera\"]',
+    'selector': '#attr-value [align="centera"]',
     'expect': [] /*no matches*/,
     'level': 2,
     'testType': testQsaBaseline
@@ -287,7 +287,7 @@ var validSelectors = [
   {
     'name':
         'Attribute value selector, matching custom data-* attribute with unicode escaped value',
-    'selector': '[data-attr-value=\"\\e9\"]',
+    'selector': '[data-attr-value="\\e9"]',
     'expect': ['attr-value-div3'],
     'level': 2,
     'testType': testQsaBaseline | testMatchBaseline
@@ -295,7 +295,7 @@ var validSelectors = [
   {
     'name':
         'Attribute value selector, matching custom data-* attribute with escaped character',
-    'selector': '[data-attr-value\_foo=\"\\e9\"]',
+    'selector': '[data-attr-value_foo="\\e9"]',
     'expect': ['attr-value-div4'],
     'level': 2,
     'testType': testQsaBaseline | testMatchBaseline
@@ -357,7 +357,7 @@ var validSelectors = [
   {
     'name':
         'Attribute whitespace-separated list selector, matching class attribute with value',
-    'selector': '#attr-whitespace [class~=\"div1\"]',
+    'selector': '#attr-whitespace [class~="div1"]',
     'expect': ['attr-whitespace-div1'],
     'level': 2,
     'testType': testQsaBaseline | testMatchBaseline
@@ -365,7 +365,7 @@ var validSelectors = [
   {
     'name':
         'Attribute whitespace-separated list selector, not matching class attribute with empty value',
-    'selector': '#attr-whitespace [class~=\"\"]',
+    'selector': '#attr-whitespace [class~=""]',
     'expect': [] /*no matches*/,
     'level': 2,
     'testType': testQsaBaseline
@@ -373,7 +373,7 @@ var validSelectors = [
   {
     'name':
         'Attribute whitespace-separated list selector, not matching class attribute with partial value',
-    'selector': '[data-attr-whitespace~=\"div\"]',
+    'selector': '[data-attr-whitespace~="div"]',
     'expect': [] /*no matches*/,
     'level': 2,
     'testType': testQsaBaseline
@@ -381,7 +381,7 @@ var validSelectors = [
   {
     'name':
         'Attribute whitespace-separated list selector, matching custom data-* attribute with unicode escaped value',
-    'selector': '[data-attr-whitespace~=\"\\0000e9\"]',
+    'selector': '[data-attr-whitespace~="\\0000e9"]',
     'expect': ['attr-whitespace-div4'],
     'level': 2,
     'testType': testQsaBaseline | testMatchBaseline
@@ -389,7 +389,7 @@ var validSelectors = [
   {
     'name':
         'Attribute whitespace-separated list selector, matching custom data-* attribute with escaped character',
-    'selector': '[data-attr-whitespace\_foo~=\"\\e9\"]',
+    'selector': '[data-attr-whitespace_foo~="\\e9"]',
     'expect': ['attr-whitespace-div5'],
     'level': 2,
     'testType': testQsaBaseline | testMatchBaseline
@@ -442,7 +442,7 @@ var validSelectors = [
   {
     'name':
         'Attribute whitespace-separated list selector with double-quoted value, not matching value with space',
-    'selector': '#attr-whitespace a[rel~=\"book mark\"]',
+    'selector': '#attr-whitespace a[rel~="book mark"]',
     'expect': [] /* no matches */,
     'level': 2,
     'testType': testQsaBaseline
@@ -460,7 +460,7 @@ var validSelectors = [
   {
     'name':
         'Attribute hyphen-separated list selector, not matching unspecified lang attribute',
-    'selector': '#attr-hyphen-div1[lang|=\"en\"]',
+    'selector': '#attr-hyphen-div1[lang|="en"]',
     'expect': [] /*no matches*/,
     'level': 2,
     'testType': testQsaBaseline
@@ -468,7 +468,7 @@ var validSelectors = [
   {
     'name':
         'Attribute hyphen-separated list selector, matching lang attribute with exact value',
-    'selector': '#attr-hyphen-div2[lang|=\"fr\"]',
+    'selector': '#attr-hyphen-div2[lang|="fr"]',
     'expect': ['attr-hyphen-div2'],
     'level': 2,
     'testType': testQsaBaseline | testMatchBaseline
@@ -476,7 +476,7 @@ var validSelectors = [
   {
     'name':
         'Attribute hyphen-separated list selector, matching lang attribute with partial value',
-    'selector': '#attr-hyphen-div3[lang|=\"en\"]',
+    'selector': '#attr-hyphen-div3[lang|="en"]',
     'expect': ['attr-hyphen-div3'],
     'level': 2,
     'testType': testQsaBaseline | testMatchBaseline
@@ -484,7 +484,7 @@ var validSelectors = [
   {
     'name':
         'Attribute hyphen-separated list selector, not matching incorrect value',
-    'selector': '#attr-hyphen-div4[lang|=\"es-AR\"]',
+    'selector': '#attr-hyphen-div4[lang|="es-AR"]',
     'expect': [] /*no matches*/,
     'level': 2,
     'testType': testQsaBaseline
@@ -494,7 +494,7 @@ var validSelectors = [
   {
     'name':
         'Attribute begins with selector, matching href attributes beginning with specified substring',
-    'selector': '#attr-begins a[href^=\"http://www\"]',
+    'selector': '#attr-begins a[href^="http://www"]',
     'expect': ['attr-begins-a1', 'attr-begins-a3'],
     'level': 3,
     'testType': testQsaAdditional | testMatchBaseline
@@ -502,7 +502,7 @@ var validSelectors = [
   {
     'name':
         'Attribute begins with selector, matching lang attributes beginning with specified substring, ',
-    'selector': '#attr-begins [lang^=\"en-\"]',
+    'selector': '#attr-begins [lang^="en-"]',
     'expect': ['attr-begins-div2', 'attr-begins-div4'],
     'level': 3,
     'testType': testQsaAdditional | testMatchBaseline
@@ -526,7 +526,7 @@ var validSelectors = [
   {
     'name':
         'Attribute begins with selector with double-quoted value, matching class attribute beginning with specified substring',
-    'selector': '#attr-begins [class^=\" apple\"]',
+    'selector': '#attr-begins [class^=" apple"]',
     'expect': ['attr-begins-p1'],
     'level': 3,
     'testType': testQsaAdditional | testMatchBaseline
@@ -544,7 +544,7 @@ var validSelectors = [
   {
     'name':
         'Attribute ends with selector, matching href attributes ending with specified substring',
-    'selector': '#attr-ends a[href\$=\".org\"]',
+    'selector': '#attr-ends a[href\$=".org"]',
     'expect': ['attr-ends-a1', 'attr-ends-a3'],
     'level': 3,
     'testType': testQsaAdditional | testMatchBaseline
@@ -552,7 +552,7 @@ var validSelectors = [
   {
     'name':
         'Attribute ends with selector, matching lang attributes ending with specified substring, ',
-    'selector': '#attr-ends [lang\$=\"-CH\"]',
+    'selector': '#attr-ends [lang\$="-CH"]',
     'expect': ['attr-ends-div2', 'attr-ends-div4'],
     'level': 3,
     'testType': testQsaAdditional | testMatchBaseline
@@ -576,7 +576,7 @@ var validSelectors = [
   {
     'name':
         'Attribute ends with selector with double-quoted value, matching class attribute ending with specified substring',
-    'selector': '#attr-ends [class\$=\"apple \"]',
+    'selector': '#attr-ends [class\$="apple "]',
     'expect': ['attr-ends-p1'],
     'level': 3,
     'testType': testQsaAdditional | testMatchBaseline
@@ -594,7 +594,7 @@ var validSelectors = [
   {
     'name':
         'Attribute contains selector, matching href attributes beginning with specified substring',
-    'selector': '#attr-contains a[href*=\"http://www\"]',
+    'selector': '#attr-contains a[href*="http://www"]',
     'expect': ['attr-contains-a1', 'attr-contains-a3'],
     'level': 3,
     'testType': testQsaAdditional | testMatchBaseline
@@ -602,7 +602,7 @@ var validSelectors = [
   {
     'name':
         'Attribute contains selector, matching href attributes ending with specified substring',
-    'selector': '#attr-contains a[href*=\".org\"]',
+    'selector': '#attr-contains a[href*=".org"]',
     'expect': ['attr-contains-a1', 'attr-contains-a2'],
     'level': 3,
     'testType': testQsaAdditional | testMatchBaseline
@@ -610,7 +610,7 @@ var validSelectors = [
   {
     'name':
         'Attribute contains selector, matching href attributes containing specified substring',
-    'selector': '#attr-contains a[href*=\".example.\"]',
+    'selector': '#attr-contains a[href*=".example."]',
     'expect': ['attr-contains-a1', 'attr-contains-a3'],
     'level': 3,
     'testType': testQsaAdditional | testMatchBaseline
@@ -618,7 +618,7 @@ var validSelectors = [
   {
     'name':
         'Attribute contains selector, matching lang attributes beginning with specified substring, ',
-    'selector': '#attr-contains [lang*=\"en-\"]',
+    'selector': '#attr-contains [lang*="en-"]',
     'expect': ['attr-contains-div2', 'attr-contains-div6'],
     'level': 3,
     'testType': testQsaAdditional | testMatchBaseline
@@ -626,7 +626,7 @@ var validSelectors = [
   {
     'name':
         'Attribute contains selector, matching lang attributes ending with specified substring, ',
-    'selector': '#attr-contains [lang*=\"-CH\"]',
+    'selector': '#attr-contains [lang*="-CH"]',
     'expect': ['attr-contains-div3', 'attr-contains-div5'],
     'level': 3,
     'testType': testQsaAdditional | testMatchBaseline
@@ -658,7 +658,7 @@ var validSelectors = [
   {
     'name':
         'Attribute contains selector with double-quoted value, matching class attribute beginning with specified substring',
-    'selector': '#attr-contains [class*=\" apple\"]',
+    'selector': '#attr-contains [class*=" apple"]',
     'expect': ['attr-contains-p1'],
     'level': 3,
     'testType': testQsaAdditional | testMatchBaseline
@@ -666,7 +666,7 @@ var validSelectors = [
   {
     'name':
         'Attribute contains selector with double-quoted value, matching class attribute ending with specified substring',
-    'selector': '#attr-contains [class*=\"orange \"]',
+    'selector': '#attr-contains [class*="orange "]',
     'expect': ['attr-contains-p1'],
     'level': 3,
     'testType': testQsaAdditional | testMatchBaseline
@@ -674,7 +674,7 @@ var validSelectors = [
   {
     'name':
         'Attribute contains selector with double-quoted value, matching class attribute containing specified substring',
-    'selector': '#attr-contains [class*=\"ple banana ora\"]',
+    'selector': '#attr-contains [class*="ple banana ora"]',
     'expect': ['attr-contains-p1'],
     'level': 3,
     'testType': testQsaAdditional | testMatchBaseline
