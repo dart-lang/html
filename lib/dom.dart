@@ -161,7 +161,7 @@ abstract class Node {
   /// include all elements but not necessarily other node types.
   late final nodes = NodeList._(this);
 
-  List<Element>? _elements;
+  late final List<Element> children = FilteredElementList(this);
 
   // TODO(jmesserly): consider using an Expando for this, and put it in
   // dom_parsing. Need to check the performance affect.
@@ -191,8 +191,6 @@ abstract class Node {
     _ensureAttributeSpans();
     return _attributeValueSpans;
   }
-
-  List<Element> get children => _elements ??= FilteredElementList(this);
 
   /// Returns a copy of this node.
   ///
