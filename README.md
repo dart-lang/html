@@ -8,7 +8,6 @@ Parsing HTML is easy!
 
 ```dart
 import 'package:html/parser.dart' show parse;
-import 'package:html/dom.dart';
 
 main() {
   var document = parse(
