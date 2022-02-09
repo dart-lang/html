@@ -3480,7 +3480,7 @@ class InForeignContentPhase extends Phase {
 
   InForeignContentPhase(HtmlParser parser) : super(parser);
 
-  void adjustSVGTagNames(token) {
+  void adjustSVGTagNames(StartTagToken token) {
     final replacements = const {
       'altglyph': 'altGlyph',
       'altglyphdef': 'altGlyphDef',
