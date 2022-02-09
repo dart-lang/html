@@ -1,5 +1,9 @@
 ## 0.15.1-dev
 
+- Move `htmlSerializeEscape` to its own library,
+  `package:html/html_escape.dart`, which is exported from
+  `package:html/dom_parsing.dart`.
+
 ## 0.15.0
 
 - Migrate to null safety.
