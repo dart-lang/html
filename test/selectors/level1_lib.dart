@@ -9,6 +9,9 @@
 /// from upstream.
 library html.test.selectors.level1_lib;
 
+// TODO(https://github.com/dart-lang/html/issues/173): Remove.
+// ignore_for_file: avoid_dynamic_calls
+
 import 'package:html/dom.dart';
 import 'package:test/test.dart' as unittest;
 
@@ -64,29 +67,6 @@ void setupSpecialElements(parent) {
 
   parent.append(anyNS);
   parent.append(noNS);
-}
-
-/*
- * Check that the querySelector and querySelectorAll methods exist on the given Node
- */
-void interfaceCheck(String type, obj) {
-  runTest(() {
-    final q = obj.querySelector is Function;
-    assertTrue(q, '$type supports querySelector.');
-  }, '$type supports querySelector');
-
-  runTest(() {
-    final qa = obj.querySelectorAll is Function;
-    assertTrue(qa, '$type supports querySelectorAll.');
-  }, '$type supports querySelectorAll');
-
-  runTest(() {
-    final list = obj.querySelectorAll('div');
-    // TODO(jmesserly): testing List<Element> for now. It should return an
-    // ElementList which has extra properties. Needed for dart:html compat.
-    assertTrue(list is List<Element>,
-        'The result should be an instance of a NodeList');
-  }, '$type.querySelectorAll returns NodeList instance');
 }
 
 /*

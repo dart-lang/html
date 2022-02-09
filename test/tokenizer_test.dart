@@ -1,6 +1,9 @@
 @TestOn('vm')
 library tokenizer_test;
 
+// TODO(https://github.com/dart-lang/html/issues/173): Remove.
+// ignore_for_file: avoid_dynamic_calls
+
 // Note: mirrors used to match the getattr usage in the original test
 import 'dart:convert';
 import 'dart:io';

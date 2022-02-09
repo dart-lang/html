@@ -88,11 +88,6 @@ void main() async {
   fragment.append(element.clone(true));
 
   // Setup Tests
-  interfaceCheck('Document', doc);
-  interfaceCheck('Detached Element', detached);
-  interfaceCheck('Fragment', fragment);
-  interfaceCheck('In-document Element', element);
-
   runSpecialSelectorTests('Document', doc);
   runSpecialSelectorTests('Detached Element', detached);
   runSpecialSelectorTests('Fragment', fragment);

@@ -11,6 +11,7 @@ analyzer:
     dead_code: error
 linter:
   rules:
+    - avoid_dynamic_calls
     - avoid_function_literals_in_foreach_calls
     - avoid_returning_null
     - avoid_unused_constructor_parameters
