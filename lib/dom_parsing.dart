@@ -32,7 +32,7 @@ class TreeVisitor {
 
   void visitChildren(Node node) {
     // Allow for mutations (remove works) while iterating.
-    for (var child in node.nodes.toList()) {
+    for (var child in node.nodes.toList(growable: false)) {
       visit(child);
     }
   }

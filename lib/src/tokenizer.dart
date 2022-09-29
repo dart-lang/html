@@ -174,7 +174,7 @@ class HtmlTokenizer implements Iterator<Token> {
       radix = 16;
     }
 
-    final charStack = [];
+    final charStack = <String?>[];
 
     // Consume all the characters that are in range while making sure we
     // don't hit an EOF.
@@ -297,8 +297,9 @@ class HtmlTokenizer implements Iterator<Token> {
 
       while (charStack.last != eof) {
         final name = charStack.join();
-        filteredEntityList =
-            filteredEntityList.where((e) => e.startsWith(name)).toList();
+        filteredEntityList = filteredEntityList
+            .where((e) => e.startsWith(name))
+            .toList(growable: false);
 
         if (filteredEntityList.isEmpty) {
           break;

@@ -331,7 +331,7 @@ class HtmlParser {
 
     // When the loop finishes it's EOF
     var reprocess = true;
-    final reprocessPhases = [];
+    final reprocessPhases = <Phase>[];
     while (reprocess) {
       reprocessPhases.add(phase);
       reprocess = phase.processEOF();
@@ -430,7 +430,7 @@ class HtmlParser {
       'ychannelselector': 'yChannelSelector',
       'zoomandpan': 'zoomAndPan'
     };
-    for (var originalName in token.data.keys.toList()) {
+    for (var originalName in token.data.keys.toList(growable: false)) {
       final svgName = replacements[originalName as String];
       if (svgName != null) {
         token.data[svgName] = token.data.remove(originalName)!;
@@ -456,7 +456,7 @@ class HtmlParser {
       'xmlns:xlink': AttributeName('xmlns', 'xlink', Namespaces.xmlns)
     };
 
-    for (var originalName in token.data.keys.toList()) {
+    for (var originalName in token.data.keys.toList(growable: false)) {
       final foreignName = replacements[originalName as String];
       if (foreignName != null) {
         token.data[foreignName] = token.data.remove(originalName)!;
@@ -1468,7 +1468,7 @@ class InBodyPhase extends Phase {
     tree.insertElement(token);
     final element = tree.openElements.last;
 
-    final matchingElements = [];
+    final matchingElements = <Node?>[];
     for (Node? node in tree.activeFormattingElements.reversed) {
       if (node == null) {
         break;

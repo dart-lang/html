@@ -3,6 +3,8 @@
 - Move `htmlSerializeEscape` to its own library,
   `package:html/html_escape.dart`, which is exported from
   `package:html/dom_parsing.dart`.
+- Use more non-growable lists, and type annotations on List literals.
+- Switch analysis option `implicit-casts: false` to `strict-casts: true`.
 
 ## 0.15.0
 

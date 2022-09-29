@@ -232,13 +232,13 @@ Map<String, dynamic> unescape(Map<String, dynamic> testInfo) {
   dynamic decode(inp) => inp == '\u0000' ? inp : jsonDecode('"$inp"');
 
   testInfo['input'] = decode(testInfo['input']);
-  for (var token in testInfo['output']) {
+  for (var token in testInfo['output'] as List) {
     if (token == 'ParseError') {
       continue;
     } else {
       token[1] = decode(token[1]);
       if ((token as List).length > 2) {
-        for (var pair in token[2]) {
+        for (var pair in token[2] as List) {
           final key = pair[0];
           final value = pair[1];
           token[2].remove(key);
@@ -276,7 +276,7 @@ void main() async {
         final testInfo = testList[index] as Map<String, dynamic>;
 
         testInfo.putIfAbsent('initialStates', () => ['Data state']);
-        for (var initialState in testInfo['initialStates']) {
+        for (var initialState in testInfo['initialStates'] as List) {
           test(testInfo['description'], () {
             testInfo['initialState'] = camelCase(initialState as String);
             runTokenizerTest(testInfo);
