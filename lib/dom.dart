@@ -885,7 +885,8 @@ class FilteredElementList extends IterableBase<Element>
   //
   // TODO(nweiz): we don't always need to create a new list. For example
   // forEach, every, any, ... could directly work on the _childNodes.
-  List<Element> get _filtered => _childNodes.whereType<Element>().toList();
+  List<Element> get _filtered =>
+      _childNodes.whereType<Element>().toList(growable: false);
 
   @override
   void forEach(void Function(Element) action) {
@@ -1028,7 +1029,7 @@ class FilteredElementList extends IterableBase<Element>
 
   @override
   List<Element> toList({bool growable = true}) =>
-      List<Element>.from(this, growable: growable);
+      List<Element>.of(this, growable: growable);
 
   @override
   Set<Element> toSet() => Set<Element>.from(this);

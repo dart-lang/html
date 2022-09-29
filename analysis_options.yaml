@@ -1,7 +1,7 @@
 include: package:lints/recommended.yaml
 analyzer:
-  strong-mode:
-    implicit-casts: false
+  language:
+    strict-casts: true
   errors:
     # https://github.com/dart-lang/linter/issues/1649
     prefer_collection_literals: ignore

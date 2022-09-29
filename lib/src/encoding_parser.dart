@@ -247,8 +247,8 @@ class EncodingParser {
       return null;
     }
     // Step 3
-    final attrName = [];
-    final attrValue = [];
+    final attrName = <String>[];
+    final attrValue = <String>[];
     // Step 4 attribute name
     while (true) {
       if (c == null) {

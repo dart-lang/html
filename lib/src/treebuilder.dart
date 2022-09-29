@@ -111,7 +111,7 @@ class TreeBuilder {
     final exactNode = target is Node;
 
     var listElements1 = scopingElements;
-    var listElements2 = const [];
+    var listElements2 = const <Pair>[];
     var invert = false;
     if (variant != null) {
       switch (variant) {
