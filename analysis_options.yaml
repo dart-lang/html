@@ -1,10 +1,12 @@
 include: package:lints/recommended.yaml
+
 analyzer:
   language:
     strict-casts: true
   errors:
     # https://github.com/dart-lang/linter/issues/1649
     prefer_collection_literals: ignore
+
 linter:
   rules:
     - avoid_dynamic_calls
