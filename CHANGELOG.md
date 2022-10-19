@@ -1,4 +1,4 @@
-## 0.15.1-dev
+## 0.15.1
 
 - Move `htmlSerializeEscape` to its own library,
   `package:html/html_escape.dart`, which is exported from

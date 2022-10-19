@@ -2,7 +2,7 @@
 [![pub package](https://img.shields.io/pub/v/html.svg)](https://pub.dev/packages/html)
 [![package publisher](https://img.shields.io/pub/publisher/html.svg)](https://pub.dev/packages/html/publisher)
 
-This is a Dart HTML5 parser.
+A Dart implementation of an HTML5 parser.
 
 ## Usage
 
