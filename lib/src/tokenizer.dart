@@ -1,7 +1,9 @@
 library tokenizer;
 
 import 'dart:collection';
+
 import 'package:html/parser.dart' show HtmlParser;
+
 import 'constants.dart';
 import 'html_input_stream.dart';
 import 'token.dart';
@@ -63,7 +65,7 @@ class HtmlTokenizer implements Iterator<Token> {
   List<TagAttribute>? _attributes;
   Set<String>? _attributeNames;
 
-  HtmlTokenizer(doc,
+  HtmlTokenizer(dynamic doc,
       {String? encoding,
       bool parseMeta = true,
       this.lowercaseElementName = true,

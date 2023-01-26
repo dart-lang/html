@@ -15,6 +15,7 @@ library parser;
 
 import 'dart:collection';
 import 'dart:math';
+
 import 'package:source_span/source_span.dart';
 
 import 'dom.dart';
@@ -36,7 +37,7 @@ import 'src/utils.dart';
 /// [Node.sourceSpan] property will be `null`. When using [generateSpans] you
 /// can additionally pass [sourceUrl] to indicate where the [input] was
 /// extracted from.
-Document parse(input,
+Document parse(dynamic input,
     {String? encoding, bool generateSpans = false, String? sourceUrl}) {
   final p = HtmlParser(input,
       encoding: encoding, generateSpans: generateSpans, sourceUrl: sourceUrl);
@@ -55,7 +56,7 @@ Document parse(input,
 /// [Node.sourceSpan] property will be `null`. When using [generateSpans] you can
 /// additionally pass [sourceUrl] to indicate where the [input] was extracted
 /// from.
-DocumentFragment parseFragment(input,
+DocumentFragment parseFragment(dynamic input,
     {String container = 'div',
     String? encoding,
     bool generateSpans = false,
@@ -93,7 +94,7 @@ class HtmlParser {
 
   Phase? originalPhase;
 
-  var framesetOK = true;
+  bool framesetOK = true;
 
   // These fields hold the different phase singletons. At any given time one
   // of them will be active.
@@ -140,7 +141,7 @@ class HtmlParser {
   /// automatic conversion of element and attribute names to lower case. Note
   /// that standard way to parse HTML is to lowercase, which is what the browser
   /// DOM will do if you request `Element.outerHTML`, for example.
-  HtmlParser(input,
+  HtmlParser(dynamic input,
       {String? encoding,
       bool parseMeta = true,
       bool lowercaseElementName = true,
@@ -348,7 +349,7 @@ class HtmlParser {
       .pointSpan();
 
   void parseError(SourceSpan? span, String errorcode,
-      [Map? datavars = const {}]) {
+      [Map<String, Object?>? datavars = const {}]) {
     if (!generateSpans && span == null) {
       span = _lastSpan;
     }
@@ -3943,7 +3944,7 @@ class ParseError implements SourceSpanException {
   final String errorCode;
   @override
   final SourceSpan? span;
-  final Map? data;
+  final Map<String, Object?>? data;
 
   ParseError(this.errorCode, this.span, this.data);
 
@@ -3959,7 +3960,7 @@ class ParseError implements SourceSpanException {
   String get message => formatStr(errorMessages[errorCode]!, data);
 
   @override
-  String toString({color}) {
+  String toString({dynamic color}) {
     final res = span!.message(message, color: color);
     return span!.sourceUrl == null ? 'ParserError on $res' : 'On $res';
   }

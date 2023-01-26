@@ -2,6 +2,7 @@
 library token;
 
 import 'dart:collection';
+
 import 'package:source_span/source_span.dart';
 
 /// An html5 token.
@@ -74,7 +75,7 @@ abstract class StringToken extends Token {
 
 class ParseErrorToken extends StringToken {
   /// Extra information that goes along with the error message.
-  Map? messageParams;
+  Map<String, Object?>? messageParams;
 
   ParseErrorToken(String data, {this.messageParams}) : super(data);
 

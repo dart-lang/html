@@ -3,12 +3,14 @@ include: package:lints/recommended.yaml
 analyzer:
   language:
     strict-casts: true
+    strict-raw-types: true
   errors:
     # https://github.com/dart-lang/linter/issues/1649
     prefer_collection_literals: ignore
 
 linter:
   rules:
+    - always_declare_return_types
     - avoid_dynamic_calls
     - avoid_function_literals_in_foreach_calls
     - avoid_returning_null
@@ -17,14 +19,12 @@ linter:
     - camel_case_types
     - cancel_subscriptions
     - comment_references
-    # See https://github.com/dart-lang/logging/issues/43
-    #- constant_identifier_names
+    - constant_identifier_names
     - control_flow_in_finally
     - directives_ordering
     - empty_statements
     - hash_and_equals
     - implementation_imports
-    #- invariant_booleans
     - iterable_contains_unrelated_type
     - list_remove_unrelated_type
     - no_adjacent_strings_in_list
@@ -41,6 +41,7 @@ linter:
     - prefer_typing_uninitialized_variables
     - test_types_in_equals
     - throw_in_finally
+    - type_annotate_public_apis
     - unnecessary_brace_in_string_interps
     - unnecessary_getters_setters
     - unnecessary_lambdas

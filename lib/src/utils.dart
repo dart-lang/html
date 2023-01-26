@@ -51,7 +51,7 @@ String padWithZeros(String str, int size) {
 /// Format a string like Python's % string format operator. Right now this only
 /// supports a [data] dictionary used with %s or %08x. Those were the only
 /// things needed for [errorMessages].
-String formatStr(String format, Map? data) {
+String formatStr(String format, Map<String, Object?>? data) {
   if (data == null) return format;
   data.forEach((key, value) {
     final result = StringBuffer();

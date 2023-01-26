@@ -1,9 +1,8 @@
 /// Query selector implementation for our DOM.
 library html.src.query;
 
-import 'package:csslib/parser.dart' as css;
-import 'package:csslib/parser.dart' show TokenKind, Message;
-import 'package:csslib/visitor.dart'; // the CSSOM
+import 'package:csslib/parser.dart';
+import 'package:csslib/visitor.dart';
 import 'package:html/dom.dart';
 import 'package:html/src/constants.dart' show isWhitespaceCC;
 
@@ -23,7 +22,7 @@ List<Element> querySelectorAll(Node node, String selector) {
 // http://dev.w3.org/csswg/selectors-4/#grouping
 SelectorGroup _parseSelectorList(String selector) {
   final errors = <Message>[];
-  final group = css.parseSelectorGroup(selector, errors: errors);
+  final group = parseSelectorGroup(selector, errors: errors);
   if (group == null || errors.isNotEmpty) {
     throw FormatException("'$selector' is not a valid selector: $errors");
   }
@@ -127,7 +126,7 @@ class SelectorEvaluator extends Visitor {
       UnimplementedError("'$selector' selector of type "
           '${selector.runtimeType} is not implemented');
 
-  FormatException _unsupported(selector) =>
+  FormatException _unsupported(TreeNode selector) =>
       FormatException("'$selector' is not a valid selector");
 
   @override

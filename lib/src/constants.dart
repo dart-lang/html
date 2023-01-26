@@ -265,7 +265,7 @@ class Namespaces {
   }
 }
 
-const List scopingElements = [
+const List<Pair<String, String>> scopingElements = [
   Pair(Namespaces.html, 'applet'),
   Pair(Namespaces.html, 'caption'),
   Pair(Namespaces.html, 'html'),

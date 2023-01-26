@@ -8,6 +8,7 @@
 library html.test.selectors.level1_baseline_test;
 
 import 'dart:io';
+
 import 'package:html/dom.dart';
 import 'package:html/parser.dart';
 import 'package:path/path.dart' as p;
@@ -23,8 +24,8 @@ Future<Document> testContentDocument() async {
   return parse(File(testPath).readAsStringSync());
 }
 
-var testType = testQsaBaseline; // Only run baseline tests.
-var docType = 'html'; // Only run tests suitable for HTML
+int testType = testQsaBaseline; // Only run baseline tests.
+String docType = 'html'; // Only run tests suitable for HTML
 
 void main() async {
   /*
@@ -88,15 +89,17 @@ void main() async {
   fragment.append(element.clone(true));
 
   // Setup Tests
-  runSpecialSelectorTests('Document', doc);
-  runSpecialSelectorTests('Detached Element', detached);
-  runSpecialSelectorTests('Fragment', fragment);
-  runSpecialSelectorTests('In-document Element', element);
+  runSpecialSelectorTests('Document', SelectorAdaptor.document(doc));
+  runSpecialSelectorTests(
+      'Detached Element', SelectorAdaptor.element(detached));
+  runSpecialSelectorTests('Fragment', SelectorAdaptor.fragment(fragment));
+  runSpecialSelectorTests(
+      'In-document Element', SelectorAdaptor.element(element));
 
-  verifyStaticList('Document', doc);
-  verifyStaticList('Detached Element', detached);
-  verifyStaticList('Fragment', fragment);
-  verifyStaticList('In-document Element', element);
+  verifyStaticList('Document', SelectorAdaptor.document(doc));
+  verifyStaticList('Detached Element', SelectorAdaptor.element(detached));
+  verifyStaticList('Fragment', SelectorAdaptor.fragment(fragment));
+  verifyStaticList('In-document Element', SelectorAdaptor.element(element));
 
   // TODO(jmesserly): fix negative tests
   //runInvalidSelectorTest('Document', doc, invalidSelectors);
@@ -104,10 +107,12 @@ void main() async {
   //runInvalidSelectorTest('Fragment', fragment, invalidSelectors);
   //runInvalidSelectorTest('In-document Element', element, invalidSelectors);
 
-  runValidSelectorTest('Document', doc, validSelectors, testType, docType);
-  runValidSelectorTest(
-      'Detached Element', detached, validSelectors, testType, docType);
-  runValidSelectorTest('Fragment', fragment, validSelectors, testType, docType);
+  runValidSelectorTest('Document', SelectorAdaptor.document(doc),
+      validSelectors, testType, docType);
+  runValidSelectorTest('Detached Element', SelectorAdaptor.element(detached),
+      validSelectors, testType, docType);
+  runValidSelectorTest('Fragment', SelectorAdaptor.fragment(fragment),
+      validSelectors, testType, docType);
 
   group('out of scope', () {
     setUp(() {
@@ -115,7 +120,7 @@ void main() async {
       // None of these elements should match
     });
     tearDown(outOfScope.remove);
-    runValidSelectorTest(
-        'In-document Element', element, validSelectors, testType, docType);
+    runValidSelectorTest('In-document Element',
+        SelectorAdaptor.element(element), validSelectors, testType, docType);
   });
 }

@@ -35,7 +35,7 @@ void runParserTest(
     String? innerHTML,
     String? input,
     String? expected,
-    List? errors,
+    List<String>? errors,
     TreeBuilderFactory treeCtor,
     bool namespaceHTMLElements) {
   // XXX - move this out into the setup function
