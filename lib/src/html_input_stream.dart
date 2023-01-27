@@ -35,7 +35,7 @@ class HtmlInputStream {
   /// Raw UTF-16 codes, used if a Dart String is passed in.
   List<int>? _rawChars;
 
-  var errors = Queue<String>();
+  Queue<String> errors = Queue<String>();
 
   SourceFile? fileInfo;
 
@@ -57,7 +57,7 @@ class HtmlInputStream {
   /// element)
   ///
   /// [parseMeta] - Look for a <meta> element containing encoding information
-  HtmlInputStream(source,
+  HtmlInputStream(dynamic source,
       [String? encoding,
       bool parseMeta = true,
       this.generateSpans = false,

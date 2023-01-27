@@ -1,3 +1,8 @@
+## 0.15.2-dev
+
+- Add additional types at the API boundary (in `lib/parser.dart` and others).
+- Update to `package:lints` 2.0.
+
 ## 0.15.1
 
 - Move `htmlSerializeEscape` to its own library,

@@ -15,7 +15,7 @@ typedef TreeBuilderFactory = TreeBuilder Function(bool namespaceHTMLElements);
 Map<String, TreeBuilderFactory>? _treeTypes;
 Map<String, TreeBuilderFactory>? get treeTypes {
   // TODO(jmesserly): add DOM here once it's implemented
-  _treeTypes ??= {'simpletree': (useNs) => TreeBuilder(useNs)};
+  _treeTypes ??= {'simpletree': TreeBuilder.new};
   return _treeTypes;
 }
 
@@ -144,7 +144,7 @@ class TestSerializer extends TreeVisitor {
   }
 
   @override
-  void visitDocument(node) => _visitDocumentOrFragment(node);
+  void visitDocument(Document node) => _visitDocumentOrFragment(node);
 
   void _visitDocumentOrFragment(Node node) {
     indent += 1;

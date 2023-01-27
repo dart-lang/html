@@ -9,18 +9,14 @@
 /// from upstream.
 library html.test.selectors.level1_lib;
 
-// TODO(https://github.com/dart-lang/html/issues/173): Remove.
-// ignore_for_file: avoid_dynamic_calls
-
 import 'package:html/dom.dart';
 import 'package:test/test.dart' as unittest;
 
 late Document doc;
 
-/*
- * Create and append special elements that cannot be created correctly with HTML markup alone.
- */
-void setupSpecialElements(parent) {
+// Create and append special elements that cannot be created correctly with HTML
+// markup alone.
+void setupSpecialElements(Element parent) {
   // Setup null and undefined tests
   parent.append(doc.createElement('null'));
   parent.append(doc.createElement('undefined'));
@@ -69,38 +65,35 @@ void setupSpecialElements(parent) {
   parent.append(noNS);
 }
 
-/*
- * Verify that the NodeList returned by querySelectorAll is static and and that a new list is created after
- * each call. A static list should not be affected by subsequent changes to the DOM.
- */
-void verifyStaticList(String type, dynamic root) {
-  List pre;
-  List post;
+/// Verify that the NodeList returned by querySelectorAll is static and and that
+/// a new list is created after each call. A static list should not be affected
+/// by subsequent changes to the DOM.
+void verifyStaticList(String type, SelectorAdaptor root) {
+  List<Element> pre;
+  List<Element> post;
   late int preLength;
 
   runTest(() {
-    pre = root.querySelectorAll('div') as List;
+    pre = root.querySelectorAll('div');
     preLength = pre.length;
 
     final div = doc.createElement('div');
-    (root is Document ? root.body : root).append(div);
+    root.isDocument ? root.body!.append(div) : root.append(div);
 
     assertEquals(
         pre.length, preLength, 'The length of the NodeList should not change.');
   }, '$type: static NodeList');
 
   runTest(() {
-    post = root.querySelectorAll('div') as List;
+    post = root.querySelectorAll('div');
     assertEquals(post.length, preLength + 1,
         'The length of the new NodeList should be 1 more than the previous list.');
   }, '$type: new NodeList');
 }
 
-/*
- * Verify handling of special values for the selector parameter, including stringification of
- * null and undefined, and the handling of the empty string.
- */
-void runSpecialSelectorTests(String type, root) {
+/// Verify handling of special values for the selector parameter, including
+/// stringification of null and undefined, and the handling of the empty string.
+void runSpecialSelectorTests(String type, SelectorAdaptor root) {
   // Dart note: changed these tests because we don't have auto conversion to
   // String like JavaScript does.
   runTest(() {
@@ -115,20 +108,20 @@ void runSpecialSelectorTests(String type, root) {
         "This should find one element with the tag name 'UNDEFINED'.");
   }, '$type.querySelectorAll undefined');
 
-  runTest(() {
-    // 3
-    assertThrows((e) => e is NoSuchMethodError, () {
-      root.querySelectorAll();
-    }, 'This should throw a TypeError.');
-  }, '$type.querySelectorAll no parameter');
+  // runTest(() {
+  //   // 3
+  //   assertThrows((e) => e is NoSuchMethodError, () {
+  //     root.querySelectorAll();
+  //   }, 'This should throw a TypeError.');
+  // }, '$type.querySelectorAll no parameter');
 
   runTest(() {
     // 4
     final elm = root.querySelector('null');
     assertNotEquals(elm, null, 'This should find an element.');
     // TODO(jmesserly): change "localName" back to "tagName" once implemented.
-    assertEquals(
-        elm.localName.toUpperCase(), 'NULL', "The tag name should be 'NULL'.");
+    assertEquals(elm!.localName?.toUpperCase(), 'NULL',
+        "The tag name should be 'NULL'.");
   }, '$type.querySelector null');
 
   runTest(() {
@@ -136,23 +129,23 @@ void runSpecialSelectorTests(String type, root) {
     final elm = root.querySelector('undefined');
     assertNotEquals(elm, 'undefined', 'This should find an element.');
     // TODO(jmesserly): change "localName" back to "tagName" once implemented.
-    assertEquals(elm.localName.toUpperCase(), 'UNDEFINED',
+    assertEquals(elm!.localName?.toUpperCase(), 'UNDEFINED',
         "The tag name should be 'UNDEFINED'.");
   }, '$type.querySelector undefined');
 
-  runTest(() {
-    // 6
-    assertThrows((e) => e is NoSuchMethodError, () {
-      root.querySelector();
-    }, 'This should throw a TypeError.');
-  }, '$type.querySelector no parameter');
+  // runTest(() {
+  //   // 6
+  //   assertThrows((e) => e is NoSuchMethodError, () {
+  //     root.querySelector();
+  //   }, 'This should throw a TypeError.');
+  // }, '$type.querySelector no parameter');
 
   runTest(() {
     // 7
     final result = root.querySelectorAll('*');
     var i = 0;
-    traverse(root as Node, (elem) {
-      if (!identical(elem, root)) {
+    traverse(root.asNode!, (elem) {
+      if (!identical(elem, root.asNode)) {
         assertEquals(
             elem, result[i], 'The result in index $i should be in tree order.');
         i++;
@@ -175,8 +168,8 @@ String? _getSkip(String name) {
  * Execute queries with the specified valid selectors for both querySelector() and querySelectorAll()
  * Only run these tests when results are expected. Don't run for syntax error tests.
  */
-void runValidSelectorTest(String type, Node root,
-    List<Map<String, dynamic>> selectors, testType, docType) {
+void runValidSelectorTest(String type, SelectorAdaptor root,
+    List<Map<String, dynamic>> selectors, int testType, String docType) {
   var nodeType = '';
   switch (root.nodeType) {
     case Node.DOCUMENT_NODE:
@@ -199,16 +192,17 @@ void runValidSelectorTest(String type, Node root,
     final q = s['selector'] as String;
     final e = s['expect'] as List?;
 
-    if ((s['exclude'] is! List ||
-            (s['exclude'].indexOf(nodeType) == -1 &&
-                s['exclude'].indexOf(docType) == -1)) &&
-        (s['testType'] & testType != 0)) {
+    final exclude = s['exclude'];
+
+    if ((exclude is! List ||
+            (!(exclude).contains(nodeType) && !exclude.contains(docType))) &&
+        ((s['testType'] as int) & testType != 0)) {
       //console.log("Running tests " + nodeType + ": " + s["testType"] + "&" + testType + "=" + (s["testType"] & testType) + ": " + JSON.stringify(s))
       late List<Element> foundall;
       Element? found;
 
       runTest(() {
-        foundall = (root as dynamic).querySelectorAll(q) as List<Element>;
+        foundall = root.querySelectorAll(q);
         assertNotEquals(foundall, null, 'The method should not return null.');
         assertEquals(foundall.length, e!.length,
             'The method should return the expected number of matches.');
@@ -224,7 +218,7 @@ void runValidSelectorTest(String type, Node root,
       }, '$type.querySelectorAll: $n:$q', skip: skip);
 
       runTest(() {
-        found = (root as dynamic).querySelector(q) as Element?;
+        found = root.querySelector(q);
 
         if (e!.isNotEmpty) {
           assertNotEquals(found, null, 'The method should return a match.');
@@ -248,7 +242,8 @@ void runValidSelectorTest(String type, Node root,
  * Execute queries with the specified invalid selectors for both querySelector() and querySelectorAll()
  * Only run these tests when errors are expected. Don't run for valid selector tests.
  */
-void runInvalidSelectorTest(String type, root, List selectors) {
+void runInvalidSelectorTest(
+    String type, SelectorAdaptor root, List<Map<String, dynamic>> selectors) {
   for (var i = 0; i < selectors.length; i++) {
     final s = selectors[i];
     final n = s['name'] as String;
@@ -256,13 +251,13 @@ void runInvalidSelectorTest(String type, root, List selectors) {
 
     // Dart note: FormatException seems a reasonable mapping of SyntaxError
     runTest(() {
-      assertThrows((e) => e is FormatException, () {
+      assertThrows((Object e) => e is FormatException, () {
         root.querySelector(q);
       });
     }, '$type.querySelector: $n:$q');
 
     runTest(() {
-      assertThrows((e) => e is FormatException, () {
+      assertThrows((Object e) => e is FormatException, () {
         root.querySelectorAll(q);
       });
     }, '$type.querySelectorAll: $n:$q');
@@ -289,10 +284,64 @@ void assertTrue(bool value, String reason) =>
 void assertFalse(bool value, String reason) =>
     unittest.expect(value, unittest.isFalse, reason: reason);
 
-void assertEquals(x, y, String reason) => unittest.expect(x, y, reason: reason);
+void assertEquals(dynamic x, dynamic y, String reason) =>
+    unittest.expect(x, y, reason: reason);
 
-void assertNotEquals(x, y, String reason) =>
+void assertNotEquals(dynamic x, dynamic y, String reason) =>
     unittest.expect(x, unittest.isNot(y), reason: reason);
 
-void assertThrows(exception, void Function() body, [String? reason]) =>
+void assertThrows(Object exception, void Function() body, [String? reason]) =>
     unittest.expect(body, unittest.throwsA(exception), reason: reason);
+
+/// Used for testing.
+///
+/// This class delegates to one of three different kinds of objects. They share
+/// methods with similar signatures but do not share a type hierarchy.
+/// Previously these methods were invoked through `dynamic`.
+class SelectorAdaptor {
+  final Document? document;
+  final Element? element;
+  final DocumentFragment? fragment;
+
+  SelectorAdaptor.document(this.document)
+      : element = null,
+        fragment = null;
+
+  SelectorAdaptor.element(this.element)
+      : document = null,
+        fragment = null;
+
+  SelectorAdaptor.fragment(this.fragment)
+      : document = null,
+        element = null;
+
+  bool get isDocument => document != null;
+
+  Element? get body => document?.body;
+
+  Node? get asNode => document ?? element ?? fragment;
+
+  int get nodeType => asNode!.nodeType;
+
+  Node? get parentNode => asNode!.parentNode;
+
+  void append(Node node) {
+    asNode!.append(node);
+  }
+
+  Element? querySelector(String selector) {
+    if (document != null) return document!.querySelector(selector);
+    if (element != null) return element!.querySelector(selector);
+    if (fragment != null) return fragment!.querySelector(selector);
+
+    throw StateError('unsupported');
+  }
+
+  List<Element> querySelectorAll(String selector) {
+    if (document != null) return document!.querySelectorAll(selector);
+    if (element != null) return element!.querySelectorAll(selector);
+    if (fragment != null) return fragment!.querySelectorAll(selector);
+
+    throw StateError('unsupported');
+  }
+}

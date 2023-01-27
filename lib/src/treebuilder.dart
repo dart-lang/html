@@ -2,9 +2,11 @@
 library treebuilder;
 
 import 'dart:collection';
+
 import 'package:html/dom.dart';
 import 'package:html/parser.dart' show getElementNameTuple;
 import 'package:source_span/source_span.dart';
+
 import 'constants.dart';
 import 'list_proxy.dart';
 import 'token.dart';
@@ -47,7 +49,7 @@ class ActiveFormattingElements extends ListProxy<Element?> {
 }
 
 // TODO(jmesserly): this should exist in corelib...
-bool _mapEquals(Map a, Map b) {
+bool _mapEquals(Map<Object, String> a, Map<Object, String> b) {
   if (a.length != b.length) return false;
   if (a.isEmpty) return true;
 
@@ -85,7 +87,7 @@ class TreeBuilder {
 
   /// Switch the function used to insert an element from the
   /// normal one to the misnested table one and back again
-  var insertFromTable = false;
+  bool insertFromTable = false;
 
   TreeBuilder(bool namespaceHTMLElements)
       : defaultNamespace = namespaceHTMLElements ? Namespaces.html : null {
@@ -105,13 +107,13 @@ class TreeBuilder {
     document = Document();
   }
 
-  bool elementInScope(target, {String? variant}) {
-    //If we pass a node in we match that. if we pass a string
-    //match any node with that name
+  bool elementInScope(dynamic target, {String? variant}) {
+    // If we pass a node in we match that. If we pass a string match any node
+    // with that name.
     final exactNode = target is Node;
 
     var listElements1 = scopingElements;
-    var listElements2 = const <Pair>[];
+    var listElements2 = const <Pair<String, String>>[];
     var invert = false;
     if (variant != null) {
       switch (variant) {

@@ -22,7 +22,7 @@ abstract class ListProxy<E> extends ListBase<E> {
   E operator [](int index) => _list[index];
 
   @override
-  operator []=(int index, E value) {
+  void operator []=(int index, E value) {
     _list[index] = value;
   }
 

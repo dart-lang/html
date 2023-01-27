@@ -1,13 +1,10 @@
 @TestOn('vm')
 library tokenizer_test;
 
-// TODO(https://github.com/dart-lang/html/issues/173): Remove.
-// ignore_for_file: avoid_dynamic_calls
-
-// Note: mirrors used to match the getattr usage in the original test
 import 'dart:convert';
 import 'dart:io';
-import 'dart:mirrors';
+// Note: mirrors used to match the getattr usage in the original test
+import 'dart:mirrors' show reflect;
 
 import 'package:html/src/token.dart';
 import 'package:html/src/tokenizer.dart';
@@ -16,11 +13,37 @@ import 'package:test/test.dart';
 
 import 'support.dart';
 
+void main() async {
+  await for (var path in dataFiles('tokenizer')) {
+    if (!path.endsWith('.test')) continue;
+
+    final text = File(path).readAsStringSync();
+    final tests = jsonDecode(text) as Map<String, dynamic>;
+    final testName = pathos.basenameWithoutExtension(path);
+    final testList = tests['tests'] as List?;
+    if (testList == null) continue;
+
+    group(testName, () {
+      for (var index = 0; index < testList.length; index++) {
+        final testInfo = testList[index] as Map<String, dynamic>;
+
+        testInfo.putIfAbsent('initialStates', () => ['Data state']);
+        for (var initialState in testInfo['initialStates'] as List) {
+          test(testInfo['description'], () {
+            testInfo['initialState'] = camelCase(initialState as String);
+            runTokenizerTest(testInfo);
+          });
+        }
+      }
+    });
+  }
+}
+
 class TokenizerTestParser {
   final String? _state;
   final String? _lastStartTag;
   final bool _generateSpans;
-  List? outputTokens;
+  List<List<Object?>>? outputTokens;
 
   TokenizerTestParser(String? initialState,
       [String? lastStartTag, bool generateSpans = false])
@@ -28,7 +51,7 @@ class TokenizerTestParser {
         _lastStartTag = lastStartTag,
         _generateSpans = generateSpans;
 
-  List? parse(String str) {
+  List<dynamic>? parse(String str) {
     // Note: we need to pass bytes to the tokenizer if we want it to handle BOM.
     final bytes = utf8.encode(str);
     final tokenizer =
@@ -101,7 +124,7 @@ class TokenizerTestParser {
     addOutputToken(token, ['Character', token.data]);
   }
 
-  void processEOF(token) {}
+  void processEOF(StringToken token) {}
 
   void processParseError(StringToken token) {
     // TODO(jmesserly): when debugging test failures it can be useful to add
@@ -110,7 +133,7 @@ class TokenizerTestParser {
     addOutputToken(token, ['ParseError', token.data]);
   }
 
-  void addOutputToken(Token token, List array) {
+  void addOutputToken(Token token, List<Object?> array) {
     outputTokens!.add([
       ...array,
       if (token.span != null && _generateSpans) token.span!.start.offset,
@@ -119,14 +142,16 @@ class TokenizerTestParser {
   }
 }
 
-List concatenateCharacterTokens(List tokens) {
-  final outputTokens = [];
+/// [tokens] can contain strings, lists, and maps.
+List<dynamic> concatenateCharacterTokens(List<dynamic> tokens) {
+  final outputTokens = <dynamic>[];
   for (var token in tokens) {
-    if (token.indexOf('ParseError') == -1 && token[0] == 'Character') {
+    if (token != 'ParseError' && (token as List)[0] == 'Character') {
       if (outputTokens.isNotEmpty &&
-          outputTokens.last.indexOf('ParseError') == -1 &&
-          outputTokens.last[0] == 'Character') {
-        outputTokens.last[1] = '${outputTokens.last[1]}${token[1]}';
+          outputTokens.last != 'ParseError' &&
+          (outputTokens.last as List)[0] == 'Character') {
+        (outputTokens.last as List)[1] =
+            '${(outputTokens.last as List)[1]}${token[1]}';
       } else {
         outputTokens.add(token);
       }
@@ -137,10 +162,10 @@ List concatenateCharacterTokens(List tokens) {
   return outputTokens;
 }
 
-List normalizeTokens(List tokens) {
+List<dynamic> normalizeTokens(List<dynamic> tokens) {
   // TODO: convert tests to reflect arrays
   for (var i = 0; i < tokens.length; i++) {
-    final token = tokens[i];
+    final token = tokens[i] as List;
     if (token[0] == 'ParseError') {
       tokens[i] = token[0];
     }
@@ -152,13 +177,13 @@ List normalizeTokens(List tokens) {
 ///
 /// If the ignoreErrorOrder flag is set to true we don't test the relative
 /// positions of parse errors and non parse errors.
-void expectTokensMatch(
-    List expectedTokens, List receivedTokens, bool ignoreErrorOrder,
+void expectTokensMatch(List<dynamic> expectedTokens,
+    List<dynamic> receivedTokens, bool ignoreErrorOrder,
     [bool ignoreErrors = false, String? message]) {
   // If the 'selfClosing' attribute is not included in the expected test tokens,
   // remove it from the received token.
   var removeSelfClosing = false;
-  for (var token in expectedTokens) {
+  for (var token in expectedTokens.whereType<List<dynamic>>()) {
     if (token[0] == 'StartTag' && token.length == 3 ||
         token[0] == 'EndTag' && token.length == 2) {
       removeSelfClosing = true;
@@ -167,7 +192,7 @@ void expectTokensMatch(
   }
 
   if (removeSelfClosing) {
-    for (var token in receivedTokens) {
+    for (var token in receivedTokens.whereType<List<dynamic>>()) {
       if (token[0] == 'StartTag' || token[0] == 'EndTag') {
         token.removeLast();
       }
@@ -229,24 +254,30 @@ Map<String, dynamic> unescape(Map<String, dynamic> testInfo) {
   // TODO(sigmundch,jmesserly): we currently use jsonDecode to unescape the
   // unicode characters in the string, we should use a decoding that works with
   // any control characters.
-  dynamic decode(inp) => inp == '\u0000' ? inp : jsonDecode('"$inp"');
+  dynamic decode(String inp) => inp == '\u0000' ? inp : jsonDecode('"$inp"');
 
-  testInfo['input'] = decode(testInfo['input']);
+  testInfo['input'] = decode(testInfo['input'] as String);
+
   for (var token in testInfo['output'] as List) {
     if (token == 'ParseError') {
       continue;
-    } else {
-      token[1] = decode(token[1]);
-      if ((token as List).length > 2) {
-        for (var pair in token[2] as List) {
-          final key = pair[0];
-          final value = pair[1];
-          token[2].remove(key);
-          token[2][decode(key)] = decode(value);
-        }
+    }
+
+    token as List;
+    token[1] = decode(token[1] as String);
+
+    if ((token).length > 2) {
+      for (var pair in (token[2] as List)) {
+        pair as List;
+        final key = pair[0] as String;
+        final value = pair[1] as String;
+
+        (token[2] as Map).remove(key);
+        (token[2] as Map)[decode(key)] = decode(value);
       }
     }
   }
+
   return testInfo;
 }
 
@@ -259,30 +290,4 @@ String camelCase(String s) {
     result.write(match.group(2));
   }
   return result.toString();
-}
-
-void main() async {
-  await for (var path in dataFiles('tokenizer')) {
-    if (!path.endsWith('.test')) continue;
-
-    final text = File(path).readAsStringSync();
-    final tests = jsonDecode(text);
-    final testName = pathos.basenameWithoutExtension(path);
-    final testList = tests['tests'] as List?;
-    if (testList == null) continue;
-
-    group(testName, () {
-      for (var index = 0; index < testList.length; index++) {
-        final testInfo = testList[index] as Map<String, dynamic>;
-
-        testInfo.putIfAbsent('initialStates', () => ['Data state']);
-        for (var initialState in testInfo['initialStates'] as List) {
-          test(testInfo['description'], () {
-            testInfo['initialState'] = camelCase(initialState as String);
-            runTokenizerTest(testInfo);
-          });
-        }
-      }
-    });
-  }
 }

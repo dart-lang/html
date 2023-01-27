@@ -3,16 +3,16 @@
 library html.test.selectors.selectors;
 
 // Bit-mapped flags to indicate which tests the selector is suitable for
-final testQsaBaseline =
+final int testQsaBaseline =
     0x01; // querySelector() and querySelectorAll() baseline tests
-final testQsaAdditional =
+final int testQsaAdditional =
     0x02; // querySelector() and querySelectorAll() additional tests
-final testFindBaseline =
+final int testFindBaseline =
     0x04; // find() and findAll() baseline tests, may be unsuitable for querySelector[All]
-final testFindAdditional =
+final int testFindAdditional =
     0x08; // find() and findAll() additional tests, may be unsuitable for querySelector[All]
-final testMatchBaseline = 0x10; // matches() baseline tests
-var testMatchAdditional = 0x20; // matches() additional tests
+final int testMatchBaseline = 0x10; // matches() baseline tests
+int testMatchAdditional = 0x20; // matches() additional tests
 
 /*
  * All of these invalid selectors should result in a SyntaxError being thrown by the APIs.
@@ -74,7 +74,7 @@ final invalidSelectors = [
  *
  * Note: Interactive pseudo-classes (:active :hover and :focus) have not been tested in this test suite.
  */
-var validSelectors = [
+final List<Map<String, dynamic>> validSelectors = [
   // Type Selector
   {
     'name': 'Type selector, matching html element',
@@ -87,7 +87,7 @@ var validSelectors = [
   {
     'name': 'Type selector, matching html element',
     'selector': 'html',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'exclude': ['document'],
     'level': 1,
     'testType': testQsaBaseline
@@ -103,7 +103,7 @@ var validSelectors = [
   {
     'name': 'Type selector, matching body element',
     'selector': 'body',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'exclude': ['document'],
     'level': 1,
     'testType': testQsaBaseline
@@ -142,7 +142,7 @@ var validSelectors = [
     'name':
         'Universal selector, matching all children of empty element with specified ID',
     'selector': '#empty>*',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'level': 2,
     'testType': testQsaBaseline
   },
@@ -196,7 +196,7 @@ var validSelectors = [
     'name':
         'Attribute presence selector, not matching title attribute, case sensitivity',
     'selector': '#attr-presence [TiTlE]',
-    'expect': [],
+    'expect': <String>[],
     'exclude': ['html'],
     'level': 2,
     'testType': testQsaBaseline | testMatchBaseline
@@ -212,7 +212,7 @@ var validSelectors = [
     'name':
         'Attribute presence selector, not matching attribute with similar name',
     'selector': '.attr-presence-div3[align], .attr-presence-div4[align]',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'level': 2,
     'testType': testQsaBaseline
   },
@@ -228,7 +228,7 @@ var validSelectors = [
     'name':
         'Attribute presence selector, not matching default option without selected attribute',
     'selector': '#attr-presence-select1 option[selected]',
-    'expect': [] /* no matches */,
+    'expect': <String>[] /* no matches */,
     'level': 2,
     'testType': testQsaBaseline
   },
@@ -272,7 +272,7 @@ var validSelectors = [
     'name':
         'Attribute value selector, not matching align attribute with partial value',
     'selector': '#attr-value [align="c"]',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'level': 2,
     'testType': testQsaBaseline
   },
@@ -280,7 +280,7 @@ var validSelectors = [
     'name':
         'Attribute value selector, not matching align attribute with incorrect value',
     'selector': '#attr-value [align="centera"]',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'level': 2,
     'testType': testQsaBaseline
   },
@@ -366,7 +366,7 @@ var validSelectors = [
     'name':
         'Attribute whitespace-separated list selector, not matching class attribute with empty value',
     'selector': '#attr-whitespace [class~=""]',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'level': 2,
     'testType': testQsaBaseline
   },
@@ -374,7 +374,7 @@ var validSelectors = [
     'name':
         'Attribute whitespace-separated list selector, not matching class attribute with partial value',
     'selector': '[data-attr-whitespace~="div"]',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'level': 2,
     'testType': testQsaBaseline
   },
@@ -443,7 +443,7 @@ var validSelectors = [
     'name':
         'Attribute whitespace-separated list selector with double-quoted value, not matching value with space',
     'selector': '#attr-whitespace a[rel~="book mark"]',
-    'expect': [] /* no matches */,
+    'expect': <String>[] /* no matches */,
     'level': 2,
     'testType': testQsaBaseline
   },
@@ -461,7 +461,7 @@ var validSelectors = [
     'name':
         'Attribute hyphen-separated list selector, not matching unspecified lang attribute',
     'selector': '#attr-hyphen-div1[lang|="en"]',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'level': 2,
     'testType': testQsaBaseline
   },
@@ -485,7 +485,7 @@ var validSelectors = [
     'name':
         'Attribute hyphen-separated list selector, not matching incorrect value',
     'selector': '#attr-hyphen-div4[lang|="es-AR"]',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'level': 2,
     'testType': testQsaBaseline
   },
@@ -511,7 +511,7 @@ var validSelectors = [
     'name':
         'Attribute begins with selector, not matching class attribute not beginning with specified substring',
     'selector': '#attr-begins [class^=apple]',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'level': 3,
     'testType': testQsaAdditional
   },
@@ -535,7 +535,7 @@ var validSelectors = [
     'name':
         'Attribute begins with selector with unquoted value, not matching class attribute not beginning with specified substring',
     'selector': '#attr-begins [class^= apple]',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'level': 3,
     'testType': testQsaAdditional
   },
@@ -561,7 +561,7 @@ var validSelectors = [
     'name':
         'Attribute ends with selector, not matching class attribute not ending with specified substring',
     'selector': '#attr-ends [class\$=apple]',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'level': 3,
     'testType': testQsaAdditional
   },
@@ -585,7 +585,7 @@ var validSelectors = [
     'name':
         'Attribute ends with selector with unquoted value, not matching class attribute not ending with specified substring',
     'selector': '#attr-ends [class\$=apple ]',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'level': 3,
     'testType': testQsaAdditional
   },
@@ -717,7 +717,7 @@ var validSelectors = [
   {
     'name': ':root pseudo-class selector, not matching document root element',
     'selector': ':root',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'exclude': ['document'],
     'level': 3,
     'testType': testQsaAdditional
@@ -946,7 +946,7 @@ var validSelectors = [
         ":first-child pseudo-class selector, doesn't match non-first-child elements",
     'selector':
         '.pseudo-first-child-div2:first-child, .pseudo-first-child-div3:first-child',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'level': 2,
     'testType': testQsaBaseline
   },
@@ -977,7 +977,7 @@ var validSelectors = [
         ":last-child pseudo-class selector, doesn't match non-last-child elements",
     'selector':
         '.pseudo-last-child-div1:last-child, .pseudo-last-child-div2:first-child',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'level': 3,
     'testType': testQsaAdditional
   },
@@ -1007,7 +1007,7 @@ var validSelectors = [
     'name':
         ':pseudo-only-child pseudo-class selector, matching only-child em elements',
     'selector': '#pseudo-only em:only-child',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'level': 3,
     'testType': testQsaAdditional
   },
@@ -1070,7 +1070,7 @@ var validSelectors = [
     'name':
         ':link and :visited pseudo-class selectors, not matching link elements with href attributes',
     'selector': '#head :link, #head :visited',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'exclude': ['document'],
     'level': 1,
     'testType': testQsaBaseline
@@ -1079,7 +1079,7 @@ var validSelectors = [
     'name':
         ':link and :visited pseudo-class selectors, chained, mutually exclusive pseudo-classes match nothing',
     'selector': ':link:visited',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'exclude': ['document'],
     'level': 1,
     'testType': testQsaBaseline
@@ -1090,7 +1090,7 @@ var validSelectors = [
     'name':
         ':target pseudo-class selector, matching the element referenced by the URL fragment identifier',
     'selector': ':target',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'exclude': ['document', 'element'],
     'level': 3,
     'testType': testQsaAdditional
@@ -1118,7 +1118,7 @@ var validSelectors = [
     'name':
         ':lang pseudo-class selector, not matching element with no inherited language',
     'selector': '#pseudo-lang-div1:lang(en)',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'exclude': ['document', 'element'],
     'level': 2,
     'testType': testQsaBaseline
@@ -1142,7 +1142,7 @@ var validSelectors = [
   {
     'name': ':lang pseudo-class selector, not matching incorrect language',
     'selector': '#pseudo-lang-div4:lang(es-AR)',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'level': 2,
     'testType': testQsaBaseline
   },
@@ -1224,14 +1224,14 @@ var validSelectors = [
   {
     'name': ':not pseudo-class selector, matching nothing',
     'selector': ':not(*)',
-    'expect': [] /* no matches */,
+    'expect': <String>[] /* no matches */,
     'level': 3,
     'testType': testQsaAdditional
   },
   {
     'name': ':not pseudo-class selector, matching nothing',
     'selector': ':not(*|*)',
-    'expect': [] /* no matches */,
+    'expect': <String>[] /* no matches */,
     'level': 3,
     'testType': testQsaAdditional
   },
@@ -1242,7 +1242,7 @@ var validSelectors = [
     'name':
         ':first-line pseudo-element (one-colon syntax) selector, not matching any elements',
     'selector': '#pseudo-element:first-line',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'level': 2,
     'testType': testQsaBaseline
   },
@@ -1250,7 +1250,7 @@ var validSelectors = [
     'name':
         '::first-line pseudo-element (two-colon syntax) selector, not matching any elements',
     'selector': '#pseudo-element::first-line',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'level': 3,
     'testType': testQsaAdditional
   },
@@ -1260,7 +1260,7 @@ var validSelectors = [
     'name':
         ':first-letter pseudo-element (one-colon syntax) selector, not matching any elements',
     'selector': '#pseudo-element:first-letter',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'level': 2,
     'testType': testQsaBaseline
   },
@@ -1268,7 +1268,7 @@ var validSelectors = [
     'name':
         '::first-letter pseudo-element (two-colon syntax) selector, not matching any elements',
     'selector': '#pseudo-element::first-letter',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'level': 3,
     'testType': testQsaAdditional
   },
@@ -1278,7 +1278,7 @@ var validSelectors = [
     'name':
         ':before pseudo-element (one-colon syntax) selector, not matching any elements',
     'selector': '#pseudo-element:before',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'level': 2,
     'testType': testQsaBaseline
   },
@@ -1286,7 +1286,7 @@ var validSelectors = [
     'name':
         '::before pseudo-element (two-colon syntax) selector, not matching any elements',
     'selector': '#pseudo-element::before',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'level': 3,
     'testType': testQsaAdditional
   },
@@ -1296,7 +1296,7 @@ var validSelectors = [
     'name':
         ':after pseudo-element (one-colon syntax) selector, not matching any elements',
     'selector': '#pseudo-element:after',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'level': 2,
     'testType': testQsaBaseline
   },
@@ -1304,7 +1304,7 @@ var validSelectors = [
     'name':
         '::after pseudo-element (two-colon syntax) selector, not matching any elements',
     'selector': '#pseudo-element::after',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'level': 3,
     'testType': testQsaAdditional
   },
@@ -1413,14 +1413,14 @@ var validSelectors = [
   {
     'name': 'ID selector, not matching non-existent descendant',
     'selector': '#id #none',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'level': 1,
     'testType': testQsaBaseline
   },
   {
     'name': 'ID selector, not matching non-existent ancestor',
     'selector': '#none #id-div1',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'level': 1,
     'testType': testQsaBaseline
   },
@@ -1565,7 +1565,7 @@ var validSelectors = [
     'name':
         'Descendant combinator, not matching element with id that is not a descendant of an element with id',
     'selector': '#descendant-div1 #descendant-div4',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'level': 1,
     'testType': testQsaBaseline
   },
@@ -1622,7 +1622,7 @@ var validSelectors = [
     'name':
         'Child combinator, not matching element with id that is not a child of an element with id',
     'selector': '#child>#child-div3',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'level': 2,
     'testType': testQsaBaseline
   },
@@ -1630,7 +1630,7 @@ var validSelectors = [
     'name':
         'Child combinator, not matching element with id that is not a child of an element with class',
     'selector': '#child-div1>.child-div3',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'level': 2,
     'testType': testQsaBaseline
   },
@@ -1638,7 +1638,7 @@ var validSelectors = [
     'name':
         'Child combinator, not matching element with class that is not a child of an element with class',
     'selector': '.child-div1>.child-div3',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'level': 2,
     'testType': testQsaBaseline
   },
@@ -1724,7 +1724,7 @@ var validSelectors = [
     'name':
         'Adjacent sibling combinator, not matching element with id that is not an adjacent sibling of an element with id',
     'selector': '#adjacent-div2+#adjacent-p2, #adjacent-div2+#adjacent-div1',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'level': 2,
     'testType': testQsaBaseline
   },
@@ -1802,7 +1802,7 @@ var validSelectors = [
     'name':
         'General sibling combinator, not matching element with id that is not a sibling after a p element',
     'selector': '#sibling>p~div',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'level': 3,
     'testType': testQsaAdditional
   },
@@ -1810,7 +1810,7 @@ var validSelectors = [
     'name':
         'General sibling combinator, not matching element with id that is not a sibling after an element with id',
     'selector': '#sibling-div2~#sibling-div3, #sibling-div2~#sibling-div1',
-    'expect': [] /*no matches*/,
+    'expect': <String>[] /*no matches*/,
     'level': 3,
     'testType': testQsaAdditional
   },
