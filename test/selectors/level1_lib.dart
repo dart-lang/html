@@ -195,7 +195,7 @@ void runValidSelectorTest(String type, SelectorAdaptor root,
     final exclude = s['exclude'];
 
     if ((exclude is! List ||
-            (!(exclude).contains(nodeType) && !exclude.contains(docType))) &&
+            (!exclude.contains(nodeType) && !exclude.contains(docType))) &&
         ((s['testType'] as int) & testType != 0)) {
       //console.log("Running tests " + nodeType + ": " + s["testType"] + "&" + testType + "=" + (s["testType"] & testType) + ": " + JSON.stringify(s))
       late List<Element> foundall;

@@ -266,8 +266,8 @@ Map<String, dynamic> unescape(Map<String, dynamic> testInfo) {
     token as List;
     token[1] = decode(token[1] as String);
 
-    if ((token).length > 2) {
-      for (var pair in (token[2] as List)) {
+    if (token.length > 2) {
+      for (var pair in token[2] as List) {
         pair as List;
         final key = pair[0] as String;
         final value = pair[1] as String;

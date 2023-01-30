@@ -1,9 +1,8 @@
 import 'constants.dart';
 import 'html_input_stream.dart';
 
-// TODO(jmesserly): I converted StopIteration to StateError("No more elements").
-// Seems strange to throw this from outside of an iterator though.
-/// String-like object with an associated position and various extra methods
+/// String-like object with an associated position and various extra methods.
+///
 /// If the position is ever greater than the string length then an exception is
 /// raised.
 class EncodingBytes {
@@ -17,7 +16,7 @@ class EncodingBytes {
   String _next() {
     final p = __position = __position + 1;
     if (p >= _length) {
-      throw StateError('No more elements');
+      throw _EncodingRangeException('No more elements');
     } else if (p < 0) {
       throw RangeError(p);
     }
@@ -27,7 +26,7 @@ class EncodingBytes {
   String _previous() {
     var p = __position;
     if (p >= _length) {
-      throw StateError('No more elements');
+      throw _EncodingRangeException('No more elements');
     } else if (p < 0) {
       throw RangeError(p);
     }
@@ -37,14 +36,14 @@ class EncodingBytes {
 
   set _position(int value) {
     if (__position >= _length) {
-      throw StateError('No more elements');
+      throw _EncodingRangeException('No more elements');
     }
     __position = value;
   }
 
   int get _position {
     if (__position >= _length) {
-      throw StateError('No more elements');
+      throw _EncodingRangeException('No more elements');
     }
     if (__position >= 0) {
       return __position;
@@ -108,7 +107,7 @@ class EncodingBytes {
       __position = newPosition + bytes.length - 1;
       return true;
     } else {
-      throw StateError('No more elements');
+      throw _EncodingRangeException('No more elements');
     }
   }
 
@@ -161,7 +160,7 @@ class EncodingParser {
         }
         _data._position += 1;
       }
-    } on StateError catch (_) {
+    } on _EncodingRangeException catch (_) {
       // Catch this here to match behavior of Python's StopIteration
       // TODO(jmesserly): refactor to not use exceptions
     }
@@ -355,12 +354,12 @@ class ContentAttrParser {
         try {
           data._skipUntil(isWhitespace);
           return data._slice(oldPosition, data._position);
-        } on StateError catch (_) {
+        } on _EncodingRangeException catch (_) {
           //Return the whole remaining value
           return data._slice(oldPosition);
         }
       }
-    } on StateError catch (_) {
+    } on _EncodingRangeException catch (_) {
       return null;
     }
   }
@@ -371,3 +370,9 @@ bool _isSpaceOrAngleBracket(String char) {
 }
 
 typedef _CharPredicate = bool Function(String char);
+
+class _EncodingRangeException implements Exception {
+  final String message;
+
+  _EncodingRangeException(this.message);
+}

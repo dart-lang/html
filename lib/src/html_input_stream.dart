@@ -22,7 +22,7 @@ class HtmlInputStream {
   /// The name of the character encoding.
   String? charEncodingName;
 
-  /// True if we are certain about [charEncodingName], false for tenative.
+  /// True if we are certain about [charEncodingName], false for tentative.
   bool charEncodingCertain = true;
 
   final bool generateSpans;

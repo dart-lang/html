@@ -151,7 +151,7 @@ class HtmlParser {
       String? sourceUrl,
       TreeBuilder? tree})
       : tree = tree ?? TreeBuilder(true),
-        tokenizer = (input is HtmlTokenizer
+        tokenizer = input is HtmlTokenizer
             ? input
             : HtmlTokenizer(input,
                 encoding: encoding,
@@ -159,7 +159,7 @@ class HtmlParser {
                 lowercaseElementName: lowercaseElementName,
                 lowercaseAttrName: lowercaseAttrName,
                 generateSpans: generateSpans,
-                sourceUrl: sourceUrl)) {
+                sourceUrl: sourceUrl) {
     tokenizer.parser = this;
   }
 
@@ -653,9 +653,9 @@ class InitialPhase extends Phase {
     final systemId = token.systemId;
     final correct = token.correct;
 
-    if ((name != 'html' ||
+    if (name != 'html' ||
         publicId != null ||
-        systemId != null && systemId != 'about:legacy-compat')) {
+        systemId != null && systemId != 'about:legacy-compat') {
       parser.parseError(token.span, 'unknown-doctype');
     }
 
@@ -1573,8 +1573,8 @@ class InBodyPhase extends Phase {
 
   void startTagFrameset(StartTagToken token) {
     parser.parseError(token.span, 'unexpected-start-tag', {'name': 'frameset'});
-    if ((tree.openElements.length == 1 ||
-        tree.openElements[1].localName != 'body')) {
+    if (tree.openElements.length == 1 ||
+        tree.openElements[1].localName != 'body') {
       assert(parser.innerHTMLMode);
     } else if (parser.framesetOK) {
       if (tree.openElements[1].parentNode != null) {
@@ -2121,7 +2121,7 @@ class InBodyPhase extends Phase {
         }
         // Step 6.4
         if (lastNode == furthestBlock) {
-          bookmark = (tree.activeFormattingElements.indexOf(node) + 1);
+          bookmark = tree.activeFormattingElements.indexOf(node) + 1;
         }
         // Step 6.5
         //cite = node.parent
