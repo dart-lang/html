@@ -2,6 +2,8 @@
 
 - Add additional types at the API boundary (in `lib/parser.dart` and others).
 - Update to `package:lints` 2.0.
+- Fixed an issue with `querySelector` where it would fail in some cases with
+  descendant or sibling combinators (#157).
 
 ## 0.15.1
 

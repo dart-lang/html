@@ -1,7 +1,7 @@
 library query_selector_test;
 
-import 'package:test/test.dart';
 import 'package:html/dom.dart';
+import 'package:test/test.dart';
 
 void main() {
   group('querySelector descendant', () {
