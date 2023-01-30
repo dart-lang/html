@@ -60,7 +60,7 @@ class AttributeName implements Comparable<Object> {
   int compareTo(Object other) {
     // Not sure about this sort order
     if (other is! AttributeName) return 1;
-    var cmp = (prefix ?? '').compareTo((other.prefix ?? ''));
+    var cmp = (prefix ?? '').compareTo(other.prefix ?? '');
     if (cmp != 0) return cmp;
     cmp = name.compareTo(other.name);
     if (cmp != 0) return cmp;

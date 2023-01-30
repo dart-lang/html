@@ -200,7 +200,7 @@ const Map<String, String> errorMessages = {
   'unexpected-end-tag-after-body': 'Unexpected end tag token (%(name)s)'
       ' in the after body phase.',
   'unexpected-char-in-frameset':
-      'Unepxected characters in the frameset phase. Characters ignored.',
+      'Unexpected characters in the frameset phase. Characters ignored.',
   'unexpected-start-tag-in-frameset': 'Unexpected start tag token (%(name)s)'
       ' in the frameset phase. Ignored.',
   'unexpected-frameset-in-frameset-innerhtml':
