@@ -69,22 +69,25 @@ class SelectorEvaluator extends Visitor {
     for (var s in node.simpleSelectorSequences.reversed) {
       if (combinator == null) {
         result = s.simpleSelector.visit(this) as bool;
-      } else if (combinator == TokenKind.COMBINATOR_DESCENDANT) {
-        // descendant combinator
-        // http://dev.w3.org/csswg/selectors-4/#descendant-combinators
-        do {
-          _element = _element!.parent;
-        } while (_element != null && !(s.simpleSelector.visit(this) as bool));
+      } else {
+        if (combinator == TokenKind.COMBINATOR_DESCENDANT) {
+          // descendant combinator
+          // http://dev.w3.org/csswg/selectors-4/#descendant-combinators
+          do {
+            _element = _element!.parent;
+          } while (_element != null && !(s.simpleSelector.visit(this) as bool));
 
-        if (_element == null) result = false;
-      } else if (combinator == TokenKind.COMBINATOR_TILDE) {
-        // Following-sibling combinator
-        // http://dev.w3.org/csswg/selectors-4/#general-sibling-combinators
-        do {
-          _element = _element!.previousElementSibling;
-        } while (_element != null && !(s.simpleSelector.visit(this) as bool));
+          if (_element == null) result = false;
+        } else if (combinator == TokenKind.COMBINATOR_TILDE) {
+          // Following-sibling combinator
+          // http://dev.w3.org/csswg/selectors-4/#general-sibling-combinators
+          do {
+            _element = _element!.previousElementSibling;
+          } while (_element != null && !(s.simpleSelector.visit(this) as bool));
 
-        if (_element == null) result = false;
+          if (_element == null) result = false;
+        }
+        combinator = null;
       }
 
       if (!result) break;

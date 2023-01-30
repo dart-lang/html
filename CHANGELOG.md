@@ -2,6 +2,8 @@
 
 - Add additional types at the API boundary (in `lib/parser.dart` and others).
 - Adopted the `package:dart_flutter_team_lints` linting rules.
+- Fixed an issue with `querySelector` where it would fail in some cases with
+  descendant or sibling combinators (#157).
 
 ## 0.15.1
 
