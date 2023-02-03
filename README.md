@@ -9,9 +9,9 @@ A Dart implementation of an HTML5 parser.
 Parsing HTML is easy!
 
 ```dart
-import 'package:html/parser.dart' show parse;
+import 'package:html/parser.dart';
 
-main() {
+void main() {
   var document = parse(
       '<body>Hello world! <a href="www.html5rocks.com">HTML5 rocks!');
   print(document.outerHtml);
