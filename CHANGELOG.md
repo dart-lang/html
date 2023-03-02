@@ -1,4 +1,4 @@
-## 0.15.2-dev
+## 0.15.2
 
 - Add additional types at the API boundary (in `lib/parser.dart` and others).
 - Adopted the `package:dart_flutter_team_lints` linting rules.
