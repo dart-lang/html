@@ -103,7 +103,7 @@ abstract class _ParentNode implements Node {
 }
 
 // http://dom.spec.whatwg.org/#interface-nonelementparentnode
-abstract class _NonElementParentNode implements _ParentNode {
+mixin _NonElementParentNode implements _ParentNode {
   // TODO(jmesserly): could be faster, should throw on invalid id.
   Element? getElementById(String id) => querySelector('#$id');
 }
@@ -112,7 +112,7 @@ abstract class _NonElementParentNode implements _ParentNode {
 // common methods from these:
 // http://dom.spec.whatwg.org/#interface-document
 // http://dom.spec.whatwg.org/#element
-abstract class _ElementAndDocument implements _ParentNode {
+mixin _ElementAndDocument implements _ParentNode {
   // TODO(jmesserly): could be faster, should throw on invalid tag/class names.
 
   List<Element> getElementsByTagName(String localName) =>
