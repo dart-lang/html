@@ -76,7 +76,7 @@ class AttributeName implements Comparable<Object> {
 }
 
 // http://dom.spec.whatwg.org/#parentnode
-abstract class _ParentNode implements Node {
+mixin _ParentNode implements Node {
   // TODO(jmesserly): this is only a partial implementation
 
   /// Seaches for the first descendant node matching the given selectors, using
@@ -103,7 +103,7 @@ abstract class _ParentNode implements Node {
 }
 
 // http://dom.spec.whatwg.org/#interface-nonelementparentnode
-abstract class _NonElementParentNode implements _ParentNode {
+mixin _NonElementParentNode implements _ParentNode {
   // TODO(jmesserly): could be faster, should throw on invalid id.
   Element? getElementById(String id) => querySelector('#$id');
 }
