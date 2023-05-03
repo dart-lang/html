@@ -1,3 +1,7 @@
+## 0.15.3
+
+- Added package topics to the pubspec file.
+
 ## 0.15.2
 
 - Add additional types at the API boundary (in `lib/parser.dart` and others).
