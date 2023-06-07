@@ -3,7 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 // TODO(jmesserly): everything in this file is copied straight from "dart:html".
-library html.dom.src;
 
 import 'dart:collection';
 

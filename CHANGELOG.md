@@ -1,3 +1,8 @@
+## 0.15.4
+
+- Widen the dependency on `package:csslib`.
+- Require Dart `2.19`.
+
 ## 0.15.3
 
 - Added package topics to the pubspec file.
