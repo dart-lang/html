@@ -1,5 +1,3 @@
-library query_selector_test;
-
 import 'package:html/dom.dart';
 import 'package:test/test.dart';
 

@@ -1,5 +1,3 @@
-library tokenizer;
-
 import 'dart:collection';
 
 import 'package:html/parser.dart' show HtmlParser;
