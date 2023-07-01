@@ -1,5 +1,5 @@
 name: html
-version: 0.15.4
+version: 0.15.5-wip
 description: APIs for parsing and manipulating HTML content outside the browser.
 repository: https://github.com/dart-lang/html
 

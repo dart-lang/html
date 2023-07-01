@@ -124,8 +124,6 @@ class TokenizerTestParser {
     addOutputToken(token, ['Character', token.data]);
   }
 
-  void processEOF(StringToken token) {}
-
   void processParseError(StringToken token) {
     // TODO(jmesserly): when debugging test failures it can be useful to add
     // logging here like `print('ParseError $token');`. It would be nice to
