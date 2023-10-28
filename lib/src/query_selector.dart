@@ -111,8 +111,6 @@ class SelectorEvaluator extends Visitor {
           break;
         case TokenKind.COMBINATOR_NONE:
           break;
-        default:
-          throw _unsupported(node);
       }
 
       if (_element == null) {
@@ -124,13 +122,6 @@ class SelectorEvaluator extends Visitor {
     _element = old;
     return result;
   }
-
-  UnimplementedError _unimplemented(SimpleSelector selector) =>
-      UnimplementedError("'$selector' selector of type "
-          '${selector.runtimeType} is not implemented');
-
-  FormatException _unsupported(TreeNode selector) =>
-      FormatException("'$selector' is not a valid selector");
 
   @override
   bool visitPseudoClassSelector(PseudoClassSelector node) {
@@ -180,28 +171,10 @@ class SelectorEvaluator extends Visitor {
   }
 
   @override
-  bool visitPseudoElementSelector(PseudoElementSelector node) {
-    // :before, :after, :first-letter/line can't match DOM elements.
-    if (_isLegacyPsuedoClass(node.name)) return false;
-
-    throw _unimplemented(node);
-  }
-
-  static bool _isLegacyPsuedoClass(String name) {
-    switch (name) {
-      case 'before':
-      case 'after':
-      case 'first-line':
-      case 'first-letter':
-        return true;
-      default:
-        return false;
-    }
-  }
+  bool visitPseudoElementSelector(PseudoElementSelector node) => false;
 
   @override
-  bool visitPseudoElementFunctionSelector(PseudoElementFunctionSelector node) =>
-      throw _unimplemented(node);
+  bool visitPseudoElementFunctionSelector(PseudoElementFunctionSelector node) => false;
 
   @override
   bool visitPseudoClassFunctionSelector(PseudoClassFunctionSelector node) {
@@ -230,7 +203,7 @@ class SelectorEvaluator extends Visitor {
         // TODO(jmesserly): implement wildcards in level 4
         return lang != null && lang.startsWith(toMatch);
     }
-    throw _unimplemented(node);
+    return false;
   }
 
   static String? _getInheritedLanguage(Node? node) {
@@ -251,7 +224,7 @@ class SelectorEvaluator extends Visitor {
 
     if (node.namespace == '') return _element!.namespaceUri == null;
 
-    throw _unimplemented(node);
+    return false;
   }
 
   @override
@@ -296,7 +269,7 @@ class SelectorEvaluator extends Visitor {
       case TokenKind.SUBSTRING_MATCH:
         return value.contains(select);
       default:
-        throw _unsupported(node);
+        return false;
     }
   }
 }
