@@ -12,22 +12,16 @@ export 'html_escape.dart';
 /// A simple tree visitor for the DOM nodes.
 class TreeVisitor {
   void visit(Node node) {
-    switch (node.nodeType) {
-      case Node.ELEMENT_NODE:
-        return visitElement(node as Element);
-      case Node.TEXT_NODE:
-        return visitText(node as Text);
-      case Node.COMMENT_NODE:
-        return visitComment(node as Comment);
-      case Node.DOCUMENT_FRAGMENT_NODE:
-        return visitDocumentFragment(node as DocumentFragment);
-      case Node.DOCUMENT_NODE:
-        return visitDocument(node as Document);
-      case Node.DOCUMENT_TYPE_NODE:
-        return visitDocumentType(node as DocumentType);
-      default:
-        throw UnsupportedError('DOM node type ${node.nodeType}');
-    }
+    return switch (node.nodeType) {
+      Node.ELEMENT_NODE => visitElement(node as Element),
+      Node.TEXT_NODE => visitText(node as Text),
+      Node.COMMENT_NODE => visitComment(node as Comment),
+      Node.DOCUMENT_FRAGMENT_NODE =>
+        visitDocumentFragment(node as DocumentFragment),
+      Node.DOCUMENT_NODE => visitDocument(node as Document),
+      Node.DOCUMENT_TYPE_NODE => visitDocumentType(node as DocumentType),
+      _ => throw UnsupportedError('DOM node type ${node.nodeType}')
+    };
   }
 
   void visitChildren(Node node) {

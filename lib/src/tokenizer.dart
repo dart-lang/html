@@ -1,6 +1,6 @@
 import 'dart:collection';
 
-import 'package:html/parser.dart' show HtmlParser;
+import '../parser.dart' show HtmlParser;
 
 import 'constants.dart';
 import 'html_input_stream.dart';
