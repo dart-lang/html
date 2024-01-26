@@ -633,7 +633,7 @@ class Phase {
 }
 
 class InitialPhase extends Phase {
-  InitialPhase(HtmlParser parser) : super(parser);
+  InitialPhase(super.parser);
 
   @override
   Token? processSpaceCharacters(SpaceCharactersToken token) {
@@ -788,7 +788,7 @@ class InitialPhase extends Phase {
 }
 
 class BeforeHtmlPhase extends Phase {
-  BeforeHtmlPhase(HtmlParser parser) : super(parser);
+  BeforeHtmlPhase(super.parser);
 
   // helper methods
   void insertHtmlElement() {
@@ -849,7 +849,7 @@ class BeforeHtmlPhase extends Phase {
 }
 
 class BeforeHeadPhase extends Phase {
-  BeforeHeadPhase(HtmlParser parser) : super(parser);
+  BeforeHeadPhase(super.parser);
 
   @override
   Token? processStartTag(StartTagToken token) {
@@ -923,7 +923,7 @@ class BeforeHeadPhase extends Phase {
 }
 
 class InHeadPhase extends Phase {
-  InHeadPhase(HtmlParser parser) : super(parser);
+  InHeadPhase(super.parser);
 
   @override
   Token? processStartTag(StartTagToken token) {
@@ -1070,7 +1070,7 @@ class InHeadPhase extends Phase {
 // class InHeadNoScriptPhase extends Phase {
 
 class AfterHeadPhase extends Phase {
-  AfterHeadPhase(HtmlParser parser) : super(parser);
+  AfterHeadPhase(super.parser);
 
   @override
   Token? processStartTag(StartTagToken token) {
@@ -1189,7 +1189,7 @@ class InBodyPhase extends Phase {
 
   // http://www.whatwg.org/specs/web-apps/current-work///parsing-main-inbody
   // the really-really-really-very crazy mode
-  InBodyPhase(HtmlParser parser) : super(parser);
+  InBodyPhase(super.parser);
 
   @override
   Token? processStartTag(StartTagToken token) {
@@ -2227,7 +2227,7 @@ class InBodyPhase extends Phase {
 }
 
 class TextPhase extends Phase {
-  TextPhase(HtmlParser parser) : super(parser);
+  TextPhase(super.parser);
 
   // "Tried to process start tag %s in RCDATA/RAWTEXT mode"%token.name
   @override
@@ -2277,7 +2277,7 @@ class TextPhase extends Phase {
 
 class InTablePhase extends Phase {
   // http://www.whatwg.org/specs/web-apps/current-work///in-table
-  InTablePhase(HtmlParser parser) : super(parser);
+  InTablePhase(super.parser);
 
   @override
   Token? processStartTag(StartTagToken token) {
@@ -2507,9 +2507,7 @@ class InTableTextPhase extends Phase {
   Phase? originalPhase;
   List<StringToken> characterTokens;
 
-  InTableTextPhase(HtmlParser parser)
-      : characterTokens = <StringToken>[],
-        super(parser);
+  InTableTextPhase(super.parser) : characterTokens = <StringToken>[];
 
   void flushCharacters() {
     if (characterTokens.isEmpty) return;
@@ -2578,7 +2576,7 @@ class InTableTextPhase extends Phase {
 
 class InCaptionPhase extends Phase {
   // http://www.whatwg.org/specs/web-apps/current-work///in-caption
-  InCaptionPhase(HtmlParser parser) : super(parser);
+  InCaptionPhase(super.parser);
 
   @override
   Token? processStartTag(StartTagToken token) {
@@ -2700,7 +2698,7 @@ class InCaptionPhase extends Phase {
 
 class InColumnGroupPhase extends Phase {
   // http://www.whatwg.org/specs/web-apps/current-work///in-column
-  InColumnGroupPhase(HtmlParser parser) : super(parser);
+  InColumnGroupPhase(super.parser);
 
   @override
   Token? processStartTag(StartTagToken token) {
@@ -2788,7 +2786,7 @@ class InColumnGroupPhase extends Phase {
 
 class InTableBodyPhase extends Phase {
   // http://www.whatwg.org/specs/web-apps/current-work///in-table0
-  InTableBodyPhase(HtmlParser parser) : super(parser);
+  InTableBodyPhase(super.parser);
 
   @override
   Token? processStartTag(StartTagToken token) {
@@ -2927,7 +2925,7 @@ class InTableBodyPhase extends Phase {
 
 class InRowPhase extends Phase {
   // http://www.whatwg.org/specs/web-apps/current-work///in-row
-  InRowPhase(HtmlParser parser) : super(parser);
+  InRowPhase(super.parser);
 
   @override
   Token? processStartTag(StartTagToken token) {
@@ -3073,7 +3071,7 @@ class InRowPhase extends Phase {
 
 class InCellPhase extends Phase {
   // http://www.whatwg.org/specs/web-apps/current-work///in-cell
-  InCellPhase(HtmlParser parser) : super(parser);
+  InCellPhase(super.parser);
 
   @override
   Token? processStartTag(StartTagToken token) {
@@ -3197,7 +3195,7 @@ class InCellPhase extends Phase {
 }
 
 class InSelectPhase extends Phase {
-  InSelectPhase(HtmlParser parser) : super(parser);
+  InSelectPhase(super.parser);
 
   @override
   Token? processStartTag(StartTagToken token) {
@@ -3353,7 +3351,7 @@ class InSelectPhase extends Phase {
 }
 
 class InSelectInTablePhase extends Phase {
-  InSelectInTablePhase(HtmlParser parser) : super(parser);
+  InSelectInTablePhase(super.parser);
 
   @override
   Token? processStartTag(StartTagToken token) {
@@ -3479,7 +3477,7 @@ class InForeignContentPhase extends Phase {
     'var'
   ];
 
-  InForeignContentPhase(HtmlParser parser) : super(parser);
+  InForeignContentPhase(super.parser);
 
   void adjustSVGTagNames(StartTagToken token) {
     final replacements = const {
@@ -3609,7 +3607,7 @@ class InForeignContentPhase extends Phase {
 }
 
 class AfterBodyPhase extends Phase {
-  AfterBodyPhase(HtmlParser parser) : super(parser);
+  AfterBodyPhase(super.parser);
 
   @override
   Token? processStartTag(StartTagToken token) {
@@ -3681,7 +3679,7 @@ class AfterBodyPhase extends Phase {
 
 class InFramesetPhase extends Phase {
   // http://www.whatwg.org/specs/web-apps/current-work///in-frameset
-  InFramesetPhase(HtmlParser parser) : super(parser);
+  InFramesetPhase(super.parser);
 
   @override
   Token? processStartTag(StartTagToken token) {
@@ -3774,7 +3772,7 @@ class InFramesetPhase extends Phase {
 
 class AfterFramesetPhase extends Phase {
   // http://www.whatwg.org/specs/web-apps/current-work///after3
-  AfterFramesetPhase(HtmlParser parser) : super(parser);
+  AfterFramesetPhase(super.parser);
 
   @override
   Token? processStartTag(StartTagToken token) {
@@ -3831,7 +3829,7 @@ class AfterFramesetPhase extends Phase {
 }
 
 class AfterAfterBodyPhase extends Phase {
-  AfterAfterBodyPhase(HtmlParser parser) : super(parser);
+  AfterAfterBodyPhase(super.parser);
 
   @override
   Token? processStartTag(StartTagToken token) {
@@ -3882,7 +3880,7 @@ class AfterAfterBodyPhase extends Phase {
 }
 
 class AfterAfterFramesetPhase extends Phase {
-  AfterAfterFramesetPhase(HtmlParser parser) : super(parser);
+  AfterAfterFramesetPhase(super.parser);
 
   @override
   Token? processStartTag(StartTagToken token) {

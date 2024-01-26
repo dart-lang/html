@@ -3,10 +3,10 @@ library treebuilder;
 
 import 'dart:collection';
 
-import 'package:html/dom.dart';
-import 'package:html/parser.dart' show getElementNameTuple;
 import 'package:source_span/source_span.dart';
 
+import '../dom.dart';
+import '../parser.dart' show getElementNameTuple;
 import 'constants.dart';
 import 'list_proxy.dart';
 import 'token.dart';

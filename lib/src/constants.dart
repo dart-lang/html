@@ -246,22 +246,15 @@ class Namespaces {
   Namespaces._();
 
   static String? getPrefix(String? url) {
-    switch (url) {
-      case html:
-        return 'html';
-      case mathml:
-        return 'math';
-      case svg:
-        return 'svg';
-      case xlink:
-        return 'xlink';
-      case xml:
-        return 'xml';
-      case xmlns:
-        return 'xmlns';
-      default:
-        return null;
-    }
+    return switch (url) {
+      html => 'html',
+      mathml => 'math',
+      svg => 'svg',
+      xlink => 'xlink',
+      xml => 'xml',
+      xmlns => 'xmlns',
+      _ => null
+    };
   }
 }
 

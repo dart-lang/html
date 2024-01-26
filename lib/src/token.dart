@@ -77,14 +77,14 @@ class ParseErrorToken extends StringToken {
   /// Extra information that goes along with the error message.
   Map<String, Object?>? messageParams;
 
-  ParseErrorToken(String data, {this.messageParams}) : super(data);
+  ParseErrorToken(String super.data, {this.messageParams});
 
   @override
   int get kind => TokenKind.parseError;
 }
 
 class CharactersToken extends StringToken {
-  CharactersToken([String? data]) : super(data);
+  CharactersToken([super.data]);
 
   @override
   int get kind => TokenKind.characters;
@@ -98,14 +98,14 @@ class CharactersToken extends StringToken {
 }
 
 class SpaceCharactersToken extends StringToken {
-  SpaceCharactersToken([String? data]) : super(data);
+  SpaceCharactersToken([super.data]);
 
   @override
   int get kind => TokenKind.spaceCharacters;
 }
 
 class CommentToken extends StringToken {
-  CommentToken([String? data]) : super(data);
+  CommentToken([super.data]);
 
   @override
   int get kind => TokenKind.comment;
