@@ -1,6 +1,6 @@
-[![Dart CI](https://github.com/dart-lang/html/actions/workflows/test-package.yml/badge.svg)](https://github.com/dart-lang/html/actions/workflows/test-package.yml)
-[![pub package](https://img.shields.io/pub/v/html.svg)](https://pub.dev/packages/html)
-[![package publisher](https://img.shields.io/pub/publisher/html.svg)](https://pub.dev/packages/html/publisher)
+[![Dart CI](https://github.com/dart-lang/html/actions/workflows/test-package.yml/badge.svg)](https://github.com/dart-lang/html/actions/workflows/test-package.yml).
+[![pub package](https://img.shields.io/pub/v/html.svg)](https://pub.dev/packages/html).
+[![package publisher](https://img.shields.io/pub/publisher/html.svg)](https://pub.dev/packages/html/publisher).
 
 A Dart implementation of an HTML5 parser.
 
