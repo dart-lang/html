@@ -1,5 +1,5 @@
 /// Internals to the tree builders.
-library treebuilder;
+library;
 
 import 'dart:collection';
 

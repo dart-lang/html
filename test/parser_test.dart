@@ -1,5 +1,5 @@
 @TestOn('vm')
-library parser_test;
+library;
 
 import 'dart:convert';
 

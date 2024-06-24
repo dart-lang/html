@@ -1,5 +1,5 @@
 /// Query selector implementation for our DOM.
-library html.src.query;
+library;
 
 import 'package:csslib/parser.dart';
 import 'package:csslib/visitor.dart';

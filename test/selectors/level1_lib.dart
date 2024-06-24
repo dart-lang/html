@@ -7,7 +7,7 @@
 /// As usual with ports: being faithful to the original style is more important
 /// than other style goals, as it reduces friction to integrating changes
 /// from upstream.
-library html.test.selectors.level1_lib;
+library;
 
 import 'package:html/dom.dart';
 import 'package:test/test.dart' as unittest;

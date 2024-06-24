@@ -1,5 +1,5 @@
 /// This library contains token types used by the html5 tokenizer.
-library token;
+library;
 
 import 'dart:collection';
 

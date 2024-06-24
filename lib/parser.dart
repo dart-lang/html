@@ -11,7 +11,7 @@
 ///
 /// The resulting document you get back has a DOM-like API for easy tree
 /// traversal and manipulation.
-library parser;
+library;
 
 import 'dart:collection';
 import 'dart:math';
