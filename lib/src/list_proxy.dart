@@ -1,5 +1,5 @@
 /// A [List] proxy that you can subclass.
-library list_proxy;
+library;
 
 import 'dart:collection';
 

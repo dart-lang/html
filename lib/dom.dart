@@ -1,6 +1,6 @@
 /// A simple tree API that results from parsing html. Intended to be compatible
 /// with dart:html, but it is missing many types and APIs.
-library dom;
+library;
 
 // ignore_for_file: constant_identifier_names
 

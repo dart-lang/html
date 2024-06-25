@@ -1,5 +1,5 @@
 /// Support code for the tests in this directory.
-library support;
+library;
 
 import 'dart:collection';
 import 'dart:io';

@@ -1,6 +1,6 @@
 /// This library contains extra APIs that aren't in the DOM, but are useful
 /// when interacting with the parse tree.
-library dom_parsing;
+library;
 
 import 'dom.dart';
 import 'html_escape.dart';

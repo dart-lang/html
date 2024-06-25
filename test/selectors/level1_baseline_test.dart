@@ -5,7 +5,7 @@
 /// an iframe, but instead operate over a parsed DOM.
 
 @TestOn('vm')
-library html.test.selectors.level1_baseline_test;
+library;
 
 import 'dart:io';
 

@@ -1,5 +1,5 @@
 /// Additional feature tests that aren't based on test data.
-library dom_test;
+library;
 
 import 'package:html/dom.dart';
 import 'package:html/parser.dart';
