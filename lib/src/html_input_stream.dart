@@ -266,6 +266,8 @@ class HtmlInputStream {
 // TODO(jmesserly): the Python code used a regex to check for this. But
 // Dart doesn't let you create a regexp with invalid characters.
 bool _invalidUnicode(int c) {
+  // Fast return for common ASCII characters
+  if (0x0020 <= c && c <= 0x007E) return false;
   if (0x0001 <= c && c <= 0x0008) return true;
   if (0x000E <= c && c <= 0x001F) return true;
   if (0x007F <= c && c <= 0x009F) return true;
