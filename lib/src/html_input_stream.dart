@@ -86,17 +86,22 @@ class HtmlInputStream {
     errors = Queue<String>();
 
     _offset = 0;
-    _chars = <int>[];
 
     final rawChars = _rawChars ??= _decodeBytes(charEncodingName!, _rawBytes!);
 
+    // Optimistically allocate array, trim it later if there are changes
+    _chars = List.filled(rawChars.length, 0, growable: true);
     var skipNewline = false;
     var wasSurrogatePair = false;
+    var deletedChars = 0;
     for (var i = 0; i < rawChars.length; i++) {
       var c = rawChars[i];
       if (skipNewline) {
         skipNewline = false;
-        if (c == newLine) continue;
+        if (c == newLine) {
+          deletedChars++;
+          continue;
+        }
       }
 
       final isSurrogatePair = _isSurrogatePair(rawChars, i);
@@ -116,7 +121,11 @@ class HtmlInputStream {
         c = newLine;
       }
 
-      _chars.add(c);
+      _chars[i - deletedChars] = c;
+    }
+    if (deletedChars > 0) {
+      // Remove the null bytes from the end
+      _chars.removeRange(_chars.length - deletedChars, _chars.length);
     }
 
     // Free decoded characters if they aren't needed anymore.
