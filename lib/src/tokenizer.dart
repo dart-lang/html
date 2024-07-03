@@ -9,15 +9,20 @@ import 'utils.dart';
 
 // Group entities by their first character, for faster lookups
 
-// TODO(jmesserly): we could use a better data structure here like a trie, if
-// we had it implemented in Dart.
-Map<String, List<String>> entitiesByFirstChar = (() {
-  final result = <String, List<String>>{};
-  for (var k in entities.keys) {
-    result.putIfAbsent(k[0], () => []).add(k);
+class _EntityTrieNode {
+  final Map<String, _EntityTrieNode> children = {};
+}
+
+final _entitiesTrieRoot = () {
+  final root = _EntityTrieNode();
+  for (final entity in entities.keys) {
+    var node = root;
+    for (var i = 0; i < entity.length; i++) {
+      node = node.children.putIfAbsent(entity[i], _EntityTrieNode.new);
+    }
   }
-  return result;
-})();
+  return root;
+}();
 
 // TODO(jmesserly): lots of ways to make this faster:
 // - use char codes everywhere instead of 1-char strings
@@ -293,18 +298,11 @@ class HtmlTokenizer implements Iterator<Token> {
       //
       // Consume characters and compare to these to a substring of the
       // entity names in the list until the substring no longer matches.
-      var filteredEntityList = entitiesByFirstChar[charStack[0]!] ?? const [];
+      var node = _entitiesTrieRoot.children[charStack.last];
 
-      while (charStack.last != eof) {
-        final name = charStack.join();
-        filteredEntityList = filteredEntityList
-            .where((e) => e.startsWith(name))
-            .toList(growable: false);
-
-        if (filteredEntityList.isEmpty) {
-          break;
-        }
+      while (node != null) {
         charStack.add(stream.char());
+        node = _entitiesTrieRoot.children[charStack.last];
       }
 
       // At this point we have a string that starts with some characters
