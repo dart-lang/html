@@ -131,9 +131,9 @@ class HtmlInputStream {
     // Free decoded characters if they aren't needed anymore.
     if (_rawBytes != null) _rawChars = null;
 
-    // TODO(sigmund): Don't parse the file at all if spans aren't being
-    // generated.
-    fileInfo = SourceFile.decoded(_chars, url: sourceUrl);
+    if (generateSpans) {
+      fileInfo = SourceFile.decoded(_chars, url: sourceUrl);
+    }
   }
 
   void detectEncoding([bool parseMeta = true]) {
