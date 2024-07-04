@@ -3959,6 +3959,9 @@ class ParseError implements SourceSpanException {
 
   @override
   String toString({dynamic color}) {
+    if (span == null) {
+      return message;
+    }
     final res = span!.message(message, color: color);
     return span!.sourceUrl == null ? 'ParserError on $res' : 'On $res';
   }
