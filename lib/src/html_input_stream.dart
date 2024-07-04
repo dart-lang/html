@@ -226,6 +226,13 @@ class HtmlInputStream {
     return _chars[_offset];
   }
 
+  String? peekChar() {
+    if (_offset >= _chars.length) return eof;
+    return _isSurrogatePair(_chars, _offset)
+        ? String.fromCharCodes([_chars[_offset], _chars[_offset + 1]])
+        : String.fromCharCode(_chars[_offset]);
+  }
+
   // Whether the current and next chars indicate a surrogate pair.
   bool _isSurrogatePair(List<int> chars, int i) {
     return i + 1 < chars.length &&
@@ -284,7 +291,7 @@ class HtmlInputStream {
     // be consumed again before any further call to unget
     if (ch != null) {
       _offset -= ch.length;
-      assert(String.fromCharCode(peekCodeUnit() ?? 0) == ch);
+      assert(peekChar() == ch);
     }
   }
 }
