@@ -299,9 +299,9 @@ class HtmlTokenizer implements Iterator<Token> {
       // entity names in the list until the substring no longer matches.
       var node = _entitiesTrieRoot.children[charStack.last];
 
-      while (node != null) {
+      while (node != null && charStack.last != eof) {
         charStack.add(stream.char());
-        node = _entitiesTrieRoot.children[charStack.last];
+        node = node.children[charStack.last];
       }
 
       // At this point we have a string that starts with some characters
