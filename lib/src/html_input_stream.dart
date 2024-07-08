@@ -258,6 +258,7 @@ class HtmlInputStream {
 
     return String.fromCharCodes(_chars.sublist(start, _offset));
   }
+
   String charsUntil1(int charCode, [bool opposite = false]) {
     final start = _offset;
     int? c;
@@ -267,19 +268,24 @@ class HtmlInputStream {
 
     return String.fromCharCodes(_chars.sublist(start, _offset));
   }
+
   String charsUntil2(int charCode1, int charCode2, [bool opposite = false]) {
     final start = _offset;
     int? c;
-    while ((c = peekCodeUnit()) != null && (charCode1 == c! || charCode2 == c) == opposite) {
+    while ((c = peekCodeUnit()) != null &&
+        (charCode1 == c! || charCode2 == c) == opposite) {
       _offset += 1;
     }
 
     return String.fromCharCodes(_chars.sublist(start, _offset));
   }
-  String charsUntil3(int charCode1, int charCode2, int charCode3, [bool opposite = false]) {
+
+  String charsUntil3(int charCode1, int charCode2, int charCode3,
+      [bool opposite = false]) {
     final start = _offset;
     int? c;
-    while ((c = peekCodeUnit()) != null && (charCode1 == c! || charCode2 == c || charCode3 == c) == opposite) {
+    while ((c = peekCodeUnit()) != null &&
+        (charCode1 == c! || charCode2 == c || charCode3 == c) == opposite) {
       _offset += 1;
     }
 

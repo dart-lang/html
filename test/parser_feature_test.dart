@@ -251,8 +251,7 @@ On line 4, column 3 of ParseError: Unexpected DOCTYPE. Ignored.
     expect(parser.errors[0].errorCode, 'expected-doctype-but-got-chars');
     expect(parser.errors[0].message,
         'Unexpected non-space characters. Expected DOCTYPE.');
-    expect(
-        parser.errors[0].toString(),
+    expect(parser.errors[0].toString(),
         'Unexpected non-space characters. Expected DOCTYPE.');
   });
 

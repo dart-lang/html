@@ -394,40 +394,52 @@ const mathmlTextIntegrationPointElements = [
 ];
 
 class Charcode {
-    static const int kNull = 0x00;
-    /// '\t'
-    static const int kTab = 0x09;
-    /// '\n'
-    static const int kLineFeed = 0x0A;
-    static const int kFormFeed = 0x0C;
-    /// '\r'
-    static const int kCarriageReturn = 0x0D;
-    /// ' '
-    static const int kSpace = 0x20;
-    /// '"'
-    static const int kDoubleQuote = 0x22;
-    /// '&'
-    static const int kAmpersand = 0x26;
-    /// "'"
-    static const int kSingleQuote = 0x27;
-    /// '-'
-    static const int kHyphen = 0x2D;
-    /// '<'
-    static const int kLessThan = 0x3C;
-    /// '='
-    static const int kEquals = 0x3D;
-    /// '>'
-    static const int kGreaterThan = 0x3E;
-    /// '`'
-    static const int kGraveAccent = 0x60;
+  static const int kNull = 0x00;
+
+  /// '\t'
+  static const int kTab = 0x09;
+
+  /// '\n'
+  static const int kLineFeed = 0x0A;
+  static const int kFormFeed = 0x0C;
+
+  /// '\r'
+  static const int kCarriageReturn = 0x0D;
+
+  /// ' '
+  static const int kSpace = 0x20;
+
+  /// '"'
+  static const int kDoubleQuote = 0x22;
+
+  /// '&'
+  static const int kAmpersand = 0x26;
+
+  /// "'"
+  static const int kSingleQuote = 0x27;
+
+  /// '-'
+  static const int kHyphen = 0x2D;
+
+  /// '<'
+  static const int kLessThan = 0x3C;
+
+  /// '='
+  static const int kEquals = 0x3D;
+
+  /// '>'
+  static const int kGreaterThan = 0x3E;
+
+  /// '`'
+  static const int kGraveAccent = 0x60;
 }
 
 const spaceCharacters = {
-    Charcode.kSpace,
-    Charcode.kLineFeed,
-    Charcode.kCarriageReturn,
-    Charcode.kTab,
-    Charcode.kFormFeed
+  Charcode.kSpace,
+  Charcode.kLineFeed,
+  Charcode.kCarriageReturn,
+  Charcode.kTab,
+  Charcode.kFormFeed
 };
 
 bool isWhitespace(String? char) {
@@ -457,58 +469,58 @@ const List<String> tableInsertModeElements = [
 
 // TODO(jmesserly): remove these in favor of the test functions
 const asciiLetters = {
-    0x41,
-    0x42,
-    0x43,
-    0x44,
-    0x45,
-    0x46,
-    0x47,
-    0x48,
-    0x49,
-    0x4A,
-    0x4B,
-    0x4C,
-    0x4D,
-    0x4E,
-    0x4F,
-    0x50,
-    0x51,
-    0x52,
-    0x53,
-    0x54,
-    0x55,
-    0x56,
-    0x57,
-    0x58,
-    0x59,
-    0x5A,
-    0x61,
-    0x62,
-    0x63,
-    0x64,
-    0x65,
-    0x66,
-    0x67,
-    0x68,
-    0x69,
-    0x6A,
-    0x6B,
-    0x6C,
-    0x6D,
-    0x6E,
-    0x6F,
-    0x70,
-    0x71,
-    0x72,
-    0x73,
-    0x74,
-    0x75,
-    0x76,
-    0x77,
-    0x78,
-    0x79,
-    0x7A,
+  0x41,
+  0x42,
+  0x43,
+  0x44,
+  0x45,
+  0x46,
+  0x47,
+  0x48,
+  0x49,
+  0x4A,
+  0x4B,
+  0x4C,
+  0x4D,
+  0x4E,
+  0x4F,
+  0x50,
+  0x51,
+  0x52,
+  0x53,
+  0x54,
+  0x55,
+  0x56,
+  0x57,
+  0x58,
+  0x59,
+  0x5A,
+  0x61,
+  0x62,
+  0x63,
+  0x64,
+  0x65,
+  0x66,
+  0x67,
+  0x68,
+  0x69,
+  0x6A,
+  0x6B,
+  0x6C,
+  0x6D,
+  0x6E,
+  0x6F,
+  0x70,
+  0x71,
+  0x72,
+  0x73,
+  0x74,
+  0x75,
+  0x76,
+  0x77,
+  0x78,
+  0x79,
+  0x7A,
 };
 
 const _zeroCode = 48;

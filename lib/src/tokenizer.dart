@@ -419,7 +419,8 @@ class HtmlTokenizer implements Iterator<Token> {
       // have already been appended to lastFourChars and will have broken
       // any <!-- or --> sequences
     } else {
-      final chars = stream.charsUntil3(Charcode.kAmpersand, Charcode.kLessThan, Charcode.kNull);
+      final chars = stream.charsUntil3(
+          Charcode.kAmpersand, Charcode.kLessThan, Charcode.kNull);
       _addToken(CharactersToken('$data$chars'));
     }
     return true;
@@ -778,7 +779,8 @@ class HtmlTokenizer implements Iterator<Token> {
     } else if (data == eof) {
       state = dataState;
     } else {
-      final chars = stream.charsUntil3(Charcode.kLessThan, Charcode.kHyphen, Charcode.kNull);
+      final chars = stream.charsUntil3(
+          Charcode.kLessThan, Charcode.kHyphen, Charcode.kNull);
       _addToken(CharactersToken('$data$chars'));
     }
     return true;
@@ -1176,7 +1178,8 @@ class HtmlTokenizer implements Iterator<Token> {
       state = dataState;
     } else {
       _attributeValue.write(data);
-      _attributeValue.write(stream.charsUntil2(Charcode.kDoubleQuote, Charcode.kAmpersand));
+      _attributeValue.write(
+          stream.charsUntil2(Charcode.kDoubleQuote, Charcode.kAmpersand));
     }
     return true;
   }
@@ -1198,7 +1201,8 @@ class HtmlTokenizer implements Iterator<Token> {
       state = dataState;
     } else {
       _attributeValue.write(data);
-      _attributeValue.write(stream.charsUntil2(Charcode.kSingleQuote, Charcode.kAmpersand));
+      _attributeValue.write(
+          stream.charsUntil2(Charcode.kSingleQuote, Charcode.kAmpersand));
     }
     return true;
   }
@@ -1400,7 +1404,9 @@ class HtmlTokenizer implements Iterator<Token> {
       _addToken(currentToken!);
       state = dataState;
     } else {
-      currentStringToken.add(data!).add(stream.charsUntil2(Charcode.kHyphen, Charcode.kNull));
+      currentStringToken
+          .add(data!)
+          .add(stream.charsUntil2(Charcode.kHyphen, Charcode.kNull));
     }
     return true;
   }
