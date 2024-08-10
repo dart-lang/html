@@ -5,24 +5,9 @@ import '../parser.dart' show HtmlParser;
 import 'constants.dart';
 import 'html_input_stream.dart';
 import 'token.dart';
+import 'trie.dart';
 import 'utils.dart';
 
-// Group entities by their first character, for faster lookups
-
-class _EntityTrieNode {
-  final Map<String, _EntityTrieNode> children = {};
-}
-
-final _entitiesTrieRoot = () {
-  final root = _EntityTrieNode();
-  for (final entity in entities.keys) {
-    var node = root;
-    for (var i = 0; i < entity.length; i++) {
-      node = node.children.putIfAbsent(entity[i], _EntityTrieNode.new);
-    }
-  }
-  return root;
-}();
 
 // TODO(jmesserly): lots of ways to make this faster:
 // - use switch instead of contains, indexOf
@@ -297,11 +282,11 @@ class HtmlTokenizer implements Iterator<Token> {
       //
       // Consume characters and compare to these to a substring of the
       // entity names in the list until the substring no longer matches.
-      var node = _entitiesTrieRoot.children[charStack.last];
+      dynamic node = entitiesTrieRoot[charStack.last?.codeUnitAt(0)];
 
       while (node != null && charStack.last != eof) {
         charStack.add(stream.char());
-        node = node.children[charStack.last];
+        node = (node as Map)[charStack.last?.codeUnitAt(0)];
       }
 
       // At this point we have a string that starts with some characters
