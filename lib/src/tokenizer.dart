@@ -8,7 +8,6 @@ import 'token.dart';
 import 'trie.dart';
 import 'utils.dart';
 
-
 // TODO(jmesserly): lots of ways to make this faster:
 // - use switch instead of contains, indexOf
 // - use switch instead of the sequential if tests
