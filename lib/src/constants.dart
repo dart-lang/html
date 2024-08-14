@@ -393,7 +393,7 @@ const mathmlTextIntegrationPointElements = [
   Pair(Namespaces.mathml, 'mtext')
 ];
 
-class Charcode {
+abstract final class Charcode {
   static const int kNull = 0x00;
 
   /// '\t'
