@@ -569,7 +569,10 @@ const entitiesTrieRoot = {
                                                         103: {
                                                           114: {
                                                             97: {
-                                                              108: {59: <int, dynamic>{}}
+                                                              108: {
+                                                                59: <int,
+                                                                    dynamic>{}
+                                                              }
                                                             }
                                                           }
                                                         }
