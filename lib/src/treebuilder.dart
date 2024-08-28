@@ -10,7 +10,6 @@ import '../parser.dart' show getElementNameTuple;
 import 'constants.dart';
 import 'list_proxy.dart';
 import 'token.dart';
-import 'utils.dart';
 
 /// Open elements in the formatting category, most recent element last.
 ///
@@ -113,29 +112,29 @@ class TreeBuilder {
     final exactNode = target is Node;
 
     var listElements1 = scopingElements;
-    var listElements2 = const <Pair<String, String>>[];
+    var listElements2 = const <(String, String)>[];
     var invert = false;
     if (variant != null) {
       switch (variant) {
         case 'button':
-          listElements2 = const [Pair(Namespaces.html, 'button')];
+          listElements2 = const [(Namespaces.html, 'button')];
           break;
         case 'list':
           listElements2 = const [
-            Pair(Namespaces.html, 'ol'),
-            Pair(Namespaces.html, 'ul')
+            (Namespaces.html, 'ol'),
+            (Namespaces.html, 'ul')
           ];
           break;
         case 'table':
           listElements1 = const [
-            Pair(Namespaces.html, 'html'),
-            Pair(Namespaces.html, 'table')
+            (Namespaces.html, 'html'),
+            (Namespaces.html, 'table')
           ];
           break;
         case 'select':
           listElements1 = const [
-            Pair(Namespaces.html, 'optgroup'),
-            Pair(Namespaces.html, 'option')
+            (Namespaces.html, 'optgroup'),
+            (Namespaces.html, 'option')
           ];
           invert = true;
           break;
