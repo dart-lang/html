@@ -27,7 +27,7 @@ import 'src/treebuilder.dart';
 import 'src/utils.dart';
 
 /// Parse the [input] html5 document into a tree. The [input] can be
-/// a [String], [List<int>] of bytes or an [HtmlTokenizer].
+/// a [String], [List]`<int>` of bytes or an [HtmlTokenizer].
 ///
 /// If [input] is not a [HtmlTokenizer], you can optionally specify the file's
 /// [encoding], which must be a string. If specified that encoding will be
@@ -45,7 +45,7 @@ Document parse(dynamic input,
 }
 
 /// Parse the [input] html5 document fragment into a tree. The [input] can be
-/// a [String], [List<int>] of bytes or an [HtmlTokenizer]. The [container]
+/// a [String], [List]`<int>` of bytes or an [HtmlTokenizer]. The [container]
 /// element can optionally be specified, otherwise it defaults to "div".
 ///
 /// If [input] is not a [HtmlTokenizer], you can optionally specify the file's
@@ -127,7 +127,7 @@ class HtmlParser {
   late final _afterAfterFramesetPhase = AfterAfterFramesetPhase(this);
 
   /// Create an HtmlParser and configure the [tree] builder and [strict] mode.
-  /// The [input] can be a [String], [List<int>] of bytes or an [HtmlTokenizer].
+  /// The [input] can be a [String], [List]`<int>` of bytes or an [HtmlTokenizer].
   ///
   /// If [input] is not a [HtmlTokenizer], you can specify a few more arguments.
   ///
