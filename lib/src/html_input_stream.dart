@@ -48,7 +48,7 @@ class HtmlInputStream {
   /// HtmlInputStream(source, [encoding]) -> Normalized stream from source
   /// for use by html5lib.
   ///
-  /// [source] can be either a [String] or a [List<int>] containing the raw
+  /// [source] can be either a `String` or a `List<int>` containing the raw
   /// bytes.
   ///
   /// The optional encoding parameter must be a string that indicates

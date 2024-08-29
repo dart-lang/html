@@ -26,8 +26,10 @@ import 'src/tokenizer.dart';
 import 'src/treebuilder.dart';
 import 'src/utils.dart';
 
-/// Parse the [input] html5 document into a tree. The [input] can be
-/// a [String], [List<int>] of bytes or an [HtmlTokenizer].
+/// Parse an html5 document into a tree.
+///
+/// The [input] can be a `String`, a `List<int>` of bytes, or an
+/// [HtmlTokenizer].
 ///
 /// If [input] is not a [HtmlTokenizer], you can optionally specify the file's
 /// [encoding], which must be a string. If specified that encoding will be
@@ -44,9 +46,12 @@ Document parse(dynamic input,
   return p.parse();
 }
 
-/// Parse the [input] html5 document fragment into a tree. The [input] can be
-/// a [String], [List<int>] of bytes or an [HtmlTokenizer]. The [container]
-/// element can optionally be specified, otherwise it defaults to "div".
+/// Parse an html5 document fragment into a tree.
+///
+/// The [input] can be a `String`, a `List<int>` of bytes, or an
+/// [HtmlTokenizer].
+/// The [container] element can optionally be specified, otherwise it defaults
+/// to "div".
 ///
 /// If [input] is not a [HtmlTokenizer], you can optionally specify the file's
 /// [encoding], which must be a string. If specified, that encoding will be used,
@@ -126,8 +131,13 @@ class HtmlParser {
   late final _afterAfterBodyPhase = AfterAfterBodyPhase(this);
   late final _afterAfterFramesetPhase = AfterAfterFramesetPhase(this);
 
-  /// Create an HtmlParser and configure the [tree] builder and [strict] mode.
-  /// The [input] can be a [String], [List<int>] of bytes or an [HtmlTokenizer].
+  /// Create and configure an HtmlParser.
+  ///
+  /// The [input] can be a `String`, a `List<int>` of bytes, or an
+  /// [HtmlTokenizer].
+  ///
+  /// The [strict], [tree] builder, and [generateSpans] arguments configure
+  /// behavior for any type of input.
   ///
   /// If [input] is not a [HtmlTokenizer], you can specify a few more arguments.
   ///
@@ -141,16 +151,17 @@ class HtmlParser {
   /// automatic conversion of element and attribute names to lower case. Note
   /// that standard way to parse HTML is to lowercase, which is what the browser
   /// DOM will do if you request `Element.outerHTML`, for example.
-  HtmlParser(dynamic input,
-      {String? encoding,
-      bool parseMeta = true,
-      bool lowercaseElementName = true,
-      bool lowercaseAttrName = true,
-      this.strict = false,
-      this.generateSpans = false,
-      String? sourceUrl,
-      TreeBuilder? tree})
-      : tree = tree ?? TreeBuilder(true),
+  HtmlParser(
+    dynamic input, {
+    TreeBuilder? tree,
+    this.strict = false,
+    this.generateSpans = false,
+    String? encoding,
+    bool parseMeta = true,
+    bool lowercaseElementName = true,
+    bool lowercaseAttrName = true,
+    String? sourceUrl,
+  })  : tree = tree ?? TreeBuilder(true),
         tokenizer = input is HtmlTokenizer
             ? input
             : HtmlTokenizer(input,
@@ -166,6 +177,7 @@ class HtmlParser {
   bool get innerHTMLMode => innerHTML != null;
 
   /// Parse an html5 document into a tree.
+  ///
   /// After parsing, [errors] will be populated with parse errors, if any.
   Document parse() {
     innerHTML = null;
@@ -174,6 +186,7 @@ class HtmlParser {
   }
 
   /// Parse an html5 document fragment into a tree.
+  ///
   /// Pass a [container] to change the type of the containing element.
   /// After parsing, [errors] will be populated with parse errors, if any.
   DocumentFragment parseFragment([String container = 'div']) {
