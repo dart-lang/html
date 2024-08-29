@@ -1,19 +1,5 @@
 import 'constants.dart';
 
-class Pair<F, S> {
-  final F first;
-  final S second;
-
-  const Pair(this.first, this.second);
-
-  @override
-  int get hashCode => 37 * first.hashCode + second.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      other is Pair && other.first == first && other.second == second;
-}
-
 bool startsWithAny(String str, List<String> prefixes) =>
     prefixes.any(str.startsWith);
 

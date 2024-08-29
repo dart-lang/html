@@ -248,13 +248,13 @@ class HtmlParser {
       return enc == 'text/html' || enc == 'application/xhtml+xml';
     } else {
       return htmlIntegrationPointElements
-          .contains(Pair(element.namespaceUri, element.localName));
+          .contains((element.namespaceUri, element.localName));
     }
   }
 
   bool isMathMLTextIntegrationPoint(Element element) {
     return mathmlTextIntegrationPointElements
-        .contains(Pair(element.namespaceUri, element.localName));
+        .contains((element.namespaceUri, element.localName));
   }
 
   bool inForeignContent(Token token, int type) {
@@ -3978,7 +3978,7 @@ class ParseError implements SourceSpanException {
 }
 
 /// Convenience function to get the pair of namespace and localName.
-Pair<String, String?> getElementNameTuple(Element e) {
+(String, String?) getElementNameTuple(Element e) {
   final ns = e.namespaceUri ?? Namespaces.html;
-  return Pair(ns, e.localName);
+  return (ns, e.localName);
 }
