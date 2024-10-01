@@ -86,17 +86,22 @@ class HtmlInputStream {
     errors = Queue<String>();
 
     _offset = 0;
-    _chars = <int>[];
 
     final rawChars = _rawChars ??= _decodeBytes(charEncodingName!, _rawBytes!);
 
+    // Optimistically allocate array, trim it later if there are changes
+    _chars = List.filled(rawChars.length, 0, growable: true);
     var skipNewline = false;
     var wasSurrogatePair = false;
+    var deletedChars = 0;
     for (var i = 0; i < rawChars.length; i++) {
       var c = rawChars[i];
       if (skipNewline) {
         skipNewline = false;
-        if (c == newLine) continue;
+        if (c == Charcode.kLineFeed) {
+          deletedChars++;
+          continue;
+        }
       }
 
       final isSurrogatePair = _isSurrogatePair(rawChars, i);
@@ -111,20 +116,24 @@ class HtmlInputStream {
       }
       wasSurrogatePair = isSurrogatePair;
 
-      if (c == returnCode) {
+      if (c == Charcode.kCarriageReturn) {
         skipNewline = true;
-        c = newLine;
+        c = Charcode.kLineFeed;
       }
 
-      _chars.add(c);
+      _chars[i - deletedChars] = c;
+    }
+    if (deletedChars > 0) {
+      // Remove the null bytes from the end
+      _chars.removeRange(_chars.length - deletedChars, _chars.length);
     }
 
     // Free decoded characters if they aren't needed anymore.
     if (_rawBytes != null) _rawChars = null;
 
-    // TODO(sigmund): Don't parse the file at all if spans aren't being
-    // generated.
-    fileInfo = SourceFile.decoded(_chars, url: sourceUrl);
+    if (generateSpans) {
+      fileInfo = SourceFile.decoded(_chars, url: sourceUrl);
+    }
   }
 
   void detectEncoding([bool parseMeta = true]) {
@@ -212,6 +221,11 @@ class HtmlInputStream {
         : String.fromCharCode(_chars[_offset++]);
   }
 
+  int? peekCodeUnit() {
+    if (_offset >= _chars.length) return null;
+    return _chars[_offset];
+  }
+
   String? peekChar() {
     if (_offset >= _chars.length) return eof;
     return _isSurrogatePair(_chars, _offset)
@@ -233,12 +247,46 @@ class HtmlInputStream {
   bool _isTrailSurrogate(int code) => (code & 0xFC00) == 0xDC00;
 
   /// Returns a string of characters from the stream up to but not
-  /// including any character in 'characters' or EOF.
-  String charsUntil(String characters, [bool opposite = false]) {
+  /// including any character in 'characters' or EOF. These functions rely
+  /// on the charCode(s) being single-codepoint.
+  String charsUntil(Set<int> charCodes, [bool opposite = false]) {
     final start = _offset;
-    String? c;
-    while ((c = peekChar()) != null && characters.contains(c!) == opposite) {
-      _offset += c.codeUnits.length;
+    int? c;
+    while ((c = peekCodeUnit()) != null && charCodes.contains(c!) == opposite) {
+      _offset += 1;
+    }
+
+    return String.fromCharCodes(_chars.sublist(start, _offset));
+  }
+
+  String charsUntil1(int charCode, [bool opposite = false]) {
+    final start = _offset;
+    int? c;
+    while ((c = peekCodeUnit()) != null && (charCode == c!) == opposite) {
+      _offset += 1;
+    }
+
+    return String.fromCharCodes(_chars.sublist(start, _offset));
+  }
+
+  String charsUntil2(int charCode1, int charCode2, [bool opposite = false]) {
+    final start = _offset;
+    int? c;
+    while ((c = peekCodeUnit()) != null &&
+        (charCode1 == c! || charCode2 == c) == opposite) {
+      _offset += 1;
+    }
+
+    return String.fromCharCodes(_chars.sublist(start, _offset));
+  }
+
+  String charsUntil3(int charCode1, int charCode2, int charCode3,
+      [bool opposite = false]) {
+    final start = _offset;
+    int? c;
+    while ((c = peekCodeUnit()) != null &&
+        (charCode1 == c! || charCode2 == c || charCode3 == c) == opposite) {
+      _offset += 1;
     }
 
     return String.fromCharCodes(_chars.sublist(start, _offset));
@@ -257,6 +305,8 @@ class HtmlInputStream {
 // TODO(jmesserly): the Python code used a regex to check for this. But
 // Dart doesn't let you create a regexp with invalid characters.
 bool _invalidUnicode(int c) {
+  // Fast return for common ASCII characters
+  if (0x0020 <= c && c <= 0x007E) return false;
   if (0x0001 <= c && c <= 0x0008) return true;
   if (0x000E <= c && c <= 0x001F) return true;
   if (0x007F <= c && c <= 0x009F) return true;
